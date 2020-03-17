@@ -29,7 +29,7 @@ class gameApp:
         print(appTitle + '\n-----控制台-----')
 
     def MainLoop(self):
-        while True and not self.isQuit:
+        while not self.isQuit:
             self.__screen.fill((0, 0, 0))
 
             # 画屏幕
