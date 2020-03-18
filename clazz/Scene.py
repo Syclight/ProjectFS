@@ -1,5 +1,6 @@
 from operator import eq
 
+from Manager.IOEventManager import IOEventManager
 from clazz.Config import Config
 from clazz.Element import *
 from clazz.Const import *
@@ -96,7 +97,7 @@ class TitleScene(Scene):
     nextSceneNum = None
 
     def __init__(self, screen, paramList=None):
-        #注册场景
+        # 注册场景
         from clazz.AppConfig import registerScene
         registerScene(SCREEN_GAME_FIRSTSTORY, NewGame_First_StoryScene)
         registerScene(SCREEN_OPT, OptionScene)
@@ -552,54 +553,63 @@ class OptionScene(Scene):
         self.__E_Img_Licence = ImgElement(self.__E_BGBlankR.area, gl_ImgPath + 'OPT_L.lice', 255, (128, 128, 128))
 
         # 画面设置绑定事件
-        self.__E_BGBlankL1.Events.appendEvent(mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Draw, True))
-        self.__E_BGBlankL1.Events.appendEvent(mouseLeftKeyDown, lambda: self.__rebuildElementsToList2(
-            [self.__E_Text_AntiAlias, self.__E_Text_AA_Val, self.__E_UI_AA_RightButton, self.__E_UI_AA_LeftButton]))
-        self.__E_BGBlankL1.Events.appendEvent(mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Draw, False))
+        self.__E_BGBlankL1.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Draw, True),
+                                              1)
+        self.__E_BGBlankL1.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: self.__rebuildElementsToList2(
+            [self.__E_Text_AntiAlias, self.__E_Text_AA_Val, self.__E_UI_AA_RightButton, self.__E_UI_AA_LeftButton]), 2)
+        self.__E_BGBlankL1.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Draw, False), 1)
 
         # 声音设置绑定事件
-        self.__E_BGBlankL2.Events.appendEvent(mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Wave, True))
-        self.__E_BGBlankL2.Events.appendEvent(mouseLeftKeyDown, lambda: self.__rebuildElementsToList2(
+        self.__E_BGBlankL2.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Wave, True),
+                                              1)
+        self.__E_BGBlankL2.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: self.__rebuildElementsToList2(
             [self.__E_Text_BGMVolume, self.__E_Text_SoundVolume, self.__E_Text_BGM_Val, self.__E_Text_Sou_Val,
              self.__E_UI_BGM_RightButton, self.__E_UI_BGM_LeftButton, self.__E_UI_Sou_RightButton,
-             self.__E_UI_Sou_LeftButton]))
-        self.__E_BGBlankL2.Events.appendEvent(mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Wave, False))
+             self.__E_UI_Sou_LeftButton]), 2)
+        self.__E_BGBlankL2.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Wave, False), 1)
 
         # 开源软件许可按钮绑定事件
-        self.__E_BGBlankL3.Events.appendEvent(mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Licence, True))
-        self.__E_BGBlankL3.Events.appendEvent(mouseLeftKeyDown,
-                                              lambda: self.__rebuildElementsToList2([self.__E_Img_Licence]))
-        self.__E_BGBlankL3.Events.appendEvent(mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Licence, False))
+        self.__E_BGBlankL3.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown,
+                                              lambda: ChePos(self.__E_Text_Licence, True), 1)
+        self.__E_BGBlankL3.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown,
+                                              lambda: self.__rebuildElementsToList2([self.__E_Img_Licence]), 2)
+        self.__E_BGBlankL3.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Licence, False),
+                                              1)
 
         # 应用按钮绑定事件
-        self.__E_BGBlankLApply.Events.appendEvent(mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Apply, True))
-        self.__E_BGBlankLApply.Events.appendEvent(mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Apply, False))
-        self.__E_BGBlankLApply.Events.appendEvent(mouseLeftKeyClick,
-                                                  lambda: self.__retSignalIsReadyToEnd(SCREEN_OPT_APPLY))
-        self.__E_BGBlankLApply.Events.appendEvent(mouseLeftKeyClick, lambda: self.__updConfig())
+        self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown,
+                                                  lambda: ChePos(self.__E_Text_Apply, True), 1)
+        self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
+                                                  lambda: ChePos(self.__E_Text_Apply, False), 1)
+        self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                                  lambda: self.__retSignalIsReadyToEnd(SCREEN_OPT_APPLY), 1)
+        self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__updConfig(), 2)
 
         # 返回按钮绑定事件
-        self.__E_BGBlankLRet.Events.appendEvent(mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Ret, True))
-        self.__E_BGBlankLRet.Events.appendEvent(mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Ret, False))
-        self.__E_BGBlankLRet.Events.appendEvent(mouseLeftKeyClick, lambda: self.__retSignalIsReadyToEnd(SCREEN_TITLE))
+        self.__E_BGBlankLRet.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: ChePos(self.__E_Text_Ret, True),
+                                                1)
+        self.__E_BGBlankLRet.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Ret, False),
+                                                1)
+        self.__E_BGBlankLRet.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                                lambda: self.__retSignalIsReadyToEnd(SCREEN_TITLE), 1)
 
         # 抗锯齿UI按钮绑定事件
-        self.__E_UI_AA_LeftButton.Events.appendEvent(mouseLeftKeyClick, lambda: self.__chVal_AA_Txt())
-        self.__E_UI_AA_RightButton.Events.appendEvent(mouseLeftKeyClick, lambda: self.__chVal_AA_Txt())
+        self.__E_UI_AA_LeftButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__chVal_AA_Txt(), 1)
+        self.__E_UI_AA_RightButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__chVal_AA_Txt(), 1)
 
         # 改变音量UI按钮绑定事件
-        self.__E_UI_BGM_LeftButton.Events.appendEvent(mouseLeftKeyClick,
+        self.__E_UI_BGM_LeftButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                                       lambda: self.__chVal_WaveParam_Txt(self.__E_Text_BGM_Val, False,
-                                                                                         GLC_INI_PARAM_BGMVOLUME))
-        self.__E_UI_BGM_RightButton.Events.appendEvent(mouseLeftKeyClick,
+                                                                                         GLC_INI_PARAM_BGMVOLUME), 1)
+        self.__E_UI_BGM_RightButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                                        lambda: self.__chVal_WaveParam_Txt(self.__E_Text_BGM_Val, True,
-                                                                                          GLC_INI_PARAM_BGMVOLUME))
-        self.__E_UI_Sou_LeftButton.Events.appendEvent(mouseLeftKeyClick,
+                                                                                          GLC_INI_PARAM_BGMVOLUME), 1)
+        self.__E_UI_Sou_LeftButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                                       lambda: self.__chVal_WaveParam_Txt(self.__E_Text_Sou_Val, False,
-                                                                                         GLC_INI_PARAM_SOUNDVOLUME))
-        self.__E_UI_Sou_RightButton.Events.appendEvent(mouseLeftKeyClick,
+                                                                                         GLC_INI_PARAM_SOUNDVOLUME), 1)
+        self.__E_UI_Sou_RightButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                                        lambda: self.__chVal_WaveParam_Txt(self.__E_Text_Sou_Val, True,
-                                                                                          GLC_INI_PARAM_SOUNDVOLUME))
+                                                                                          GLC_INI_PARAM_SOUNDVOLUME), 1)
 
         self.__ElementsMap['Draw1'] = [self.__E_BGBlankL1, self.__E_BGBlankL2, self.__E_BGBlankL3, self.__E_BGBlankR,
                                        self.__E_Text_Draw, self.__E_Text_Wave, self.__E_Text_Licence,

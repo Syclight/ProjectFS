@@ -1,17 +1,22 @@
-Sum = 15
+from enum import Enum
 
-mouseIn = '0000'
-mouseOut = '0001'
-mouseLeftKeyDown = '1000'
-mouseLeftKeyUp = '1001'
-mouseLeftKeyClick = '1002'
-mouseRightKeyDown = '0010'
-mouseRightKeyUp = '0011'
-mouseRightKeyClick = '0012'
-mouseMidKeyDown = '0100'
-mouseMidKeyUp = '0101'
-mouseMidKeyClick = '0102'
-mouseDoubleClick = '1003'
+LEN_MOUSE_EVENT = 13
+LEN_KB_EVENT = 0
+
+
+class ioEvent3Enum(Enum):
+    mouseIn = 0xA0000
+    mouseOut = 0xA0001
+    mouseLeftKeyUp = 0xA0002
+    mouseLeftKeyDown = 0xA0003
+    mouseLeftKeyClick = 0xA0004
+    mouseRightKeyUp = 0xA0005
+    mouseRightKeyDown = 0xA0006
+    mouseRightKeyClick = 0xA0007
+    mouseMidKeyUp = 0xA0008
+    mouseMidKeyDown = 0xA0009
+    mouseMidKeyClick = 0xA0010
+    mouseDoubleClick = 0xA0012
 
 
 class IOEvent:
@@ -191,121 +196,137 @@ class IOEvent2:
 
 class IOEvent3:
     def __init__(self):
-        self.__Events = {'0000': [], '0001': [], '1000': [], '1001': [], '1002': [], '0010': [], '0011': [], '0012': [],
-                         '0100': [], '0101': [], '0102': [], '1003': []}
-        self.__MouseEnum = [mouseIn, mouseOut, mouseLeftKeyDown, mouseLeftKeyUp, mouseLeftKeyClick, mouseRightKeyDown,
-                            mouseRightKeyUp, mouseRightKeyClick, mouseMidKeyDown, mouseMidKeyUp, mouseMidKeyClick,
-                            mouseDoubleClick]
-        self.__KeyEnum = []
-        self.__EventsKB = {}
-        self.__EventsContain = 0
+        self.__Events = {0xA0000: [], 0xA0001: [], 0xA0002: [], 0xA0003: [], 0xA0004: [], 0xA0005: [], 0xA0006: [],
+                         0xA0007: [], 0xA0008: [], 0xA0009: [], 0xA0010: [], 0xA0011: [], 0xA0012: []}
+        self.__EventEnums = [ioEvent3Enum.mouseIn, ioEvent3Enum.mouseOut, ioEvent3Enum.mouseLeftKeyDown,
+                             ioEvent3Enum.mouseLeftKeyUp, ioEvent3Enum.mouseLeftKeyClick,
+                             ioEvent3Enum.mouseRightKeyDown,
+                             ioEvent3Enum.mouseRightKeyUp, ioEvent3Enum.mouseRightKeyClick,
+                             ioEvent3Enum.mouseMidKeyDown, ioEvent3Enum.mouseMidKeyUp, ioEvent3Enum.mouseMidKeyClick,
+                             ioEvent3Enum.mouseDoubleClick]
+        self.__KVMapping = {}
 
-    def appendEvent(self, ioEvent3Enum, fuc):
-        if ioEvent3Enum not in self.__MouseEnum and ioEvent3Enum not in self.__KeyEnum:
-            return
-        if ioEvent3Enum in self.__MouseEnum:
-            self.__Events[ioEvent3Enum].append(fuc)
-        if ioEvent3Enum in self.__KeyEnum:
-            self.__EventsKB[ioEvent3Enum].apped(fuc)
-        self.__EventsContain += 1
+    def appendEvent(self, enum, fuc, ID) -> bool:
+        if enum not in self.__EventEnums:
+            return False
+        _id = ID + hash(enum.name)
+
+        if _id in self.__KVMapping.keys():
+            return False
+        self.__Events[enum.value].append(_id)
+        self.__KVMapping[_id] = fuc
+        return True
+
+    def removeEvent(self, enum, ID) -> bool:
+        if enum not in self.__EventEnums:
+            return False
+        _id = ID + hash(enum.name)
+
+        idList = self.__Events[enum.value]
+        if len(idList) < 1 or _id not in idList:
+            return False
+
+        self.__KVMapping.pop(_id)
+        self.__Events[enum.value].remove(_id)
+        return True
 
     def getSize(self):
-        return self.__EventsContain
+        return len(self.__KVMapping)
 
-    def doEvents(self, ioEvent3Enum):
-        if ioEvent3Enum not in self.__MouseEnum and ioEvent3Enum not in self.__KeyEnum:
+    def doEvents(self, enum):
+        if enum not in self.__EventEnums:
             return
-        _list = self.__Events[ioEvent3Enum]
+        _list = self.__Events[enum.value]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseIn(self):
-        _list = self.__Events[mouseIn]
+        _list = self.__Events[0xA0000]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseOut(self):
-        _list = self.__Events[mouseOut]
+        _list = self.__Events[0xA0001]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseLeftKeyUp(self):
-        _list = self.__Events[mouseLeftKeyUp]
+        _list = self.__Events[0xA0002]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseLeftKeyDown(self):
-        _list = self.__Events[mouseLeftKeyDown]
+        _list = self.__Events[0xA0003]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseLeftKeyClick(self):
-        _list = self.__Events[mouseLeftKeyClick]
+        _list = self.__Events[0xA0004]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseRightKeyUp(self):
-        _list = self.__Events[mouseRightKeyUp]
+        _list = self.__Events[0xA0005]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseRightKeyDown(self):
-        _list = self.__Events[mouseRightKeyDown]
+        _list = self.__Events[0xA0006]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseRightKeyClick(self):
-        _list = self.__Events[mouseRightKeyClick]
+        _list = self.__Events[0xA0007]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseMidKeyUp(self):
-        _list = self.__Events[mouseMidKeyUp]
+        _list = self.__Events[0xA0008]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseMidKeyDown(self):
-        _list = self.__Events[mouseMidKeyDown]
+        _list = self.__Events[0xA0009]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doMouseMidKeyClick(self):
-        _list = self.__Events[mouseMidKeyClick]
+        _list = self.__Events[0xA0010]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doDoubleClick(self):
-        _list = self.__Events[mouseDoubleClick]
+        _list = self.__Events[0xA0011]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doKeyboardKeyUp(self, keyEnum):
-        _list = self.__EventsKB[keyEnum + '0']
+        _list = self.__Events[keyEnum + 200]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doKeyboardKeyDown(self, keyEnum):
-        _list = self.__EventsKB[keyEnum + '1']
+        _list = self.__Events[keyEnum + 201]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()
 
     def doKeyboardKeyDowning(self, keyEnum):
-        _list = self.__EventsKB[keyEnum + '2']
+        _list = self.__Events[keyEnum + 202]
         if len(_list) > 0:
             for e in _list:
-                e()
+                self.__KVMapping[e]()

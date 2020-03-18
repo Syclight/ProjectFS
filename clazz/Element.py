@@ -312,10 +312,10 @@ class OptButtonElement:
         self.EventsHadDo = ElementHadDoEvent()
         self.__buildSurface()
 
-        self.Events.appendEvent(mouseIn, lambda: self.setAlpha(color[3] + 100))
-        self.Events.appendEvent(mouseOut, lambda: self.setAlpha(color[3]))
-        self.Events.appendEvent(mouseLeftKeyUp, lambda: Pos(self, False))
-        self.Events.appendEvent(mouseLeftKeyDown, lambda: Pos(self, True))
+        self.Events.appendEvent(ioEvent3Enum.mouseIn, lambda: self.setAlpha(color[3] + 100), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseOut, lambda: self.setAlpha(color[3]), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: Pos(self, False), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: Pos(self, True), 0)
 
     def __buildSurface(self):
         self.res_surface = blankSurface((self.area[2], self.area[3]), self.Color)
@@ -332,5 +332,5 @@ class OptUIElement(ImgElement):
     def __init__(self, area, path, alpha=255):
         super(OptUIElement, self).__init__(area, path, alpha)
 
-        self.Events.appendEvent(mouseLeftKeyUp, lambda: Pos(self, False))
-        self.Events.appendEvent(mouseLeftKeyDown, lambda: Pos(self, True))
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: Pos(self, False), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: Pos(self, True), 0)
