@@ -13,5 +13,5 @@ FS的python重置版，只不过没有资源
 >>* 现在支持去除已绑定的事件
 >>* 加入事件的ID标识，内部生成策略采用hash函数
 * 修改了与IOEvent3相关的代码
-> *Scene.py 和 Element.py
+> Scene.py 和 Element.py
 
