@@ -8,10 +8,10 @@ FS的python重置版，只不过没有资源
 
 ### 2020.3.18 Asheor
 * 主要更新了IOEvent.py中的IOEvent3
-> #####IOEvent3 更新：
+> IOEvent3 更新：
 >>* Scene 可以自动识别可交互Element和固定Element
 >>* 现在支持去除已绑定的事件
 >>* 加入事件的ID标识，内部生成策略采用hash函数
 * 修改了与IOEvent3相关的代码
-> Scene.py 和 Element.py
+> *Scene.py 和 Element.py
 
