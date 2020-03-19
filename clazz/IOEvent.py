@@ -314,19 +314,19 @@ class IOEvent3:
                 self.__KVMapping[e]()
 
     def doKeyboardKeyUp(self, keyEnum):
-        _list = self.__Events[keyEnum + 200]
+        _list = self.__Events[keyEnum + LEN_KB_EVENT]
         if len(_list) > 0:
             for e in _list:
                 self.__KVMapping[e]()
 
     def doKeyboardKeyDown(self, keyEnum):
-        _list = self.__Events[keyEnum + 201]
+        _list = self.__Events[keyEnum + LEN_KB_EVENT]
         if len(_list) > 0:
             for e in _list:
                 self.__KVMapping[e]()
 
     def doKeyboardKeyDowning(self, keyEnum):
-        _list = self.__Events[keyEnum + 202]
+        _list = self.__Events[keyEnum + LEN_KB_EVENT]
         if len(_list) > 0:
             for e in _list:
                 self.__KVMapping[e]()

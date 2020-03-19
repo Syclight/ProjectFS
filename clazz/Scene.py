@@ -1,6 +1,5 @@
 from operator import eq
 
-from Manager.IOEventManager import IOEventManager
 from clazz.Config import Config
 from clazz.Element import *
 from clazz.Const import *
@@ -732,7 +731,7 @@ class OptionScene(Scene):
 
 class Continue_Scene(Scene):
     __screen = None
-    __ElementsList = None
+    __ElementsList = None,
 
     isReadyToEnd = False
     isEnd = False

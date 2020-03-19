@@ -15,3 +15,5 @@ FS的python重置版，只不过没有资源
 * 修改了与IOEvent3相关的代码
 > Scene.py 和 Element.py
 
+### 2020.3.19 Asheor
+* 在ToolsFuc.py 中添加了一种随机数发生器，算法为梅森旋转法(Mersenne Twister MT)
