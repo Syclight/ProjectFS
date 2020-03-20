@@ -1,6 +1,6 @@
 import pygame
 import gc
-from clazz.Const import SCREEN_INIT
+from clazz.Const import SCENENUM_INIT
 
 
 class gameApp:
@@ -22,7 +22,7 @@ class gameApp:
         self.__mapping = SceneMap
         self.__screen = pygame.display.set_mode((self.__screenWidth, self.__screenHeight), self.__screenMod,
                                                 self.__colorBits)
-        self.__scene = self.__mapping[SCREEN_INIT][0](self.__screen)
+        self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen)
         pygame.display.set_caption(self.__appTitle)
 
         self.isQuit = False

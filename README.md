@@ -19,3 +19,11 @@ FS的python重置版，只不过没有资源
 * ToolsFuc.py 添加了一种随机数发生器，算法为梅森旋转法(Mersenne Twister MT)
 * Scene.py 去掉了Scene的无效导入
 * IOEvent.py 修改了IOevent3在处理键盘事件的细节
+
+### 2020.3.20 Asheor
+* Scene.py 每个场景的初始化方法均加入了参数列表，同时将CG播放场景和序章场景分割独立。
+> 原因：
+> 用以前的方法，在序章场景开始的时候，即便没有播放CG，程序也会提前运行FFmpeg的进程。
+> 将CG播放独立成一个场景，使得FFmpeg的进程在播放CG时开启，在播放完毕后销毁
+* Const.py 修正了一处英语单词的错误拼写，添加了新的CG场景的场景号 SCENENUM_GAME_STARTCG
+* 修改了CG资源的名称

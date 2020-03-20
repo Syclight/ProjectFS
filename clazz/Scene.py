@@ -38,11 +38,12 @@ class LogoScene(Scene):
     def __init__(self, screen, paramList=None):
         # 注册与该场景相关的场景
         from clazz.AppConfig import registerScene
-        registerScene(SCREEN_TITLE, TitleScene)
+        registerScene(SCENENUM_TITLE, TitleScene)
 
         self.__alpha = 0
         self.__flag = False
         self.__screen = screen
+        self.__paramList = paramList
         self.bg = pygame.image.load(gl_ImgPath + self.LogoName)
 
     def draw(self):
@@ -54,7 +55,7 @@ class LogoScene(Scene):
             self.__flag = True
         if self.__alpha < 0:
             self.isEnd = True
-            self.nextSceneNum = SCREEN_TITLE
+            self.nextSceneNum = SCENENUM_TITLE
         blitAlpha(self.__screen, self.bg, (0, 0), self.__alpha)
 
 
@@ -98,8 +99,8 @@ class TitleScene(Scene):
     def __init__(self, screen, paramList=None):
         # 注册场景
         from clazz.AppConfig import registerScene
-        registerScene(SCREEN_GAME_FIRSTSTORY, NewGame_First_StoryScene)
-        registerScene(SCREEN_OPT, OptionScene)
+        registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
+        registerScene(SCENENUM_OPT, OptionScene)
 
         self.alpha = 0
         self.flag = False
@@ -119,7 +120,9 @@ class TitleScene(Scene):
         self.__Focus = None
         self.__Focus_onClick = 0
         self.__screen = screen
+        self.__paramList = paramList
         self.__Config = Config()
+
         self.res_wave_bgm = pygame.mixer.Sound(gl_MusicPath + self.wave_bgm)
         self.res_wave_bgm.set_volume(self.__Config.getVolumeBGM())
         self.bg = pygame.image.load(gl_ImgPath + self.titleBgName)
@@ -152,14 +155,14 @@ class TitleScene(Scene):
                                self.__optOption, self.__optExit]
         # 这里绑定和控件有交互的事件
         # ---NewGame选项绑定事件---
-        self.__optNewGame.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCREEN_GAME_FIRSTSTORY))
+        self.__optNewGame.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_GAME_PROLOGUE))
         self.__optNewGame.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_NewGame))
         self.__optNewGame.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         # ---Continue选项绑定事件---
         self.__optContinue.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Continue))
         self.__optContinue.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         # ---Option选项绑定事件---
-        self.__optOption.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCREEN_OPT))
+        self.__optOption.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_OPT))
         self.__optOption.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Option))
         self.__optOption.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         # ---Exit选项绑定事件---
@@ -244,7 +247,7 @@ class TitleScene(Scene):
 
 
 # 新游戏背景故事场景
-class NewGame_First_StoryScene(Scene):
+class Title_PrologueScene(Scene):
     __screen = None
     __ElementsList = None
     __Config = None
@@ -267,10 +270,9 @@ class NewGame_First_StoryScene(Scene):
     flag_isSound4Played = False
     flag_isSoundWeakPlayed = False
 
-    flag_VideoPlayed = False
-
     isReadyToEnd = False
     isEnd = False
+    nextSceneNum = 0
 
     isMusicPlay = False
 
@@ -285,7 +287,6 @@ class NewGame_First_StoryScene(Scene):
     Sound_Drink = 'NG_F_SS_D.wav'
     Sound_Weak = 'NG_F_SS_W.wav'
     Music_BGM = 'NG_F_SS_BGM.wav'
-    Video_StartCG = 'FinalSoundCG.mp4'
 
     res_Sound_PourWine = None
     res_Sound_Cup = None
@@ -304,8 +305,13 @@ class NewGame_First_StoryScene(Scene):
     __counter = 0
 
     def __init__(self, screen, paramList=None):
+        # 注册场景
+        from clazz.AppConfig import registerScene
+        registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
+
         self.__screen = screen
         self.__Config = Config()
+        self.__paramList = paramList
         self.__Clock = pygame.time.Clock()
 
         # 音频
@@ -323,9 +329,6 @@ class NewGame_First_StoryScene(Scene):
 
         self.res_Music_BGM = pygame.mixer.Sound(gl_MusicPath + self.Music_BGM)
         self.res_Music_BGM.set_volume(self.__Config.getVolumeBGM())
-
-        # 视频
-        self.res_CG_clip = VideoFileClip(gl_VideoPath + self.Video_StartCG).resize((gl_WindowWidth, gl_WindowHeight))
 
         # 其它元素
         self.__TextList = [const_Text_NewGame_Story_1, const_Text_NewGame_Story_2, const_Text_NewGame_Story_3,
@@ -401,10 +404,9 @@ class NewGame_First_StoryScene(Scene):
                 self.alpha -= 6
                 self.__ImgShow.setAlpha(self.alpha)
                 self.__DialogueShow.setAlpha(self.alpha)
-            if 33000 < interval <= 50000:
-                if not self.flag_VideoPlayed:
-                    self.res_CG_clip.preview()
-                    self.flag_VideoPlayed = True
+            if 33000 < interval:
+                self.nextSceneNum = SCENENUM_GAME_STARTCG
+                self.isEnd = True
             self.alpha += 2
             if self.alpha >= 255:
                 self.__screen.blit(self.__DialogueShow.res_surface, (
@@ -413,6 +415,30 @@ class NewGame_First_StoryScene(Scene):
                 self.alpha = 255
             self.__ImgShow.setAlpha(self.alpha)
             self.__screen.blit(self.__ImgShow.res_surface, (self.__ImgShow.area.left, self.__ImgShow.area.top))
+
+
+# 序章播放CG的场景，接下来的场景还没有编写，所以这里的下一个场景是开场Logo
+class Prologue_StartCGScene(Scene):
+    def __init__(self, screen, paramList=None):
+        self.isReadyToEnd = False
+        self.isEnd = False
+        self.nextSceneNum = 0
+
+        self.__screen = screen
+        self.__paramList = paramList
+        self.__PrologueCG = 'P_M_PCG.mp4'
+        # 视频
+        self.__res_CG_clip = VideoFileClip(gl_VideoPath + self.__PrologueCG).resize(
+            (self.__screen.get_width(), self.__screen.get_height()))
+
+    def draw(self):
+        if not self.isReadyToEnd:
+            self.__res_CG_clip.preview()
+            self.isReadyToEnd = True
+        else:
+            # 这里的下一个场景是开场Logo
+            self.nextSceneNum = SCENENUM_INIT
+            self.isEnd = True
 
 
 def ChePos(e, isDown):
@@ -487,7 +513,7 @@ class OptionScene(Scene):
 
         # 注册与该场景相关的场景
         from clazz.AppConfig import registerScene
-        registerScene(SCREEN_OPT_APPLY, OptionScene, [True])
+        registerScene(SCENENUM_OPT_APPLY, OptionScene, [True])
 
         self.__screen = screen
         self.__Config = Config()
@@ -581,7 +607,7 @@ class OptionScene(Scene):
         self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
                                                   lambda: ChePos(self.__E_Text_Apply, False), 1)
         self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
-                                                  lambda: self.__retSignalIsReadyToEnd(SCREEN_OPT_APPLY), 1)
+                                                  lambda: self.__retSignalIsReadyToEnd(SCENENUM_OPT_APPLY), 1)
         self.__E_BGBlankLApply.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__updConfig(), 2)
 
         # 返回按钮绑定事件
@@ -590,7 +616,7 @@ class OptionScene(Scene):
         self.__E_BGBlankLRet.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: ChePos(self.__E_Text_Ret, False),
                                                 1)
         self.__E_BGBlankLRet.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
-                                                lambda: self.__retSignalIsReadyToEnd(SCREEN_TITLE), 1)
+                                                lambda: self.__retSignalIsReadyToEnd(SCENENUM_TITLE), 1)
 
         # 抗锯齿UI按钮绑定事件
         self.__E_UI_AA_LeftButton.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__chVal_AA_Txt(), 1)
@@ -675,7 +701,6 @@ class OptionScene(Scene):
             self.__start_time = pygame.time.get_ticks()
             self.__flag_recordStartTime = True
         self.__now_time = pygame.time.get_ticks()
-        interval = self.__start_time - self.__now_time
 
         blitAlpha(self.__screen, self.res_Img_BG, (0, 0), self.__alpha)
 
