@@ -115,6 +115,30 @@ def readINIFloat(path, section, param):
     return float(readINI(path, section, param)[0])
 
 
+# 将数字转换成中文字符串
+# @param int num 要转换的数字 eg. 123, 567
+# @param Const.NUM_DICT mapping 对应规则， 在Const.py 中定义的NUM_DICT系列常量
+# @ret str 对应规则下的字符串
+def IntToStr(num, mapping) -> str:
+    s = str(num)
+    res = ''
+    for c in s:
+        res += mapping[c]
+    return res
+
+
+# 将中文字符串转换成数字
+# @param str s 要转换的字符串，必须在 Const.NUM_DICT 中有对应关系
+# @param Const.NUM_DICT mapping 对应规则， 在Const.py 中定义的NUM_DICT系列常量
+# @ret int 对应规则下的数字
+def StrToInt(s, mapping) -> int:
+    new_dict = {v: k for k, v in mapping.items()}
+    res = ''
+    for c in s:
+        res += new_dict[c]
+    return int(res)
+
+
 # 梅森旋转法
 def _int32(x):
     return int(0xFFFFFFFF & x)

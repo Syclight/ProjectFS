@@ -27,3 +27,10 @@ FS的python重置版，只不过没有资源
 > 将CG播放独立成一个场景，使得FFmpeg的进程在播放CG时开启，在播放完毕后销毁
 * Const.py 修正了一处英语单词的错误拼写，添加了新的CG场景的场景号 SCENENUM_GAME_STARTCG
 * 修改了CG资源的名称
+
+### 2020.3.21 Asheor
+* 新添加 clazz/RSA.py 用途是RAS文件加密
+* 新添加 RecordFile.py 用途是生成游戏的记录文件,文件格式.rf
+* 在 Element.py 中添加了 Element 接口，使所有的Element实现该接口
+* 在 Const.py 中添加了rf文件相关的常量和NUM_DICT系列映射关系
+* 在 ToolsFuc.py 中添加了根据Const映射转换的函数

@@ -25,13 +25,24 @@ const_color_white = (255, 255, 255)
 const_color_black = (0, 0, 0)
 const_colorKey = (128, 128, 128)
 
-# screen
+# scene
 SCENENUM_INIT = 0
 SCENENUM_TITLE = 1
 SCENENUM_GAME_PROLOGUE = 10
 SCENENUM_GAME_STARTCG = 101
 SCENENUM_OPT = 30
 SCENENUM_OPT_APPLY = 301
+
+#RecordFile
+RECORDFILE_PATH = 'data/rf/'
+RECORDFILE_USER = 'game0.rf'
+RSA_PK_FILE = 'rf.prm'
+
+
+# 数字码表
+NUM_DICT = {'1': '一', '2': '二', '3': '三', '4': '四', '5': '五', '6': '六', '7': '七', '8': '八', '9': '九', '0': '〇'}
+NUM_DICT_CN = {'1': '壹', '2': '贰', '3': '叁', '4': '肆', '5': '伍', '6': '陆', '7': '柒', '8': '捌', '9': '玖', '0': '零'}
+NUM_DICT_M = {'1': '游', '2': '型', '3': '个', '4': '布', '5': '戏', '6': '应', '7': '理', '8': '永', '9': '或', '0': '件'}
 
 # Text
 const_Text_LineSize = 5

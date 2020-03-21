@@ -4,8 +4,13 @@ from clazz.Const import *
 from clazz.ToolsFuc import *
 
 
+class Element:
+    def draw(self, screen):
+        pass
+
+
 # 消息框Elements
-class MessageBox:
+class MessageBox(Element):
     area = None
     Events = None
     EventsHadDo = None
@@ -27,8 +32,8 @@ class MessageBox:
                                       16, (0, 0, 0), True)
         self.__E_cancelButt = TextElement(pygame.Rect(self.area.left + 80, self.area.top + 70, 36, 18), '取消',
                                           gl_Font_opt, 16, (0, 0, 0), True)
-        self.__E_okButt.Events.appendEvent(mouseLeftKeyClick, lambda: self.__ret(True))
-        self.__E_cancelButt.Events.appendEvent(mouseLeftKeyClick, lambda: self.__ret(False))
+        self.__E_okButt.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__ret(True), 1)
+        self.__E_cancelButt.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__ret(False), 2)
 
     def __ret(self, res):
         return res
@@ -60,17 +65,8 @@ class ElementHadDoEvent:
     hadDoKeyboardKeyDowning = False
 
 
-class Element:
-    Events = None
-    EventsHadDo = None
-
-    def __init__(self):
-        self.Events = IOEvent2()
-        self.EventsHadDo = ElementHadDoEvent()
-
-
 # 标题页面固定元素
-class TitleConstElement:
+class TitleConstElement(Element):
     area = None
     res_surface = None
     Events = None
@@ -114,7 +110,7 @@ def backStyle(e):
 
 
 # 标题页面选项元素
-class TitleOptElement:
+class TitleOptElement(Element):
     area = None
     res_surface = None
     Events = None
@@ -172,7 +168,7 @@ class TitleOptElement:
 
 
 # 文字元素及其事件处理
-class TextElement:
+class TextElement(Element):
     area = None
     res_surface = None
     Events = None
@@ -251,7 +247,7 @@ class TextElement:
 
 
 # 图像元素及其事件处理
-class ImgElement:
+class ImgElement(Element):
     area = None
     res_surface = None
     Events = None
@@ -298,7 +294,7 @@ def Pos(e, isDown):
         e.area.left -= 1
 
 
-class OptButtonElement:
+class OptButtonElement(Element):
     Area = None
     res_surface = None
     Events = None
