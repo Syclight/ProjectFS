@@ -8,14 +8,6 @@ class RecordFile:
         self.__pf = path + fileName
         self.__file = None
         self.__Mapping = {}
-        self.__check()
-
-    def __check(self):
-        try:
-            f = open(self.__pf)
-            f.close()
-        except FileNotFoundError:
-            print("File is not found.")
 
     def create(self, magMapping):
         content = ""

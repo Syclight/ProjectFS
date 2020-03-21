@@ -34,7 +34,7 @@ SCENENUM_OPT = 30
 SCENENUM_OPT_APPLY = 301
 
 #RecordFile
-RECORDFILE_PATH = 'data/rf/'
+RECORDFILE_PATH = 'data/save/'
 RECORDFILE_USER = 'game0.rf'
 RSA_PK_FILE = 'rf.prm'
 
