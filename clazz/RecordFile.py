@@ -1,4 +1,4 @@
-from clazz.Const import RECORDFILE_PATH, RECORDFILE_USER, RSA_PK_FILE
+from clazz.Const import RSA_PK_FILE
 from clazz.RSA import rsaEncrypt, rsaDecrypt, outPrivateKeyToPS, getPrivateKeyFromPS
 
 
