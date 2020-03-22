@@ -30,9 +30,9 @@ def getPrivateKeyFromPS(path) -> PrivateKey:
 
 
 # rsa加密
-def rsaEncrypt(con) -> (str, PrivateKey):
+def rsaEncrypt(con, size) -> (str, PrivateKey):
     # 生成公钥、私钥
-    (publicKey, privateKey) = rsa.newkeys(512)
+    (publicKey, privateKey) = rsa.newkeys(size)
     # 明文编码格式
     byte = con.encode('utf-8')
     # 公钥加密

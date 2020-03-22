@@ -330,3 +330,33 @@ class OptUIElement(ImgElement):
 
         self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: Pos(self, False), 0)
         self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: Pos(self, True), 0)
+
+
+# 继续游戏界面
+
+# 存储资料选项
+class SaveDataElement(ImgElement):
+    def __init__(self, area, path, alpha, lis):
+        super(SaveDataElement, self).__init__(area, path, alpha)
+        self.__buildBG((255, 255, 255, 100))
+        self.__lis = lis
+        print(self.__lis)
+        self.__date = self.__lis[0]
+        self.__time = self.__lis[1]
+        self.__HP = self.__lis[2]
+        self.__MP = self.__lis[3]
+        self.__E_text_date = TextElement(area, self.__date, gl_Font_oth, 30, (0, 0, 0), 1)
+
+        self.Events.appendEvent(ioEvent3Enum.mouseIn, lambda: self.__setBGAlpha(200), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseOut, lambda: self.__setBGAlpha(100), 0)
+
+    def __buildBG(self, color):
+        self.__bg = blankSurface((self.area.width - 22, self.area.height - 22), color)
+
+    def __setBGAlpha(self, alpha):
+        self.__bg.set_alpha(alpha)
+
+    def draw(self, screen):
+        screen.blit(self.__bg, (self.area.left + 11, self.area.top + 11))
+        super().draw(screen)
+        self.__E_text_date.draw(screen)

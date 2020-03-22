@@ -34,3 +34,11 @@ FS的python重置版，只不过没有资源
 * 在 Element.py 中添加了 Element 接口，使所有的Element实现该接口
 * 在 Const.py 中添加了rf文件相关的常量和NUM_DICT系列映射关系
 * 在 ToolsFuc.py 中添加了根据Const映射转换的函数
+
+### 2020.3.22 Asheor
+* RecordFile.py 更新了游戏记录文件的文件结构
+* Scene.py 添加了继续游戏选项的场景(试行版)
+* Element.py 添加了一种继续游戏场景中的元素
+* RSA.py 优化程序对RSA函数的调用
+* 添加了一个测试：example/RecordFileAndRSATest.py
+* 添加了modal文件夹，准备写用户模型，NPC模型，物理模型等

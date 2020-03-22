@@ -3,6 +3,7 @@ from operator import eq
 from clazz.Config import Config
 from clazz.Element import *
 from clazz.Const import *
+from clazz.RecordFile import RecordFile
 from clazz.ToolsFuc import *
 from moviepy.editor import *
 
@@ -101,6 +102,7 @@ class TitleScene(Scene):
         from clazz.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
         registerScene(SCENENUM_OPT, OptionScene)
+        registerScene(SCENENUM_CONTINUE, Continue_Scene)
 
         self.alpha = 0
         self.flag = False
@@ -159,6 +161,7 @@ class TitleScene(Scene):
         self.__optNewGame.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_NewGame))
         self.__optNewGame.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         # ---Continue选项绑定事件---
+        self.__optContinue.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_CONTINUE))
         self.__optContinue.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Continue))
         self.__optContinue.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         # ---Option选项绑定事件---
@@ -756,7 +759,89 @@ class OptionScene(Scene):
 
 class Continue_Scene(Scene):
     __screen = None
-    __ElementsList = None,
+    __ElementsList = None
+    __paramList = None
+
+    __Config = None
+    __Focus = None
+    __Focus_onClick = 0
 
     isReadyToEnd = False
     isEnd = False
+    nextSceneNum = 0
+
+    def __init__(self, screen, paramList=None):
+        self.__screen = screen
+        self.__paramList = paramList
+        self.__ElementsList = []
+        self.__Config = Config()
+        self.__mappingList = []
+        self.__res_n_OPT = 'CTU_OPT.png'
+        self.__buildList()
+
+    def __buildList(self):
+        fs = []
+        import os
+        for root, dirs, files in os.walk(RECORDFILE_SAVE_PATH):
+            fs += files
+        for name in fs:
+            if name.find(RECORDFILE_SAVE_NAMEHEAD) == 0 and name.find(RECORDFILE_SAVE_EXN) > 0:
+                n = name.replace(RECORDFILE_SAVE_EXN, '')
+                dataList = RecordFile(RECORDFILE_SAVE_PATH, n).getList()
+                if dataList is not None:
+                    self.__ElementsList.append(
+                        SaveDataElement(pygame.Rect(83, 30, 636, 114), gl_UIPath + self.__res_n_OPT, 255, dataList))
+        if len(self.__ElementsList) == 0:
+            self.__ElementsList.append((TextElement(
+                pygame.Rect(centeredXPos(800, 220), centeredXPos(600, 35), 220, 35), '未找到游戏记录', gl_Font_oth, 30,
+                (255, 255, 255, 255), self.__Config.getTextAntiAlias())))
+
+    def __retSignalIsReadyToEnd(self, SceneNum):
+        self.isReadyToEnd = True
+        self.nextSceneNum = SceneNum
+
+    def draw(self):
+        if not self.isReadyToEnd:
+            for e in self.__ElementsList:
+                e.draw(self.__screen)
+        else:
+            self.isEnd = True
+
+    def doMouseMotion(self, MousePos, MouseRel, Buttons):
+        if not eq(Buttons, (0, 0, 0)) or self.__ElementsList is None:
+            return
+        if self.__Focus is None and len(self.__ElementsList):
+            for e in self.__ElementsList:
+                if InElement(MousePos, e) and e.EventsHadDo.hadDoMouseOut:
+                    self.__Focus = e
+                    self.__Focus.Events.doMouseIn()
+                    print('确定焦点元素：', self.__Focus.area, '\n鼠标位置：', MousePos)
+        if not InElement(MousePos, self.__Focus) and self.__Focus is not None:
+            self.__Focus.Events.doMouseOut()
+            if self.__Focus.EventsHadDo.hadDoMouseLeftKeyDown:
+                self.__Focus.Events.doMouseLeftKeyUp()
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyDown = False
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyUp = True
+            print('失去焦点元素：', self.__Focus.area, '\n鼠标位置：', MousePos)
+            self.__Focus = None
+
+    def doMouseButtonDownEvent(self, MousePos, Button):
+        if Button == 1:  # 鼠标右键
+            if InElement(MousePos, self.__Focus):
+                self.__Focus_onClick = 1
+                self.__Focus.Events.doMouseLeftKeyDown()
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyDown = True
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyUp = False
+        if Button == 3:  # 左键
+            self.__retSignalIsReadyToEnd(SCENENUM_TITLE)
+
+    def doMouseButtonUpEvent(self, MousePos, Button):
+        if Button == 1:  # 鼠标右键
+            if InElement(MousePos, self.__Focus):
+                self.__Focus.Events.doMouseLeftKeyUp()
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyDown = False
+                self.__Focus.EventsHadDo.hadDoMouseLeftKeyUp = True
+                if self.__Focus_onClick == 1:
+                    self.__Focus.Events.doMouseLeftKeyClick()
+                    self.__Focus.EventsHadDo.hadDoMouseLeftKeyClick = True
+                self.__Focus_onClick = 0
