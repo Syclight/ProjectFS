@@ -45,7 +45,7 @@ FS的python重置版，只不过没有资源
 
 ### 2020.3.24 Asheor
 * Scene.py 将Scene由接口模式，转变成继承模式。同时将一些场景的事件触发机制做了调整。
-* IOEvent.py 想IOEvent3中添加了一种可处理的事件:鼠标在元素中移动事件
+* IOEvent.py 向IOEvent3中添加了一种可处理的事件：鼠标在元素中移动事件
 * Config.py 调整了Config读取配置的方式，现在不需要再各场景中重新建立对象
 * gameApp.py 修改了在程序没有加载完成时，窗口标题显示为"pygame window"的情况
 * ToolsFuc.py 添加了归并排序
