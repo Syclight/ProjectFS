@@ -20,10 +20,10 @@ class gameApp:
         if not SceneMap:
             raise Exception("'SceneMap' is Empty in AppConfig, 'SceneMap' mast have at least one element")
         self.__mapping = SceneMap
+        pygame.display.set_caption(appTitle)
         self.__screen = pygame.display.set_mode((self.__screenWidth, self.__screenHeight), self.__screenMod,
                                                 self.__colorBits)
         self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen)
-        pygame.display.set_caption(self.__appTitle)
 
         self.isQuit = False
         print(appTitle + '\n-----控制台-----')

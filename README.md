@@ -42,3 +42,11 @@ FS的python重置版，只不过没有资源
 * RSA.py 优化程序对RSA函数的调用
 * 添加了一个测试：example/RecordFileAndRSATest.py
 * 添加了modal文件夹，准备写用户模型，NPC模型，物理模型等
+
+### 2020.3.24 Asheor
+* Scene.py 将Scene由接口模式，转变成继承模式。同时将一些场景的事件触发机制做了调整。
+* IOEvent.py 想IOEvent3中添加了一种可处理的事件:鼠标在元素中移动事件
+* Config.py 调整了Config读取配置的方式，现在不需要再各场景中重新建立对象
+* gameApp.py 修改了在程序没有加载完成时，窗口标题显示为"pygame window"的情况
+* ToolsFuc.py 添加了归并排序
+* 关于Element，暂时决定成接口实现的模式，就这样吧

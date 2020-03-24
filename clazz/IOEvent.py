@@ -16,7 +16,8 @@ class ioEvent3Enum(Enum):
     mouseMidKeyUp = 0xA0008
     mouseMidKeyDown = 0xA0009
     mouseMidKeyClick = 0xA0010
-    mouseDoubleClick = 0xA0012
+    mouseDoubleClick = 0xA0011
+    mouseMotion = 0xA0012
 
 
 class IOEvent:
@@ -309,6 +310,12 @@ class IOEvent3:
 
     def doDoubleClick(self):
         _list = self.__Events[0xA0011]
+        if len(_list) > 0:
+            for e in _list:
+                self.__KVMapping[e]()
+
+    def doMouseMotion(self):
+        _list = self.__Events[0xA0012]
         if len(_list) > 0:
             for e in _list:
                 self.__KVMapping[e]()

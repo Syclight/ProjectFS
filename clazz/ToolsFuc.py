@@ -187,3 +187,28 @@ class MT19937:
             self.mt[i] = y ^ self.mt[(i + 397) % 624] >> 1
             if y % 2 != 0:
                 self.mt[i] = self.mt[i] ^ 0x9908b0df
+
+
+# 归并排序:
+def MergeSort(lists) -> list:
+    if len(lists) <= 1:
+        return lists
+    num = int(len(lists) / 2)
+    left = MergeSort(lists[:num])
+    right = MergeSort(lists[num:])
+    return Merge(left, right)
+
+
+def Merge(left, right):
+    rt, lf = 0, 0
+    result = []
+    while lf < len(left) and rt < len(right):
+        if left[lf] <= right[rt]:
+            result.append(left[lf])
+            lf += 1
+        else:
+            result.append(right[rt])
+            rt += 1
+    result += list(left[lf:])
+    result += list(right[rt:])
+    return result
