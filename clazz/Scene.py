@@ -1,3 +1,4 @@
+import time
 from operator import eq
 
 from clazz.Config import Config
@@ -9,14 +10,16 @@ from moviepy.editor import *
 
 
 class Scene:
-    def __init__(self, screen, paramList=None):
+    def __init__(self, screen, config, paramList=None):
         self.screen = screen
+        self.config = config
         self.paramList = paramList
 
+        self.isReadyToEnter = False
+        self.isEnter = False
         self.isEnd = False
         self.isReadyToEnd = False
         self.nextSceneNum = -1
-        self.config = Config()
 
         self.mousePos = (0, 0)
         self.lastMousePos = (0, 0)
@@ -41,9 +44,9 @@ class Scene:
 
 # Logo场景
 class LogoScene(Scene):
-    def __init__(self, screen, paramList=None):
+    def __init__(self, screen, config, paramList=None):
         # 注册与该场景相关的场景
-        super().__init__(screen, paramList)
+        super().__init__(screen, config, paramList)
         from clazz.AppConfig import registerScene
         registerScene(SCENENUM_TITLE, TitleScene)
 
@@ -69,9 +72,9 @@ class LogoScene(Scene):
 
 # 标题场景
 class TitleScene(Scene):
-    def __init__(self, screen, paramList=None):
+    def __init__(self, screen, config, paramList=None):
         # 注册场景
-        super().__init__(screen, paramList)
+        super().__init__(screen, config, paramList)
         from clazz.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
         registerScene(SCENENUM_OPT, OptionScene)
@@ -216,60 +219,25 @@ class TitleScene(Scene):
 
 # 新游戏背景故事场景
 class Title_PrologueScene(Scene):
-    flag_Img1 = False
-    flag_Img2 = False
-    flag_TextDisplayed = False
-    flag_BGStory = False
+    def __init__(self, screen, config, paramList=None):
+        # 初始化场景参数
+        super().__init__(screen, config, paramList)
 
-    # flag 时间
-    flag_recordStartTime = False
-    start_time = 0
-    now_time = 0
+        # resource name
+        self.res_Img1 = 'NG_F_SS_1.bmp'
+        self.res_Img2 = 'NG_F_SS_2.bmp'
+        self.Sound_PourWine = 'NG_F_SS_PW.wav'
+        self.Sound_Cup = 'NG_F_SS_C.wav'
+        self.Sound_Drink = 'NG_F_SS_D.wav'
+        self.Sound_Weak = 'NG_F_SS_W.wav'
+        self.Music_BGM = 'NG_F_SS_BGM.wav'
 
-    # flag SoundPlay
-    flag_BGMPlayed = False
-    flag_isSound1Played = False
-    flag_isSound2Played = False
-    flag_isSound3Played = False
-    flag_isSound4Played = False
-    flag_isSoundWeakPlayed = False
-
-    isMusicPlay = False
-    alpha = 0
-
-    # res
-    res_Img1 = 'NG_F_SS_1.bmp'
-    res_Img2 = 'NG_F_SS_2.bmp'
-    Sound_PourWine = 'NG_F_SS_PW.wav'
-    Sound_Cup = 'NG_F_SS_C.wav'
-    Sound_Drink = 'NG_F_SS_D.wav'
-    Sound_Weak = 'NG_F_SS_W.wav'
-    Music_BGM = 'NG_F_SS_BGM.wav'
-
-    res_Sound_PourWine = None
-    res_Sound_Cup = None
-    res_Sound_Drink = None
-    res_Sound_Weak = None
-    res_Music_BGM = None
-    res_CG_clip = None
-
-    # surface Elements
-    __TextShow = None
-    __TextList = None
-    __DialogueList = None
-    __DialogueShow = None
-    __Clock = None
-    __ImgShow = None
-    __counter = 0
-
-    def __init__(self, screen, paramList=None):
         # 注册场景
-        super().__init__(screen, paramList)
         from clazz.AppConfig import registerScene
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
 
+        # 读取配置
         self.config.readConfig()
-        self.__Clock = pygame.time.Clock()
 
         # 音频
         self.res_Sound_PourWine = pygame.mixer.Sound(gl_SoundPath + self.Sound_PourWine)
@@ -302,82 +270,89 @@ class Title_PrologueScene(Scene):
                                           (255, 255, 255), self.config.getTextAntiAlias())
 
         # 注册元素
-        __ElementsList = [self.__TextShow, self.__ImgShow]
+        self.__ElementsList = []
+
+        # 设定渲染时的参数
+        self.__flag_recordStartTime = False
+        self.__flag_Num = 0
+        self.__flag_BGMPlayed = False
+        self.start_time, self.now_time, self.interval = None, None, None
+        self.__TextShow_Interval, self.__DialogueShow_Interval = 5000, 6000
+        self.__alphaStep_Text, self.__alphaStep_Dia = 0, 0
+        self.__index, self.__alpha = 0, 0
+        self.__frameRate = self.config.getFrameRate()
+        if self.__frameRate == 0:
+            self.__alphaStep_Text = self.__TextShow_Interval / 1000 * 0.036
+            self.__alphaStep_Dia = self.__DialogueShow_Interval / 1000 * 0.416
+        else:
+            self.__alphaStep_Text = 255 / (((self.__TextShow_Interval - 2) / 1000) * self.__frameRate)
+            self.__alphaStep_Dia = 255 / self.__frameRate
 
     def draw(self):
-        if not self.flag_BGStory:
-            if self.flag_TextDisplayed:
-                self.alpha = 0
-                if self.__counter < len(self.__TextList):
-                    self.__TextShow.setText(self.__TextList[self.__counter])
-                    self.flag_TextDisplayed = False
-                else:
-                    self.flag_BGStory = True
-            else:
-                self.alpha += 0.06
-            if self.alpha > 255:
-                self.flag_TextDisplayed = True
-                self.__counter += 1
-            self.__TextShow.setAlpha(self.alpha)
-            self.screen.blit(self.__TextShow.res_surface, (
-                centeredXPos(self.screen.get_width(), len(self.__TextShow.Text) * self.__TextShow.Size), 400))
-        else:
-            if not self.flag_recordStartTime:
-                self.start_time = pygame.time.get_ticks()
-                self.flag_recordStartTime = True
-            self.now_time = pygame.time.get_ticks()
-            interval = self.now_time - self.start_time
-            if not self.flag_BGMPlayed:
-                self.res_Music_BGM.play(loops=-1)
-                self.flag_BGMPlayed = True
-            if 5000 < interval <= 10000 and not self.flag_Img2:
-                self.alpha = 0
-                self.__ImgShow.setPath(gl_ImgPath + self.res_Img2)
-                self.__DialogueShow.setText(self.__DialogueList[1])
-                self.flag_Img2 = True
-                if not self.flag_isSoundWeakPlayed:
-                    self.res_Sound_Weak.play(loops=0)
-                    self.flag_isSoundWeakPlayed = True
-            if 10000 < interval <= 15000:
-                if not self.flag_isSound1Played:
-                    self.res_Sound_Cup.play(loops=0)
-                    self.flag_isSound1Played = True
-                self.__DialogueShow.setText(self.__DialogueList[2])
-            if 20000 < interval <= 25000:
-                if not self.flag_isSound2Played:
-                    self.res_Sound_PourWine.play(loops=0)
-                    self.flag_isSound2Played = True
-                self.__DialogueShow.setText(self.__DialogueList[3])
-            if 25000 < interval <= 30000:
-                if not self.flag_isSound3Played:
-                    self.res_Sound_Drink.play(loops=0)
-                    self.flag_isSound3Played = True
-                self.__DialogueShow.setText(self.__DialogueList[4])
-            if 30000 < interval <= 35000:
-                if not self.flag_isSound4Played:
-                    self.res_Sound_Cup.play(loops=0)
-                    self.flag_isSound4Played = True
-            if 30000 < interval <= 33000:
-                self.alpha -= 6
-                self.__ImgShow.setAlpha(self.alpha)
-                self.__DialogueShow.setAlpha(self.alpha)
-            if 33000 < interval:
-                self.nextSceneNum = SCENENUM_GAME_STARTCG
-                self.isEnd = True
-            self.alpha += 2
-            if self.alpha >= 255:
+        if not self.__flag_recordStartTime:
+            self.__ElementsList = [self.__TextShow]
+            self.start_time = pygame.time.get_ticks()
+            self.__flag_recordStartTime = True
+        self.now_time = pygame.time.get_ticks()
+        self.interval = self.now_time - self.start_time
+
+        if not self.isReadyToEnd:
+            if self.__flag_Num == 0:
+                if self.interval > self.__TextShow_Interval:
+                    self.__alpha = 0
+                    self.start_time = pygame.time.get_ticks()
+                    self.__index += 1
+                    if self.__index >= len(self.__TextList):
+                        self.__index = 0
+                        self.__flag_Num = 1
+                        self.__alpha = 0
+                        self.__ElementsList = [self.__ImgShow, self.__DialogueShow]
+                    else:
+                        self.__TextShow.setText(self.__TextList[self.__index])
+                self.__alpha += self.__alphaStep_Text
+                self.__TextShow.setAlpha(self.__alpha)
+                self.screen.blit(self.__TextShow.res_surface, (
+                    centeredXPos(self.screen.get_width(), len(self.__TextShow.Text) * self.__TextShow.Size), 400))
+            elif self.__flag_Num == 1:
+                if not self.__flag_BGMPlayed:
+                    self.res_Music_BGM.play()
+                    self.__flag_BGMPlayed = True
+                if self.__index == 0 or self.__index == 1:
+                    self.__alpha += self.__alphaStep_Dia
+                    self.__ImgShow.setAlpha(self.__alpha)
+                    self.__DialogueShow.setAlpha(self.__alpha - self.__alphaStep_Dia * self.__frameRate)
+                if self.interval > self.__DialogueShow_Interval:
+                    self.__alpha = 0
+                    self.start_time = pygame.time.get_ticks()
+                    self.__index += 1
+                    if self.__index >= len(self.__DialogueList):
+                        self.res_Sound_Cup.play()
+                        time.sleep(1)
+                        self.isReadyToEnd = True
+                    else:
+                        self.__DialogueShow.setText(self.__DialogueList[self.__index])
+                        if self.__index == 1:
+                            self.res_Sound_Weak.play()
+                            self.__ImgShow.setPath(gl_ImgPath + self.res_Img2)
+                        if self.__index == 2:
+                            self.res_Sound_Cup.play()
+                        if self.__index == 3:
+                            self.res_Sound_PourWine.play()
+                        if self.__index == 4:
+                            self.res_Sound_Drink.play()
+                self.screen.blit(self.__ImgShow.res_surface, (self.__ImgShow.area.left, self.__ImgShow.area.top))
                 self.screen.blit(self.__DialogueShow.res_surface, (
                     centeredXPos(self.screen.get_width(), len(self.__DialogueShow.Text) * self.__DialogueShow.Size),
                     self.__DialogueShow.area.top))
-                self.alpha = 255
-            self.__ImgShow.setAlpha(self.alpha)
-            self.screen.blit(self.__ImgShow.res_surface, (self.__ImgShow.area.left, self.__ImgShow.area.top))
+        else:
+            self.nextSceneNum = SCENENUM_GAME_STARTCG
+            self.isEnd = True
 
 
 # 序章播放CG的场景，接下来的场景还没有编写，所以这里的下一个场景是开场Logo
 class Prologue_StartCGScene(Scene):
-    def __init__(self, screen, paramList=None):
-        super().__init__(screen, paramList)
+    def __init__(self, screen, config, paramList=None):
+        super().__init__(screen, config, paramList)
         self.__PrologueCG = 'P_M_PCG.mp4'
         # 视频
         self.__res_CG_clip = VideoFileClip(gl_VideoPath + self.__PrologueCG).resize(
@@ -451,8 +426,8 @@ class OptionScene(Scene):
     __KV_AA = None
     __KV_WAVE = None
 
-    def __init__(self, screen, paramList=None):
-        super().__init__(screen, paramList)
+    def __init__(self, screen, config, paramList=None):
+        super().__init__(screen, config, paramList)
         if paramList is not None:
             self.__flag_isEnter = paramList[0]
 
@@ -698,8 +673,8 @@ class OptionScene(Scene):
 class Continue_Scene(Scene):
     __ElementsList = None
 
-    def __init__(self, screen, paramList=None):
-        super().__init__(screen, paramList)
+    def __init__(self, screen, config, paramList=None):
+        super().__init__(screen, config, paramList)
         self.__ElementsList = []
         self.config.readConfig()
         self.__mappingList = []

@@ -18,6 +18,7 @@ GLC_INI_PARAM_BGMVOLUME = 'volbgm'
 GLC_INI_PARAM_SOUNDVOLUME = 'volsound'
 GLC_INI_SECTION_DRAW = 'Draw'
 GLC_INI_PARAM_ANTIALIAS = 'antialias'
+GLC_INI_PARAM_FRAMERATE = 'framerate'
 
 # color
 const_red = (255, 0, 0)
@@ -67,6 +68,6 @@ const_Text_NewGame_Story_8 = '在人类记忆中的彼端  遥远的理想国度
 const_Text_NewGame_Story_Present = '由 INEX 为您特别呈现'
 const_Text_NewGame__Dialogue_1 = 'AORRIYA: 快醒醒，会着凉的'
 const_Text_NewGame__Dialogue_2 = 'VCE: 呜呜呜~'
-const_Text_NewGame__Dialogue_3 = 'VCE: 。。我做了一个梦，梦到国家被敌人占领了'
+const_Text_NewGame__Dialogue_3 = 'VCE: 。。我做了一个梦，梦到王都被敌人占领了'
 const_Text_NewGame__Dialogue_4 = 'AORRIYA: 那不是梦。。'
 const_Text_NewGame__Dialogue_5 = 'VCE: 。。。。。。'

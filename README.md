@@ -29,7 +29,7 @@ FS的python重置版，只不过没有资源
 * 修改了CG资源的名称
 
 ### 2020.3.21 Asheor
-* 新添加 clazz/RSA.py 用途是RAS文件加密
+* 新添加 clazz/RSA.py 用途是RSA文件加密
 * 新添加 RecordFile.py 用途是生成游戏的记录文件,文件格式.rf
 * 在 Element.py 中添加了 Element 接口，使所有的Element实现该接口
 * 在 Const.py 中添加了rf文件相关的常量和NUM_DICT系列映射关系
@@ -50,3 +50,8 @@ FS的python重置版，只不过没有资源
 * gameApp.py 修改了在程序没有加载完成时，窗口标题显示为"pygame window"的情况
 * ToolsFuc.py 添加了归并排序
 * 关于Element，暂时决定成接口实现的模式，就这样吧
+
+### 2020.3.25 Asheor
+* gameApp.py 加入了帧率的设定，最大120帧，最小30帧，方便对游戏渲染过程的修改
+* Scene.py 重写了序章的场景，使其可以运行在相应帧率的配置下, 同时重新编排了场景的演出效果
+* 在 Const.py 与 Config.py 中加入了帧率相关设定，同时进一步改进了场景对Config的读取方式

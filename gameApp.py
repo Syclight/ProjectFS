@@ -1,5 +1,7 @@
 import pygame
 import gc
+
+from clazz.Config import Config
 from clazz.Const import SCENENUM_INIT
 
 
@@ -15,6 +17,7 @@ class gameApp:
         self.__isFullScreen = isFullScreen
         self.__screenMod = screenMod
         self.__colorBits = colorBits
+        self.__frameControl = False
 
         from clazz.AppConfig import SceneMap
         if not SceneMap:
@@ -23,13 +26,24 @@ class gameApp:
         pygame.display.set_caption(appTitle)
         self.__screen = pygame.display.set_mode((self.__screenWidth, self.__screenHeight), self.__screenMod,
                                                 self.__colorBits)
-        self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen)
+        self.__config = Config()
+        self.__config.readConfig()
+        self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen, self.__config)
+
+        self.__clock = pygame.time.Clock()
 
         self.isQuit = False
+        self.frameRate = self.__config.getFrameRate()
+        if self.frameRate != 0:
+            self.__frameControl = True
         print(appTitle + '\n-----控制台-----')
 
     def MainLoop(self):
+
         while not self.isQuit:
+            if self.__frameControl:
+                self.__clock.tick(self.frameRate)
+
             self.__screen.fill((0, 0, 0))
 
             # 画屏幕
@@ -54,6 +68,6 @@ class gameApp:
                 del self.__scene
                 gc.collect()
                 if len(nowScene) > 1:
-                    self.__scene = nowScene[0](self.__screen, nowScene[1:])
+                    self.__scene = nowScene[0](self.__screen, self.__config, nowScene[1:])
                 else:
-                    self.__scene = nowScene[0](self.__screen)
+                    self.__scene = nowScene[0](self.__screen, self.__config)
