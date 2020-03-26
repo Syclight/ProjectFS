@@ -1,5 +1,3 @@
-from typing import List
-
 import pygame
 import configparser
 
@@ -57,14 +55,40 @@ def centeredXYPos(bg_width, obj_width, bg_height, obj_height) -> []:
     return centeredXPos(bg_width, obj_width), centeredYPos(bg_height, obj_height)
 
 
-# 判断是否在矩形元素内
-def InElement(pos, element) -> bool:
+# 判断pos是否在矩形区域内
+def InRect(pos, rect) -> bool:
+    if rect.left + rect.width > pos[0] > rect.left and rect.top < pos[1] < rect.top + rect.height:
+        return True
+    return False
+
+
+# 判断pos是否在圆形区域内
+def InCircular(pos, cir) -> bool:
+    dist = pow(pow(pos[0] - cir.left, 2) + pow(pos[1] - cir.top, 2), 0.5)
+    if dist > cir.r:
+        return False
+    return True
+
+
+# 判断pos是否在Element内
+def InElement(pos, element, _type=0) -> bool:
     if not element:
         return False
     area = element.area
-    if area.left + area.width > pos[0] > area.left and area.top < pos[1] < area.top + area.height:
-        return True
-    return False
+    if _type == 0:
+        return InRect(pos, area)
+    elif _type == 1:
+        return InCircular(pos, area)
+
+
+# 判断pos是否在Sprite内
+def InSprite(pos, sprite, _type=0) -> bool:
+    if not sprite:
+        return False
+    if _type == 0:
+        return InRect(pos, sprite.rect)
+    elif _type == 1:
+        return InCircular(pos, sprite.area)
 
 
 # 读取InI文件内容
@@ -76,7 +100,7 @@ def InElement(pos, element) -> bool:
 # 【0】该ini文件section下，param对应的值
 # 【1】ini文件section下，所有的键值对，为字典
 # 【2】ini文件section下，所以得变量值
-def readINI(path, section, param=None) -> List:
+def readINI(path, section, param=None) -> list:
     conf = configparser.ConfigParser()
     conf.read(path)
     return [conf.get(section, param), conf.items(section), conf.options(section)]
@@ -212,3 +236,19 @@ def Merge(left, right):
     result += list(left[lf:])
     result += list(right[rt:])
     return result
+
+
+# 针对Ioevent3Enum的转换器,将pyameKey转换成IoEvent3的Key
+def exKey(key) -> int:
+    return int(key) - 97 + 0xC0000
+
+
+# 在一维容器中选出非n数
+def getNotN(container, n) -> list:
+    res = []
+    i = 0
+    for b in container:
+        if b != n:
+            res.append(i)
+        i += 1
+    return res

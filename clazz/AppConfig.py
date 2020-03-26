@@ -1,5 +1,6 @@
 from clazz.Const import SCENENUM_INIT
 from clazz.Scene import LogoScene
+from clazz.gameScene.testSpriteScene import testSpriteScene
 
 SceneMap = {SCENENUM_INIT: [LogoScene]}
 

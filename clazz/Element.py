@@ -45,26 +45,6 @@ class MessageBox(Element):
         screen.blit(self.__E_cancelButt.res_surface, (self.__E_cancelButt.area.left, self.__E_cancelButt.area.top))
 
 
-# Element处理处理Io事件列表
-class ElementHadDoEvent:
-    Key = None
-    hadDoMouseIn = False
-    hadDoMouseOut = True
-    hadDoMouseLeftKeyUp = True
-    hadDoMouseLeftKeyDown = False
-    hadDoMouseLeftKeyClick = False
-    hadDoMouseRightKeyUp = False
-    hadDoMouseRightKeyDown = False
-    hadDoMouseRightKeyClick = False
-    hadDoMouseMidKeyUp = False
-    hadDoMouseMidKeyDown = False
-    hadDoMouseMidKeyClick = False
-    hadDoDoubleClick = False
-    hadDoKeyboardKeyUp = False
-    hadDoKeyboardKeyDown = False
-    hadDoKeyboardKeyDowning = False
-
-
 # 标题页面固定元素
 class TitleConstElement(Element):
     area = None

@@ -1,7 +1,6 @@
 import time
 from operator import eq
 
-from clazz.Config import Config
 from clazz.Element import *
 from clazz.Const import *
 from clazz.RecordFile import RecordFile
@@ -38,7 +37,10 @@ class Scene:
     def doMouseButtonUpEvent(self, MousePos, Button):
         pass
 
-    def doKeyEvent(self):
+    def doKeyEvent(self, Key, Mod, Type, Unicode=None):
+        pass
+
+    def doKeyPressedEvent(self, KeyPressedList):
         pass
 
 
@@ -217,7 +219,7 @@ class TitleScene(Scene):
                 self.focus_onClick = 0
 
 
-# 新游戏背景故事场景
+# 新游戏序章场景
 class Title_PrologueScene(Scene):
     def __init__(self, screen, config, paramList=None):
         # 初始化场景参数
@@ -327,7 +329,7 @@ class Title_PrologueScene(Scene):
                     self.__index += 1
                     if self.__index >= len(self.__DialogueList):
                         self.res_Sound_Cup.play()
-                        time.sleep(1)
+                        time.sleep(1.4)
                         self.isReadyToEnd = True
                     else:
                         self.__DialogueShow.setText(self.__DialogueList[self.__index])
@@ -378,56 +380,15 @@ def ChePos(e, isDown):
 
 
 class OptionScene(Scene):
-    __ElementsMap = None
-    __flag_isEnter = False
-
-    __alpha = 0
-
-    __Clock = None
-    __flag_recordStartTime = False
-    __start_time = 0
-    __now_time = 0
-
-    res_Img_BG_Name = 'OPT_BG.bmp'
-    res_Sound_Choose_Name = 'OPT_C.wav'
-    res_Img_BG = None
-    res_Sound_Choose = None
-    res_UI_RightButton = 'OPT_BR.png'
-    res_UI_LeftButton = 'OPT_BL.png'
-
-    __E_BGBlankR = None
-    __E_BGBlankL1 = None
-    __E_BGBlankL2 = None
-    __E_BGBlankL3 = None
-    __E_BGBlankLApply = None
-    __E_BGBlankLRet = None
-
-    __E_Text_Apply = None
-    __E_Text_Ret = None
-
-    __E_Text_Draw = None
-    __E_Text_AntiAlias = None
-    __E_Text_AA_Val = None
-    __E_UI_AA_LeftButton = None
-    __E_UI_AA_RightButton = None
-
-    __E_Text_Wave = None
-    __E_Text_BGMVolume = None
-    __E_Text_BGM_Val = None
-    __E_UI_BGM_LeftButton = None
-    __E_UI_BGM_RightButton = None
-    __E_Text_SoundVolume = None
-    __E_Text_Sou_Val = None
-    __E_UI_Sou_LeftButton = None
-    __E_UI_Sou_RightButton = None
-    __E_Text_Licence = None
-    __E_Img_Licence = None
-
-    __KV_AA = None
-    __KV_WAVE = None
-
     def __init__(self, screen, config, paramList=None):
         super().__init__(screen, config, paramList)
+
+        self.__flag_isEnter = False
+        self.__alpha = 0
+        self.__flag_recordStartTime = False
+        self.__start_time = 0
+        self.__now_time = 0
+
         if paramList is not None:
             self.__flag_isEnter = paramList[0]
 
@@ -435,6 +396,10 @@ class OptionScene(Scene):
         from clazz.AppConfig import registerScene
         registerScene(SCENENUM_OPT_APPLY, OptionScene, [True])
 
+        self.res_Img_BG_Name = 'OPT_BG.bmp'
+        self.res_Sound_Choose_Name = 'OPT_C.wav'
+        self.res_UI_RightButton = 'OPT_BR.png'
+        self.res_UI_LeftButton = 'OPT_BL.png'
         self.config.readConfig()
         self.__Clock = pygame.time.Clock()
         self.__KV_AA = {}

@@ -3,6 +3,7 @@ import gc
 
 from clazz.Config import Config
 from clazz.Const import SCENENUM_INIT
+from clazz.ToolsFuc import getNotN
 
 
 class gameApp:
@@ -39,7 +40,6 @@ class gameApp:
         print(appTitle + '\n-----控制台-----')
 
     def MainLoop(self):
-
         while not self.isQuit:
             if self.__frameControl:
                 self.__clock.tick(self.frameRate)
@@ -49,6 +49,10 @@ class gameApp:
             # 画屏幕
             self.__scene.draw()
             pygame.display.update()
+
+            keyPressedList = getNotN(pygame.key.get_pressed(), 0)
+            if keyPressedList:
+                pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"keyPressedTuple": keyPressedList}))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -61,6 +65,12 @@ class gameApp:
                     self.__scene.doMouseButtonDownEvent(event.pos, event.button)
                 elif event.type == pygame.MOUSEBUTTONUP:
                     self.__scene.doMouseButtonUpEvent(event.pos, event.button)
+                elif event.type == pygame.KEYDOWN:
+                    self.__scene.doKeyEvent(event.key, event.mod, 0, event.unicode)
+                elif event.type == pygame.KEYUP:
+                    self.__scene.doKeyEvent(event.key, event.mod, 1)
+                elif event.type == pygame.USEREVENT + 1:
+                    self.__scene.doKeyPressedEvent(event.keyPressedTuple)
 
             if self.__scene.isEnd:
                 sceneNum = self.__scene.nextSceneNum
@@ -71,3 +81,4 @@ class gameApp:
                     self.__scene = nowScene[0](self.__screen, self.__config, nowScene[1:])
                 else:
                     self.__scene = nowScene[0](self.__screen, self.__config)
+

@@ -41,7 +41,7 @@ FS的python重置版，只不过没有资源
 * Element.py 添加了一种继续游戏场景中的元素
 * RSA.py 优化程序对RSA函数的调用
 * 添加了一个测试：example/RecordFileAndRSATest.py
-* 添加了modal文件夹，准备写用户模型，NPC模型，物理模型等
+* 添加了model文件夹，准备写用户模型，NPC模型，物理模型等
 
 ### 2020.3.24 Asheor
 * Scene.py 将Scene由接口模式，转变成继承模式。同时将一些场景的事件触发机制做了调整。
@@ -55,3 +55,17 @@ FS的python重置版，只不过没有资源
 * gameApp.py 加入了帧率的设定，最大120帧，最小30帧，方便对游戏渲染过程的修改
 * Scene.py 重写了序章的场景，使其可以运行在相应帧率的配置下, 同时重新编排了场景的演出效果
 * 在 Const.py 与 Config.py 中加入了帧率相关设定，同时进一步改进了场景对Config的读取方式
+
+### 2020. 3.26 Asheor
+* IOEvent.py, IOEvent3重大更新！
+> * 现在ioEvent3Enum 不继承enum类，因为python的enum类不太好用
+> * 修改了事件ID标识的处理方法,不再使用hash
+> * 完善了对键盘事件的支持
+> * 添加了一个关于IOEven3的测试例子，在example文件夹下
+* 添加了gameElementsAndScene文件夹，用来存放与游戏场景有关的类 Sprite.py
+* 在框架中添加了对精灵的支持，精灵也可以使用IOEvent3进行交换
+* ToolsFuc.py 添加了pygame按键到ioEvent3按键的映射函数，还有一些其它的
+* gameApp.py 添加了长按事件的支持
+* model文件夹下添加了一个Shape.py
+* Scene.py, Element.py
+* 今天决定将这个游戏的框架命名为Syclight GameFramework with python,为Syclight的一份子
