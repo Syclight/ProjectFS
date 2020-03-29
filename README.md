@@ -83,15 +83,14 @@ FS的python重置版，只不过没有资源
 
 ### 2020.3.29  Asheor -Code:Reborn
 * 更新了目录结构  
-目录名称|子文件夹|备注
--|-|-
-source|(all)|包含全部的源文件
-config|(null)|主要是App的配置文件 AppConfig
-const|(null)|常量
-controller|assembly,dataStructure|程序要用到的组件，数据结构等
-examples|(null)|测试用例
-model|(null)|模型
-util|(null)|工具包
+目录名称|子文件夹|备注  
+source|(all)|包含全部的源文件  
+config|(null)|主要是App的配置文件 AppConfig  
+const|(null)|常量  
+controller|assembly,dataStructure|程序要用到的组件，数据结构等  
+examples|(null)|测试用例  
+model|(null)|模型  
+util|(null)|工具包  
 view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中用到的基类
 * 继续完善了Shape.py
 * 新建立Actor.py，Actor为游戏中出现的所有物体
