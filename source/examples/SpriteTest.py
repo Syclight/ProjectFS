@@ -1,4 +1,4 @@
-from clazz.gameElementsAndSprite.BaseClazz.Sprite import Sprite
+from source.view.baseClazz.Sprite import Sprite
 
 s = Sprite()
 print(s.rect)

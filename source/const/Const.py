@@ -1,6 +1,9 @@
 gl_WindowWidth = 800
 gl_WindowHeight = 600
 
+#collidedAreaType
+RECT = 0
+
 gl_Font = 'resource/Font/Default_SC.ttf'
 gl_Font_oth = 'resource/Font/Default_SC_oth.otf'
 gl_Font_opt = 'resource/Font/Default_SC_opt.ttf'
