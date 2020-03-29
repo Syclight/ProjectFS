@@ -1,24 +1,13 @@
-from clazz.IOEvent import *
-import pygame
-from clazz.Const import *
-from clazz.ToolsFuc import *
-
-
-class Element:
-    def draw(self, screen):
-        pass
+from source.view.baseClazz.Element import Element
+from source.controller.assembly.IOEvent import *
+from source.const.Const import *
+from source.util.ToolsFuc import *
 
 
 # 消息框Elements
 class MessageBox(Element):
-    area = None
-    Events = None
-    EventsHadDo = None
-
     def __init__(self, bgWidth, bgHeight, text):
-        self.area = pygame.Rect(centeredXPos(bgWidth, 180, 0), centeredXPos(bgHeight, 100, 0), 180, 100)
-        self.Events = IOEvent3()
-        self.EventsHadDo = ElementHadDoEvent()
+        super(MessageBox, self).__init__(pygame.Rect(centeredXPos(bgWidth, 180, 0), centeredXPos(bgHeight, 100, 0), 180, 100))
         self.__Text = text
         self.__buildSurface()
 
@@ -32,11 +21,6 @@ class MessageBox(Element):
                                       16, (0, 0, 0), True)
         self.__E_cancelButt = TextElement(pygame.Rect(self.area.left + 80, self.area.top + 70, 36, 18), '取消',
                                           gl_Font_opt, 16, (0, 0, 0), True)
-        self.__E_okButt.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__ret(True), 1)
-        self.__E_cancelButt.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__ret(False), 2)
-
-    def __ret(self, res):
-        return res
 
     def draw(self, screen):
         screen.blit(self.__E_bg, (self.area.left, self.area.top))
@@ -47,16 +31,9 @@ class MessageBox(Element):
 
 # 标题页面固定元素
 class TitleConstElement(Element):
-    area = None
-    res_surface = None
-    Events = None
-    EventsHadDo = None
-
     def __init__(self, area, res_Surface):
-        self.area = area
+        super(TitleConstElement, self).__init__(area, IOEvent())
         self.res_surface = res_Surface
-        self.Events = IOEvent()
-        self.EventsHadDo = ElementHadDoEvent()
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)
@@ -91,22 +68,11 @@ def backStyle(e):
 
 # 标题页面选项元素
 class TitleOptElement(Element):
-    area = None
-    res_surface = None
-    Events = None
-    EventsHadDo = None
-
-    res_Img = None
-    ClipRect = None
-    ColorKey = None
-
     def __init__(self, area, res_img, clipRect, colorKey):
-        self.area = area
+        super(TitleOptElement, self).__init__(area, IOEvent2())
         self.res_Img = res_img
         self.ClipRect = clipRect
         self.ColorKey = colorKey
-        self.Events = IOEvent2()
-        self.EventsHadDo = ElementHadDoEvent()
         self.__buildSurface()
 
         self.Events.mouseIn.append(lambda: changeStyle(self))
@@ -149,26 +115,13 @@ class TitleOptElement(Element):
 
 # 文字元素及其事件处理
 class TextElement(Element):
-    area = None
-    res_surface = None
-    Events = None
-    EventsHadDo = None
-
-    Text = None
-    Font = None
-    Size = None
-    Color = None
-    AntiAlias = None
-
     def __init__(self, area, text, font, size, color, antiAlias):
-        self.area = area
+        super(TextElement, self).__init__(area)
         self.Font = font
         self.Text = text
         self.Size = size
         self.Color = color
         self.AntiAlias = antiAlias
-        self.Events = IOEvent3()
-        self.EventsHadDo = ElementHadDoEvent()
         self.__buildSurface()
 
     # 这里是渲染非透明文本的方法，没有底色
@@ -228,22 +181,11 @@ class TextElement(Element):
 
 # 图像元素及其事件处理
 class ImgElement(Element):
-    area = None
-    res_surface = None
-    Events = None
-    EventsHadDo = None
-
-    Path = None
-    Alpha = 225
-    ColorKey = None
-
     def __init__(self, area, path, alpha=255, colorKey=None):
-        self.area = area
+        super(ImgElement, self).__init__(area)
         self.Path = path
         self.Alpha = alpha
         self.ColorKey = colorKey
-        self.Events = IOEvent3()
-        self.EventsHadDo = ElementHadDoEvent()
         self.__buildSurface()
 
     def __buildSurface(self):
@@ -262,6 +204,16 @@ class ImgElement(Element):
         self.res_surface.set_alpha(alpha)
 
 
+# 序章场景
+
+# 渲染单元
+class RenderUnionElement(Element):
+    def __init__(self, surface, pos, area):
+        super(RenderUnionElement, self).__init__(area)
+        self.res_surface = surface
+        self.pos = pos
+
+
 # 设置页面元素
 
 # 鼠标左键按下鼠标改变元素位置事件
@@ -275,17 +227,9 @@ def Pos(e, isDown):
 
 
 class OptButtonElement(Element):
-    Area = None
-    res_surface = None
-    Events = None
-    EventsHadDo = None
-    Color = None
-
     def __init__(self, area, color):
-        self.area = area
+        super(OptButtonElement, self).__init__(area)
         self.Color = color
-        self.Events = IOEvent3()
-        self.EventsHadDo = ElementHadDoEvent()
         self.__buildSurface()
 
         self.Events.appendEvent(ioEvent3Enum.mouseIn, lambda: self.setAlpha(color[3] + 100), 0)

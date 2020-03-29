@@ -1,5 +1,5 @@
-from clazz.Const import RECORDFILE_HEAD, RSA_PK_FILE_EXN, RECORDFILE_SAVE_EXN
-from clazz.RSA import rsaEncrypt, rsaDecrypt, outPrivateKeyToPS, getPrivateKeyFromPS
+from source.const.Const import RECORDFILE_HEAD, RSA_PK_FILE_EXN, RECORDFILE_SAVE_EXN
+from source.controller.assembly.RSA import rsaEncrypt, rsaDecrypt, outPrivateKeyToPS, getPrivateKeyFromPS
 
 
 class NotRecordFileType(Exception):

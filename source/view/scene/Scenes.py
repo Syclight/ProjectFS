@@ -1,47 +1,12 @@
 import time
 from operator import eq
 
-from clazz.Element import *
-from clazz.Const import *
-from clazz.RecordFile import RecordFile
-from clazz.ToolsFuc import *
+from source.view.baseClazz.Scene import Scene
+from source.view.element.Elements import *
+from source.const.Const import *
+from source.model.RecordFile import RecordFile
+from source.util.ToolsFuc import *
 from moviepy.editor import *
-
-
-class Scene:
-    def __init__(self, screen, config, paramList=None):
-        self.screen = screen
-        self.config = config
-        self.paramList = paramList
-
-        self.isReadyToEnter = False
-        self.isEnter = False
-        self.isEnd = False
-        self.isReadyToEnd = False
-        self.nextSceneNum = -1
-
-        self.mousePos = (0, 0)
-        self.lastMousePos = (0, 0)
-        self.focus = None
-        self.focus_onClick = 0
-
-    def draw(self):
-        pass
-
-    def doMouseMotion(self, MousePos, MouseRel, Buttons):
-        pass
-
-    def doMouseButtonDownEvent(self, MousePos, Button):
-        pass
-
-    def doMouseButtonUpEvent(self, MousePos, Button):
-        pass
-
-    def doKeyEvent(self, Key, Mod, Type, Unicode=None):
-        pass
-
-    def doKeyPressedEvent(self, KeyPressedList):
-        pass
 
 
 # Logo场景
@@ -49,7 +14,7 @@ class LogoScene(Scene):
     def __init__(self, screen, config, paramList=None):
         # 注册与该场景相关的场景
         super().__init__(screen, config, paramList)
-        from clazz.AppConfig import registerScene
+        from source.config.AppConfig import registerScene
         registerScene(SCENENUM_TITLE, TitleScene)
 
         self.Logo = 'IEELogo.bmp'
@@ -77,7 +42,7 @@ class TitleScene(Scene):
     def __init__(self, screen, config, paramList=None):
         # 注册场景
         super().__init__(screen, config, paramList)
-        from clazz.AppConfig import registerScene
+        from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
         registerScene(SCENENUM_OPT, OptionScene)
         registerScene(SCENENUM_CONTINUE, Continue_Scene)
@@ -235,7 +200,7 @@ class Title_PrologueScene(Scene):
         self.Music_BGM = 'NG_F_SS_BGM.wav'
 
         # 注册场景
-        from clazz.AppConfig import registerScene
+        from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
 
         # 读取配置
@@ -275,10 +240,9 @@ class Title_PrologueScene(Scene):
         self.__ElementsList = []
 
         # 设定渲染时的参数
-        self.__flag_recordStartTime = False
         self.__flag_Num = 0
         self.__flag_BGMPlayed = False
-        self.start_time, self.now_time, self.interval = None, None, None
+        self.now_time, self.interval = None, None
         self.__TextShow_Interval, self.__DialogueShow_Interval = 5000, 6000
         self.__alphaStep_Text, self.__alphaStep_Dia = 0, 0
         self.__index, self.__alpha = 0, 0
@@ -291,18 +255,14 @@ class Title_PrologueScene(Scene):
             self.__alphaStep_Dia = 255 / self.__frameRate
 
     def draw(self):
-        if not self.__flag_recordStartTime:
-            self.__ElementsList = [self.__TextShow]
-            self.start_time = pygame.time.get_ticks()
-            self.__flag_recordStartTime = True
         self.now_time = pygame.time.get_ticks()
-        self.interval = self.now_time - self.start_time
+        self.interval = self.now_time - self.startClock
 
         if not self.isReadyToEnd:
             if self.__flag_Num == 0:
                 if self.interval > self.__TextShow_Interval:
                     self.__alpha = 0
-                    self.start_time = pygame.time.get_ticks()
+                    self.startClock = pygame.time.get_ticks()
                     self.__index += 1
                     if self.__index >= len(self.__TextList):
                         self.__index = 0
@@ -325,7 +285,7 @@ class Title_PrologueScene(Scene):
                     self.__DialogueShow.setAlpha(self.__alpha - self.__alphaStep_Dia * self.__frameRate)
                 if self.interval > self.__DialogueShow_Interval:
                     self.__alpha = 0
-                    self.start_time = pygame.time.get_ticks()
+                    self.startClock = pygame.time.get_ticks()
                     self.__index += 1
                     if self.__index >= len(self.__DialogueList):
                         self.res_Sound_Cup.play()
@@ -393,7 +353,7 @@ class OptionScene(Scene):
             self.__flag_isEnter = paramList[0]
 
         # 注册与该场景相关的场景
-        from clazz.AppConfig import registerScene
+        from source.config.AppConfig import registerScene
         registerScene(SCENENUM_OPT_APPLY, OptionScene, [True])
 
         self.res_Img_BG_Name = 'OPT_BG.bmp'
@@ -604,17 +564,20 @@ class OptionScene(Scene):
         self.lastMousePos = self.mousePos
         self.mousePos = MousePos
 
-        # 鼠标移动事件: 移动时鼠标按键状态为全部松开
-        if eq(Buttons, (0, 0, 0)):
-            for e in self.__ElementsMap['Interact']:
-                if InElement(self.mousePos, e):
-                    self.focus = e
-                    if InElement(self.lastMousePos, e):
-                        e.Events.doMouseMotion()
-                    else:
-                        e.Events.doMouseIn()
-                elif InElement(self.lastMousePos, e):
-                    e.Events.doMouseOut()
+        # 鼠标移动事件
+        for e in self.__ElementsMap['Interact']:
+            if InElement(self.mousePos, e):
+                self.focus = e
+                if InElement(self.lastMousePos, e):
+                    e.Events.doMouseMotion()
+                elif eq(Buttons, (0, 0, 0)):
+                    e.Events.doMouseIn()
+            elif InElement(self.lastMousePos, e):
+                e.Events.doMouseOut()
+                if e.EventsHadDo.hadDoMouseLeftKeyDown:
+                    e.Events.doMouseLeftKeyUp()
+                    e.EventsHadDo.hadDoMouseLeftKeyDown = False
+                    e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
     def doMouseButtonDownEvent(self, MousePos, Button):
         if Button == 1:  # 鼠标右键
@@ -678,17 +641,20 @@ class Continue_Scene(Scene):
         self.lastMousePos = self.mousePos
         self.mousePos = MousePos
 
-        # 鼠标移动事件: 移动时鼠标按键状态为全部松开
-        if eq(Buttons, (0, 0, 0)):
-            for e in self.__ElementsList:
-                if InElement(self.mousePos, e):
-                    self.focus = e
-                    if InElement(self.lastMousePos, e):
-                        e.Events.doMouseMotion()
-                    else:
-                        e.Events.doMouseIn()
-                elif InElement(self.lastMousePos, e):
-                    e.Events.doMouseOut()
+        # 鼠标移动事件
+        for e in self.__ElementsList:
+            if InElement(self.mousePos, e):
+                self.focus = e
+                if InElement(self.lastMousePos, e):
+                    e.Events.doMouseMotion()
+                elif eq(Buttons, (0, 0, 0)):
+                    e.Events.doMouseIn()
+            elif InElement(self.lastMousePos, e):
+                e.Events.doMouseOut()
+                if e.EventsHadDo.hadDoMouseLeftKeyDown:
+                    e.Events.doMouseLeftKeyUp()
+                    e.EventsHadDo.hadDoMouseLeftKeyDown = False
+                    e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
     def doMouseButtonDownEvent(self, MousePos, Button):
         if Button == 1:  # 鼠标右键

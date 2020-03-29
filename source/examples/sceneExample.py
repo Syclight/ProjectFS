@@ -1,8 +1,9 @@
-from clazz.Scene import Scene
+from source.view.scene.Scenes import Scene
 
 
 class exampleScene(Scene):
-    def __init__(self):
+    def __init__(self, screen, config):
+        super().__init__(screen, config)
         self.isEnd = False
         self.nextSceneNum = 0
 
@@ -29,7 +30,8 @@ class exampleScene(Scene):
 
 
 class exampleScene2(Scene):
-    def __init__(self):
+    def __init__(self, screen, config):
+        super().__init__(screen, config)
         self.isEnd = False
         self.nextSceneNum = None
         print('第二个example场景创建完成')

@@ -1,9 +1,9 @@
 import pygame
 import gc
 
-from clazz.Config import Config
-from clazz.Const import SCENENUM_INIT
-from clazz.ToolsFuc import getNotN
+from source.controller.assembly.Config import Config
+from source.const.Const import SCENENUM_INIT
+from source.util.ToolsFuc import getNotN
 
 
 class gameApp:
@@ -20,7 +20,7 @@ class gameApp:
         self.__colorBits = colorBits
         self.__frameControl = False
 
-        from clazz.AppConfig import SceneMap
+        from source.config.AppConfig import SceneMap
         if not SceneMap:
             raise Exception("'SceneMap' is Empty in AppConfig, 'SceneMap' mast have at least one element")
         self.__mapping = SceneMap
@@ -46,13 +46,20 @@ class gameApp:
 
             self.__screen.fill((0, 0, 0))
 
+            # 设定时钟
+            if not self.__scene.isRecordStartClock:
+                self.__scene.startClock = pygame.time.get_ticks()
+                self.__scene.isRecordStartClock = True
+
             # 画屏幕
             self.__scene.draw()
             pygame.display.update()
 
+            self.__scene.doClockEvent(pygame.time.get_ticks())
+
             keyPressedList = getNotN(pygame.key.get_pressed(), 0)
             if keyPressedList:
-                pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"keyPressedTuple": keyPressedList}))
+                pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"keyPressedList": keyPressedList}))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -70,7 +77,7 @@ class gameApp:
                 elif event.type == pygame.KEYUP:
                     self.__scene.doKeyEvent(event.key, event.mod, 1)
                 elif event.type == pygame.USEREVENT + 1:
-                    self.__scene.doKeyPressedEvent(event.keyPressedTuple)
+                    self.__scene.doKeyPressedEvent(event.keyPressedList)
 
             if self.__scene.isEnd:
                 sceneNum = self.__scene.nextSceneNum
@@ -81,4 +88,3 @@ class gameApp:
                     self.__scene = nowScene[0](self.__screen, self.__config, nowScene[1:])
                 else:
                     self.__scene = nowScene[0](self.__screen, self.__config)
-

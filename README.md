@@ -56,16 +56,42 @@ FS的python重置版，只不过没有资源
 * Scene.py 重写了序章的场景，使其可以运行在相应帧率的配置下, 同时重新编排了场景的演出效果
 * 在 Const.py 与 Config.py 中加入了帧率相关设定，同时进一步改进了场景对Config的读取方式
 
-### 2020. 3.26 Asheor
+### 2020.3.26 Asheor
 * IOEvent.py, IOEvent3重大更新！
 > * 现在ioEvent3Enum 不继承enum类，因为python的enum类不太好用
 > * 修改了事件ID标识的处理方法,不再使用hash
 > * 完善了对键盘事件的支持
 > * 添加了一个关于IOEven3的测试例子，在example文件夹下
 * 添加了gameElementsAndScene文件夹，用来存放与游戏场景有关的类 Sprite.py
-* 在框架中添加了对精灵的支持，精灵也可以使用IOEvent3进行交换
+* 在框架中添加了对精灵的支持，精灵也可以使用IOEvent3进行交互
 * ToolsFuc.py 添加了pygame按键到ioEvent3按键的映射函数，还有一些其它的
 * gameApp.py 添加了长按事件的支持
 * model文件夹下添加了一个Shape.py
-* Scene.py, Element.py
+* Scene.py, Element.py 修改了Scene基类和Elements中的一些细节
 * 今天决定将这个游戏的框架命名为Syclight GameFramework with python,为Syclight的一份子
+
+### 2020.3.28 Asheor
+* 添加了SpriteGroup，主要是对pygame中的改造，可以实现组内碰撞检测，同时防止一些莫名其妙bug的产生
+> 碰撞检测数据结构：四叉树
+* 对QuadTree.py做了更加规范化的调整
+* 对Shape.py中的类做了升级优化
+* 添加了三例测试
+> ShapeTest.py 测试Shape.py,
+> 精灵动画播放测试：testSpriteScene.py,
+> 碰撞测试: testSpriteScene.py
+* 其它的做了一些修改
+
+### 2020.3.29
+* 更新了目录结构  
+目录名称|子文件夹|备注
+-|-|-
+source|(all)|包含全部的源文件
+config|(null)|主要是App的配置文件 AppConfig
+const|(null)|常量
+controller|assembly,dataStructure|程序要用到的组件，数据结构等
+examples|(null)|测试用例
+model|(null)|模型
+util|(null)|工具包
+view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中用到的基类
+* 继续完善了Shape.py
+* 新建立Actor.py，Actor为游戏中出现的所有物体

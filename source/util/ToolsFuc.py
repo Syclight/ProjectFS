@@ -28,7 +28,7 @@ def blankTextSurface(size_WH, background_color, text, font, font_size, font_colo
 def clipResImg(tarImg, rect, colorKey):
     temp = pygame.Surface((rect.width, rect.height)).convert()
     temp.set_colorkey(colorKey)
-    temp.blit(tarImg, (-rect.top, -rect.left))
+    temp.blit(tarImg, (-rect.left, -rect.top))
     return temp
 
 
@@ -64,8 +64,7 @@ def InRect(pos, rect) -> bool:
 
 # 判断pos是否在圆形区域内
 def InCircular(pos, cir) -> bool:
-    dist = pow(pow(pos[0] - cir.left, 2) + pow(pos[1] - cir.top, 2), 0.5)
-    if dist > cir.r:
+    if pow(pow(pos[0] - cir.left, 2) + pow(pos[1] - cir.top, 2), 0.5) > cir.r:
         return False
     return True
 
@@ -243,7 +242,7 @@ def exKey(key) -> int:
     return int(key) - 97 + 0xC0000
 
 
-# 在一维容器中选出非n数
+# 在一维容器中选出非n数的地址值
 def getNotN(container, n) -> list:
     res = []
     i = 0

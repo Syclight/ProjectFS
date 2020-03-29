@@ -27,7 +27,7 @@
 #         print('}', end='')
 #     i += 1
 
-from clazz.IOEvent import IOEvent3
+from source.controller.assembly.IOEvent import IOEvent3
 import sys
 
 print('IOEvent3占字节数', sys.getsizeof(IOEvent3()))

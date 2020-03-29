@@ -1,6 +1,6 @@
-from clazz.Const import GLC_INI_NAME, GLC_INI_SECTION_DRAW, GLC_INI_PARAM_ANTIALIAS, GLC_INI_SECTION_WAVE, \
+from source.const.Const import GLC_INI_NAME, GLC_INI_SECTION_DRAW, GLC_INI_PARAM_ANTIALIAS, GLC_INI_SECTION_WAVE, \
     GLC_INI_PARAM_BGMVOLUME, GLC_INI_PARAM_SOUNDVOLUME, GLC_INI_PARAM_FRAMERATE
-from clazz.ToolsFuc import readINIBool, readINIFloat, readINIInt
+from source.util.ToolsFuc import readINIBool, readINIFloat, readINIInt
 
 
 class Config:
