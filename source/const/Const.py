@@ -4,6 +4,12 @@ gl_WindowHeight = 600
 #collidedAreaType
 RECT = 0
 
+DATATYPE_STR_BOOL = 'bool'
+DATATYPE_STR_INT = 'int'
+DATATYPE_STR_FLOAT = 'float'
+DATATYPE_STR_COMPLEX = 'complex'
+DATATYPE_STR_STR = 'str'
+
 gl_Font = 'resource/Font/Default_SC.ttf'
 gl_Font_oth = 'resource/Font/Default_SC_oth.otf'
 gl_Font_opt = 'resource/Font/Default_SC_opt.ttf'
@@ -44,6 +50,15 @@ RECORDFILE_SAVE_PATH = 'data/save/'
 RECORDFILE_SAVE_NAMEHEAD = 'save'
 RECORDFILE_SAVE_EXN = '.rf'
 RSA_PK_FILE_EXN = '.prm'
+
+#APP-CONFIG_XML
+ROOT_ELEMENT = 'app-config'
+CHUNK_REGISTERED_SCENE = 'registered-scene'
+ATTRIBUTE_CLASS_STRING = 'class-string'
+ATTRIBUTE_SCENE_NUM = 'scene-num'
+
+# PhysicsBody
+PHYSICSBODY_RIGIDBODY = 0
 
 
 # 数字码表

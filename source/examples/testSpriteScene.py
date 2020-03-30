@@ -64,8 +64,8 @@ def chPos(step, sprite, isY):
 
 # test 播放动画
 # class testSpriteScene(Scene):
-#     def __init__(self, screen, config):
-#         super(testSpriteScene, self).__init__(screen, config)
+#     def __init__(self, screen, framework-config):
+#         super(testSpriteScene, self).__init__(screen, framework-config)
 #         self.img = pygame.image.load('F:/练习/PyCharm/PygameTest/resource/Img/TEST_ANIM.jpg').convert_alpha()
 #         self.enemy = GameSprite(clipResImg(self.img, pygame.Rect(0, 0, 278, 153), (45, 45, 45)), 0)
 #         self.enemy.rect.x = 200

@@ -1,3 +1,5 @@
+import pygame
+
 from source.controller.assembly.IOEvent import IOEvent3, ElementHadDoEvent
 from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node
 from source.controller.assembly.Shape import Shape, Rectangle
@@ -19,6 +21,8 @@ class Actor:
             w = self.texture.get_rect().w
             h = self.texture.get_rect().h
             self.collideArea = Rectangle(x, y, w, h)
+        else:
+            self.texture = pygame.transform.scale(self.texture, (self.collideArea.w, self.collideArea.h))
         self.init_Rect = self.collideArea
 
     def collided(self, othActor):
@@ -99,7 +103,7 @@ class ActorGroup:
         return _lis
 
     def getCollide_with_Oth(self, oth):
-        raise Exception("function getCollide_with_Oth incompletely'")
+        raise Exception("function 'getCollide_with_Oth' not implemented")
         # if not isinstance(oth, ActorGroup):
         #     raise Exception("Class '{}' must is a subclass of 'ActorGroup'".format(oth))
         # if not self.activeArea.same(oth.activeArea):

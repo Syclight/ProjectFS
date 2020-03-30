@@ -66,6 +66,7 @@ class gameApp:
                     pygame.mixer.quit()
                     pygame.quit()
                     self.isQuit = True
+                    break
                 elif event.type == pygame.MOUSEMOTION:
                     self.__scene.doMouseMotion(event.pos, event.rel, event.buttons)
                 elif event.type == pygame.MOUSEBUTTONDOWN:

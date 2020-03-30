@@ -94,3 +94,9 @@ util|(null)|工具包
 view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中用到的基类
 * 继续完善了Shape.py
 * 新建立Actor.py，Actor为游戏中出现的所有物体
+
+### 2020.3.30 Asheor
+* 添加controller.assembly.XmlOperator.py用于操作XML文件
+* 添加PhysicalBody.py用于物理组件，同时还添加了PhysicsSystem
+* 添加chapter1-1.py准备进入第一章节游戏的编写
+* 将vec2等添加到util.Math2d.py中

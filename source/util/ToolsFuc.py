@@ -242,6 +242,11 @@ def exKey(key) -> int:
     return int(key) - 97 + 0xC0000
 
 
+# 将Shape.py中的形状转换为pygame.Rect
+def ex_toRect(rect) -> pygame.Rect:
+    return pygame.Rect(rect.x, rect.y, rect.w, rect.h)
+
+
 # 在一维容器中选出非n数的地址值
 def getNotN(container, n) -> list:
     res = []

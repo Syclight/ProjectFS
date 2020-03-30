@@ -1,0 +1,2 @@
+class ResourceLoader:
+    pass

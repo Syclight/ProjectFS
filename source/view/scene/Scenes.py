@@ -4,7 +4,7 @@ from operator import eq
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import *
 from source.const.Const import *
-from source.model.RecordFile import RecordFile
+from source.controller.assembly.RecordFile import RecordFile
 from source.util.ToolsFuc import *
 from moviepy.editor import *
 
@@ -12,25 +12,23 @@ from moviepy.editor import *
 # Logo场景
 class LogoScene(Scene):
     def __init__(self, screen, config, paramList=None):
-        # 注册与该场景相关的场景
         super().__init__(screen, config, paramList)
+        # 注册与该场景相关的场景
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_TITLE, TitleScene)
 
         self.Logo = 'IEELogo.bmp'
 
         self.__alpha = 0
-        self.__flag = False
-        self.__paramList = paramList
         self.bg = pygame.image.load(gl_ImgPath + self.Logo)
 
     def draw(self):
-        if self.__flag:
+        if self.isReadyToEnter:
             self.__alpha -= 4
         else:
             self.__alpha += 4
         if self.__alpha > 255:
-            self.__flag = True
+            self.isReadyToEnter = True
         if self.__alpha < 0:
             self.isEnd = True
             self.nextSceneNum = SCENENUM_TITLE
