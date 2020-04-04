@@ -1,7 +1,8 @@
 class Scene:
-    def __init__(self, screen, config, paramList=None):
+    def __init__(self, screen, config, startClock, paramList=None):
         self.screen = screen
         self.config = config
+        self.config.readConfig()
         self.paramList = paramList
 
         self.isReadyToEnter = False
@@ -15,8 +16,7 @@ class Scene:
         self.focus = None
         self.focus_onClick = 0
 
-        self.isRecordStartClock = False
-        self.startClock = None
+        self.startClock = startClock
 
     def draw(self):
         pass

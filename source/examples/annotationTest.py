@@ -1,42 +1,31 @@
-from functools import update_wrapper
+import numpy as np
 
+import matplotlib.pyplot as plt
 
-def accepts(*types):
-    def check_accepts(f):
-        def new_f(*args, **kwds):
-            assert len(types) == (len(args) + len(kwds)), \
-                "args cnt %d does not match %d" % (len(args) + len(kwds), len(types))
-            for (a, t) in zip(args, types):
-                assert isinstance(a, t), \
-                    "arg %r does not match %s" % (a, t)
-            return f(*args, **kwds)
+import pylab
 
-        update_wrapper(new_f, f)
-        return new_f
+import imageio
 
-    return check_accepts
+import skimage.io
 
+import cv2
 
-def returns(rtype):
-    def check_returns(f):
-        def new_f(*args, **kwds):
-            result = f(*args, **kwds)
-            assert isinstance(result, rtype), \
-                "return value %r does not match %s" % (result, rtype)
-            return result
+cap = cv2.VideoCapture('F:/练习/PyCharm/PygameTest/resource/Video/P_M_PCG.mp4')
 
-        update_wrapper(new_f, f)
-        return new_f
+while cap.isOpened():
 
-    return check_returns
+    ret, frame = cap.read()
 
+    cv2.imshow('image', frame)
 
-@accepts(int, (int, float))
-@returns((int, float))
+    k = cv2.waitKey(20)
 
-def func(arg1, arg2):
-    return arg1 * arg2
+    #q键退出
 
-if __name__ == "__main__":
-    a = func(1, 'b')
-    print(a)
+    if k & 0xff == ord('q'):
+
+        break
+
+cap.release()
+
+cv2.destroyAllWindows()

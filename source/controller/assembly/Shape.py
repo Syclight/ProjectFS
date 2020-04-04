@@ -1,6 +1,6 @@
 from math import pi
 
-from source.util.Math2d import Point2D
+from source.util.Math2d import point2
 
 
 class Shape:
@@ -19,6 +19,27 @@ class Shape:
     def girth(self):
         pass
 
+    def left(self):
+        pass
+
+    def right(self):
+        pass
+
+    def top(self):
+        pass
+
+    def bottom(self):
+        pass
+
+    def barycenter(self):
+        pass
+
+    def doubleRange(self):
+        pass
+
+    def rebuildForBarycenter(self, point):
+        pass
+
 
 class Triangle(Shape):
     def __init__(self, *vec):
@@ -28,6 +49,9 @@ class Triangle(Shape):
 
     def __str__(self):
         return '<Shape::{}({}, {}, {})>'.format(self.__class__.__name__, self.p1, self.p2, self.p3)
+
+    def barycenter(self):
+        return point2((self.p1.x + self.p2.x + self.p3.x) / 3, (self.p1.y + self.p2.y + self.p3.y) / 3)
 
     def same(self, shape) -> bool:
         if not isinstance(shape, Triangle):
@@ -41,7 +65,6 @@ class Rectangle(Shape):
         self.y = y
         self.w = w
         self.h = h
-        self.center = Point2D(self.x + self.w / 2, self.y + self.h / 2)  # 重心坐标
 
     def __str__(self):
         return '<Shape::{}({}, {}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.w, self.h)
@@ -52,9 +75,11 @@ class Rectangle(Shape):
     def intersects(self, shape) -> bool:
         if not isinstance(shape, Rectangle):
             raise Exception("Param '{}' not a subclass of Shape::Rectangle".format(shape))
+        center1 = self.barycenter()
+        center2 = shape.barycenter()
 
-        dist_x = abs(self.center.x - shape.center.x)  # 重心位于x方向上的距离
-        dist_y = abs(self.center.y - shape.center.y)  # 重心位于y方向上的距离
+        dist_x = abs(center1.x - center2.x)  # 重心位于x方向上的距离
+        dist_y = abs(center1.y - center2.y)  # 重心位于y方向上的距离
 
         sum_x = self.w + shape.w  # x方向上的边长之和
         sum_y = self.h + shape.h  # y方向上的边长之和
@@ -74,6 +99,28 @@ class Rectangle(Shape):
     def girth(self):
         return (self.w + self.h) * 2
 
+    def left(self):
+        return self.x
+
+    def right(self):
+        return self.x + self.w
+
+    def top(self):
+        return self.y
+
+    def bottom(self):
+        return self.y + self.h
+
+    def barycenter(self):
+        return point2(self.x + self.w / 2, self.y + self.h / 2)
+
+    def doubleRange(self):
+        return self.x, self.y, self.w * 2, self.h * 2
+
+    def rebuildForBarycenter(self, point):
+        self.x = point.x - self.w / 2
+        self.y = point.y - self.h / 2
+
 
 class Square(Rectangle):
     def __init__(self, x, y, w):
@@ -88,8 +135,6 @@ class Circle(Shape):
         self.x = x
         self.y = y
         self.r = r
-        self.d = self.r * 2
-        self.squared_r = self.r * self.r
 
     def __str__(self):
         return '<Shape::{}({}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.r)
@@ -99,11 +144,17 @@ class Circle(Shape):
             return False
         return self.x == shape.x and self.y == shape.y and self.r == shape.r
 
+    def barycenter(self):
+        return point2(self.x, self.y)
+
     def area(self):
-        return pi * self.squared_r
+        return pi * self.r * self.r
+
+    def doubleRange(self):
+        return self.x, self.y, self.r * 2
 
     def girth(self):
-        return pi * self.d
+        return pi * self.r * 2
 
 
 # 内接圆
@@ -126,6 +177,12 @@ class CircumscribedCircle(Circle):
             x = shape.x + w
             y = shape.y + w
             r = pow(pow(w, 2) * 2, 0.5)
+            super(CircumscribedCircle, self).__init__(x, y, r)
+        elif isinstance(shape, Rectangle):
+            p = shape.barycenter()
+            x = p.x
+            y = p.y
+            r = pow(pow(shape.w, 2) + pow(shape.h, 2), 0.5) / 2
             super(CircumscribedCircle, self).__init__(x, y, r)
         else:
             raise Exception("Param '{}' not a subclass of Shape::Square".format(shape))

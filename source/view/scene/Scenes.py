@@ -1,8 +1,12 @@
 import time
 from operator import eq
 
+import moviepy
+
+from source.controller.assembly.IOEvent import ioEvent3Enum
 from source.view.baseClazz.Scene import Scene
-from source.view.element.Elements import *
+from source.view.element.Elements import TitleConstElement, TitleOptElement, TextElement, ImgElement, OptButtonElement, \
+    OptUIElement, SaveDataElement
 from source.const.Const import *
 from source.controller.assembly.RecordFile import RecordFile
 from source.util.ToolsFuc import *
@@ -11,22 +15,26 @@ from moviepy.editor import *
 
 # Logo场景
 class LogoScene(Scene):
-    def __init__(self, screen, config, paramList=None):
-        super().__init__(screen, config, paramList)
+    def __init__(self, screen, config, clock, paramList=None):
+        super().__init__(screen, config, clock, paramList)
         # 注册与该场景相关的场景
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_TITLE, TitleScene)
 
         self.Logo = 'IEELogo.bmp'
-
         self.__alpha = 0
         self.bg = pygame.image.load(gl_ImgPath + self.Logo)
 
+        self.__step = 4
+        self.__frameRate = self.config.getFrameRate()
+        if self.__frameRate != 0:
+            self.__step = 255 / (2 * self.__frameRate)
+
     def draw(self):
         if self.isReadyToEnter:
-            self.__alpha -= 4
+            self.__alpha -= self.__step
         else:
-            self.__alpha += 4
+            self.__alpha += self.__step
         if self.__alpha > 255:
             self.isReadyToEnter = True
         if self.__alpha < 0:
@@ -37,9 +45,9 @@ class LogoScene(Scene):
 
 # 标题场景
 class TitleScene(Scene):
-    def __init__(self, screen, config, paramList=None):
+    def __init__(self, screen, config, clock, paramList=None):
         # 注册场景
-        super().__init__(screen, config, paramList)
+        super().__init__(screen, config, clock, paramList)
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
         registerScene(SCENENUM_OPT, OptionScene)
@@ -53,8 +61,6 @@ class TitleScene(Scene):
         self.titleBgName = 'titleBg.bmp'
         self.titleOptionName = 'titleOpts.bmp'
         self.titleName = 'titleTop.bmp'
-
-        self.config.readConfig()
 
         self.res_wave_bgm = pygame.mixer.Sound(gl_MusicPath + self.wave_bgm)
         self.res_wave_bgm.set_volume(self.config.getVolumeBGM())
@@ -104,7 +110,15 @@ class TitleScene(Scene):
         self.__optExit.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
         self.__optExit.Events.mouseLeftKeyClick.append(lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
 
-    # ---选项单独事件-开始---
+        # 渲染参数
+        self.__step_in = 2
+        self.__step_out = 5
+        self.__frameRate = self.config.getFrameRate()
+        if self.__frameRate != 0:
+            self.__step_in = 255 / (2 * self.__frameRate)
+            self.__step_out = 255 / (1.5 * self.__frameRate)
+
+        # ---选项单独事件-开始---
 
     # 改变text渲染的文字
     def __changeBoardText(self, text):
@@ -119,7 +133,7 @@ class TitleScene(Scene):
 
     def draw(self):
         if not self.flag:
-            self.alpha += 2
+            self.alpha += self.__step_in
         if self.alpha >= 255:
             if not self.isMusicPlay:
                 self.isMusicPlay = True
@@ -134,7 +148,7 @@ class TitleScene(Scene):
         if self.isReadyToEnd:
             self.res_wave_bgm.fadeout(2000)
             if self.alpha > 0:
-                self.alpha -= 5
+                self.alpha -= self.__step_out
                 blitAlpha(self.screen, self.bg, (0, 0), self.alpha)
             if self.alpha <= 0:
                 self.res_wave_bgm.stop()
@@ -184,9 +198,9 @@ class TitleScene(Scene):
 
 # 新游戏序章场景
 class Title_PrologueScene(Scene):
-    def __init__(self, screen, config, paramList=None):
+    def __init__(self, screen, config, clock, paramList=None):
         # 初始化场景参数
-        super().__init__(screen, config, paramList)
+        super().__init__(screen, config, clock, paramList)
 
         # resource name
         self.res_Img1 = 'NG_F_SS_1.bmp'
@@ -200,9 +214,6 @@ class Title_PrologueScene(Scene):
         # 注册场景
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
-
-        # 读取配置
-        self.config.readConfig()
 
         # 音频
         self.res_Sound_PourWine = pygame.mixer.Sound(gl_SoundPath + self.Sound_PourWine)
@@ -249,7 +260,7 @@ class Title_PrologueScene(Scene):
             self.__alphaStep_Text = self.__TextShow_Interval / 1000 * 0.036
             self.__alphaStep_Dia = self.__DialogueShow_Interval / 1000 * 0.416
         else:
-            self.__alphaStep_Text = 255 / (((self.__TextShow_Interval - 2) / 1000) * self.__frameRate)
+            self.__alphaStep_Text = 255 / (((self.__TextShow_Interval - 1500) / 1000) * self.__frameRate)
             self.__alphaStep_Dia = 255 / self.__frameRate
 
     def draw(self):
@@ -311,12 +322,11 @@ class Title_PrologueScene(Scene):
 
 # 序章播放CG的场景，接下来的场景还没有编写，所以这里的下一个场景是开场Logo
 class Prologue_StartCGScene(Scene):
-    def __init__(self, screen, config, paramList=None):
-        super().__init__(screen, config, paramList)
+    def __init__(self, screen, config, clock, paramList=None):
+        super().__init__(screen, config, clock, paramList)
         self.__PrologueCG = 'P_M_PCG.mp4'
         # 视频
-        self.__res_CG_clip = VideoFileClip(gl_VideoPath + self.__PrologueCG).resize(
-            (self.screen.get_width(), self.screen.get_height()))
+        self.__res_CG_clip = VideoFileClip(gl_VideoPath + self.__PrologueCG)
 
     def draw(self):
         if not self.isReadyToEnd:
@@ -338,8 +348,8 @@ def ChePos(e, isDown):
 
 
 class OptionScene(Scene):
-    def __init__(self, screen, config, paramList=None):
-        super().__init__(screen, config, paramList)
+    def __init__(self, screen, config, clock, paramList=None):
+        super().__init__(screen, config, clock, paramList)
 
         self.__flag_isEnter = False
         self.__alpha = 0
@@ -358,7 +368,7 @@ class OptionScene(Scene):
         self.res_Sound_Choose_Name = 'OPT_C.wav'
         self.res_UI_RightButton = 'OPT_BR.png'
         self.res_UI_LeftButton = 'OPT_BL.png'
-        self.config.readConfig()
+
         self.__Clock = pygame.time.Clock()
         self.__KV_AA = {}
         self.__KV_WAVE = {}
@@ -491,6 +501,12 @@ class OptionScene(Scene):
         self.__ElementsMap['Draw'] = self.__ElementsMap['Draw1'] + self.__ElementsMap['Draw2']
         self.__ElementsMap['Interact'] = self.__ElementsMap['Interact1'] + self.__ElementsMap['Interact2']
 
+        # 设定渲染参数
+        self.__step = 4
+        self.__frameRate = self.config.getFrameRate()
+        if self.__frameRate:
+            self.__step = 255 / (1.5 * self.__frameRate)
+
     # 替换ElementsList2的内容
     def __rebuildElementsToList2(self, _list):
         if _list is None or len(_list) <= 0:
@@ -547,7 +563,7 @@ class OptionScene(Scene):
         blitAlpha(self.screen, self.res_Img_BG, (0, 0), self.__alpha)
 
         if not self.__flag_isEnter and not self.isReadyToEnd:
-            self.__alpha += 4
+            self.__alpha += self.__step
             if self.__alpha >= 255:
                 self.__alpha = 255
                 self.__flag_isEnter = True
@@ -599,10 +615,9 @@ class OptionScene(Scene):
 class Continue_Scene(Scene):
     __ElementsList = None
 
-    def __init__(self, screen, config, paramList=None):
-        super().__init__(screen, config, paramList)
+    def __init__(self, screen, config, clock, paramList=None):
+        super().__init__(screen, config, clock, paramList)
         self.__ElementsList = []
-        self.config.readConfig()
         self.__mappingList = []
         self.__res_n_OPT = 'CTU_OPT.png'
         self.__buildList()

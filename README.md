@@ -100,3 +100,14 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 添加PhysicalBody.py用于物理组件，同时还添加了PhysicsSystem
 * 添加chapter1-1.py准备进入第一章节游戏的编写
 * 将vec2等添加到util.Math2d.py中
+
+### 2020.4.4 Asheor
+* 主要更新2d物理方面的支持：力，与碰撞反馈
+* PhysicsSystem 更名为PhysicalScene
+* 与物理支持有关的文件：
+> 1.controller/assembly/CollidedProbe.py 该文件为碰撞处理探针，处理碰撞之后各个物理体的状态，由physicalScene调用  
+> 2.controller/assembly/PhysicalBody.py 该文件为主要的物理处理机，包含physicalBody与PhysicalScene  
+> 3.util/Math2D.py 添加了许多2d向量的新计算方式，方便进行物理运算  
+> 4.controller/assembly/Shape.py 为方便物理运算添加了一些特性
+* 在examples下可以找到对应的测试场景，修改AppConfig.py以测试
+* 优化了gameApp.py， 现在在创建场景时要传入时间参数(这个时间一般用pygame.time.get_ticks()获得)
