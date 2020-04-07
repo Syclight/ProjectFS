@@ -111,3 +111,11 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 > 4.controller/assembly/Shape.py 为方便物理运算添加了一些特性
 * 在examples下可以找到对应的测试场景，修改AppConfig.py以测试
 * 优化了gameApp.py， 现在在创建场景时要传入时间参数(这个时间一般用pygame.time.get_ticks()获得)
+
+### 2020.4.7 Asheor
+* 重大更新！本次主要添加了A*寻路算法
+* A-star.py 主要包含A*寻路算法的各种细节
+* 添加了MathUtil.py提供一些与数学相关的函数
+* 添加了一个测试 AstartTest.py 同样在AppConfig.py中配置后即可使用
+* 轻微修改了CollidedProbe.py 与 PhysicalBody.py
+

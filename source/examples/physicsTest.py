@@ -1,8 +1,11 @@
 import random
 import pygame
 
+from source.controller.assembly.IOEvent import IOEvent3, ioEvent3Enum
 from source.controller.assembly.Shape import Rectangle
 from source.util.Math2d import vec2
+from source.util.MathUtil import constrain
+from source.util.ToolsFuc import exKey
 from source.view.baseClazz.Scene import Scene
 
 
@@ -108,16 +111,54 @@ class Mover:
 #             # self.mover.applyForce(friction)
 
 
+class Attractor:
+    def __init__(self, location):
+        self.location = location
+        self.mass = 20
+        self.G = 1
+        self.dragOffset = vec2()
+        self.Events = IOEvent3()
+        self.Events.appendEvent(ioEvent3Enum.key_D | ioEvent3Enum.keyDown, lambda: self.__X(True), 0)
+        self.Events.appendEvent(ioEvent3Enum.key_A | ioEvent3Enum.keyDown, lambda: self.__X(False), 0)
+
+    def __X(self, isAdd):
+        if isAdd:
+            self.location.x += 1
+        else:
+            self.location.x -= 10
+
+    def attract(self, m):
+        force = self.location - m.location
+        d = force.len()
+        d = constrain(d, 1, 8)
+        force = force.normal()
+        strength = (self.G * self.mass * m.mass) / (d * d)
+
+        return force.mulNum(strength)
+
+    def display(self, screen):
+        loc = int(self.location.x), int(self.location.y)
+        pygame.draw.circle(screen, (0, 255, 0), loc, self.mass * 2 + 14, 1)
+
+
 class PhysicsScene(Scene):
     def __init__(self, screen, config, clock):
         super(PhysicsScene, self).__init__(screen, config, clock)
-        self.mover = Mover(vec2(400, 0), Rectangle(0, 0, 800, 600), 1)
+        self.m = Mover(vec2(500, 50), Rectangle(0, 0, 800, 600), 1)
+        self.a = Attractor(vec2(400, 300))
 
     def draw(self):
-        gravity = vec2(0, 0.3)
-        gravity = gravity.mulNum(self.mover.mass)
-        self.mover.applyForce(gravity)
+        f = vec2(0.1, 0)
+        self.m.applyForce(f)
 
-        self.mover.update()
-        self.mover.edges()
-        self.mover.display(self.screen)
+        fa = self.a.attract(self.m)
+        self.m.applyForce(fa)
+
+        self.m.update()
+        # self.a.update()
+
+        self.a.display(self.screen)
+        self.m.display(self.screen)
+
+    def doKeyEvent(self, Key, Mod, Type, Unicode=None):
+        self.a.Events.doKeyboardKeyDown(exKey(Key))

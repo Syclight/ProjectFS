@@ -79,7 +79,7 @@ class physicalScene:
                 a.applyForce(gravity)
                 a.update(self.activeArea, self.__unitTime)
                 if a.collideArea.right() > self.__right:
-                    a.collideArea.x = self.__right
+                    a.collideArea.x = self.__right - a.collideArea.w
                     a.vel.x *= -a.restitution
                 if a.collideArea.bottom() > self.__bottom:
                     a.collideArea.y = self.__bottom - a.collideArea.h
@@ -88,7 +88,7 @@ class physicalScene:
                     a.collideArea.x = self.__left
                     a.vel.x *= -a.restitution
                 if a.collideArea.top() < self.__top:
-                    a.collideArea.y = self.__top + a.collideArea.h
+                    a.collideArea.y = self.__top
                     a.vel.y *= -a.restitution
                 a.isCollideChecked = False
             node = Node(a.collideArea.x, a.collideArea.y, a)

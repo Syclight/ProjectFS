@@ -1,12 +1,3 @@
-from source.util.Math2d import vec2
-
-
-class PhyConst:
-    areaDens = 1.293  # kg/m3
-    areaDensCoe_Cub = 1.0
-    areaDensCoe_Sphere = 0.5
-
-
 class CollidedProbe:
     @staticmethod
     def execute(act, pas, unitTime):
@@ -46,6 +37,3 @@ class CollidedProbe:
         #     act.vel.y = 0
         # if pas.vel.y < pasV.y:
         #     pas.vel.y = 0
-
-        # act.force += actF_
-        # pas.force += pasF_
