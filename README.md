@@ -116,6 +116,9 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 重大更新！本次主要添加了A*寻路算法
 * A-star.py 主要包含A*寻路算法的各种细节
 * 添加了MathUtil.py提供一些与数学相关的函数
-* 添加了一个测试 AstartTest.py 同样在AppConfig.py中配置后即可使用
-* 轻微修改了CollidedProbe.py 与 PhysicalBody.py
+* 添加了一个测试AstartTest.py同样在AppConfig.py中配置后即可使用
+* 轻微修改了CollidedProbe.py与PhysicalBody.py
+
+### 2020.4.8 Asheor
+* 修改了A-start.py中的一些细节，使寻路在实际应用中更加方便
 

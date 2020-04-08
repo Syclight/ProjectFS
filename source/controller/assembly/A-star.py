@@ -1,21 +1,18 @@
-from source.controller.assembly.Shape import Rectangle
-from source.util.Math2d import point2
-
-
+#  启发函数
 def heuristic(a, b):
     return abs(a.i - b.i) + abs(a.j - b.j)
 
 
 class Spot:
     def __init__(self, i, j):
-        self.i = i
-        self.j = j
-        self.f = 0
-        self.g = 0
-        self.h = 0
-        self.neighbors = []
-        self.previous = None
-        self.wall = False
+        self.i = i  # 该位置X坐标
+        self.j = j  # 该位置Y坐标
+        self.g = 0  # 从起点到当前位置的距离
+        self.h = 0  # 从终点到当前位置距离，需要计算
+        self.f = 0  # g + h这是最短路径的依据，g + h最小，则说明该点越在最短路径上
+        self.neighbors = []  # 邻居集合，即子节点
+        self.previous = None  # 父节点，即该位置的上一个位置
+        self.wall = False  # 是否是无法穿越的位置
 
     def addNeighbors(self, cols, rows, grid):
         i, j = self.i, self.j
@@ -38,19 +35,23 @@ class Spot:
 
 
 class AStartArea:
-    def __init__(self, rect, cols, rows, start, end):
+    def __init__(self, rect, cols, rows, start=None, end=None):
         self.__grid = []
         self.rect = rect
         self.cols, self.rows = cols, rows
         self.unit_w, self.unit_h = self.rect.w / self.cols, self.rect.w / self.rows
         self.__openSet, self.__closeSet = [], []
+        self.start, self.end = None, None
         self.__initArea()
-        self.start = self.__grid[start[0]][start[1]]
-        self.end = self.__grid[end[0]][end[1]]
-        self.__openSet.append(self.start)
+        if start is not None:
+            self.start = self.__grid[start[0]][start[1]]
+            self.__openSet.append(self.start)
+        if end is not None:
+            self.end = self.__grid[end[0]][end[1]]
         self.__done = False
         self.__noSolution = False
         self.__resList = []
+        self.__wallsMap = []
 
     def __initArea(self):
         for i in range(0, self.cols):
@@ -64,34 +65,55 @@ class AStartArea:
             for j in range(0, self.rows):
                 self.__grid[i][j].addNeighbors(self.cols, self.rows, self.__grid)
 
-    def addWall(self, x, y):
-        if self.start.i == x and self.start.j == y or self.end.i == x and self.end.j == y:
-            raise Exception('({}, {}) shouldnt be startPos or endPos'.format(x, y))
+    def addObstacle(self, x, y):
+        if self.start is not None or self.end is not None:
+            if self.start.i == x and self.start.j == y or self.end.i == x and self.end.j == y:
+                raise Exception('Obstacle pos ({}, {}) should not be startPos or endPos'.format(x, y))
         self.__grid[x][y].wall = True
+        self.__wallsMap.append((x, y))
 
-    def addWalls(self, pos_list):
+    def addObstacles(self, pos_list):
         for x, y in pos_list:
-            self.addWall(x, y)
+            self.addObstacle(x, y)
 
-    def removeWall(self, x, y):
+    def removeObstacle(self, x, y):
         self.__grid[x][y].wall = False
+        self.__wallsMap.remove((x, y))
 
-    def removeWalls(self, pos_list):
+    def removeObstacles(self, pos_list):
         for x, y in pos_list:
-            self.removeWall(x, y)
+            self.removeObstacle(x, y)
+
+    def removeAllObstacles(self):
+        for x, y in self.__wallsMap:
+            self.__grid[x][y].wall = False
+        self.__wallsMap.clear()
+
+    def getObstaclesList(self):
+        return self.__wallsMap
+
+    def refresh(self):
+        tempWall = self.__wallsMap
+        self.__init__(self.rect, self.cols, self.rows)
+        self.__wallsMap = tempWall
+        for x, y in self.__wallsMap:
+            self.__grid[x][y].wall = True
 
     def setStart(self, start):
-        self.__openSet.clear()
-        self.start = self.__grid[start[0]][start[1]]
+        x, y = start[0], start[1]
+        if self.__grid[x][y].wall:
+            raise Exception('There are obstacle at pos ({}, {})'.format(x, y))
+        self.start = self.__grid[x][y]
         self.__openSet.append(self.start)
 
     def setEnd(self, end):
-        self.end = self.__grid[end[0]][end[1]]
+        x, y = end[0], end[1]
+        if self.__grid[x][y].wall:
+            raise Exception('There are obstacle at pos ({}, {})'.format(x, y))
+        self.end = self.__grid[x][y]
 
     def run(self):
         while not self.__done:
-
-            current = None
             if len(self.__openSet) > 0:
                 winner = 0
                 for i in range(0, len(self.__openSet)):
@@ -121,6 +143,7 @@ class AStartArea:
                                 newPath = True
                                 self.__openSet.append(n)
                             if newPath:
+                                # 这里的启发函数是自定义的，用于测定启发点到当前点的距离(也可以理解成消耗资源量)
                                 n.h = heuristic(n, self.end)
                                 n.f = n.g + n.h
                                 n.previous = current
@@ -141,7 +164,14 @@ class AStartArea:
                 return self.__resList
 
 
-area = AStartArea(Rectangle(0, 0, 500, 500), 10, 10, (0, 0), (9, 9))
-area.addWall(4, 4)
-area.addWalls([(4, 4), (3, 3), (6, 5)])
-print(area.run())
+# area = AStartArea(Rectangle(0, 0, 500, 500), 10, 10)
+# area.addObstacle(4, 4)
+# area.addObstacles([(5, 5), (3, 3), (6, 5)])
+# area.setStart((0, 0))
+# area.setEnd((9, 9))
+# print(area.run())
+# area.refresh()
+# area.removeAllObstacles()
+# area.setStart((0, 0))
+# area.setEnd((9, 9))
+# print(area.run())
