@@ -149,7 +149,7 @@ class AStartArea:
                                 n.previous = current
             else:
                 self.__noSolution = True
-                return False
+                return []
 
             if not self.__done:
                 self.__resList.clear()
@@ -172,6 +172,10 @@ class AStartArea:
 # print(area.run())
 # area.refresh()
 # area.removeAllObstacles()
+# area.setStart((0, 0))
+# area.setEnd((9, 9))
+# print(area.run())
+# area.refresh()
 # area.setStart((0, 0))
 # area.setEnd((9, 9))
 # print(area.run())

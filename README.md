@@ -122,3 +122,11 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 ### 2020.4.8 Asheor
 * 修改了A-start.py中的一些细节，使寻路在实际应用中更加方便
 
+### 2020.4.13 Asheor
+* 新增的Painter.py可以画出Shape中的形状
+* 新增了一个测试 TestPainter.py 用于测试绘制Shape的效果
+* 新增了MathConst.py 数学常量
+* Math2d.py 新增了行列式计算
+* A-start.py 更名为A_start.py，并做了少量修改。
+* Shape.py 新增了Line与Ellipse
+

@@ -1,7 +1,14 @@
 import math
+import random
+
+from source.util.MathConst import PI_DOUBLE
 
 
 class vec2:
+    """Math2d::vec2\n
+    @overwrite: __str__, __add__, __sub__
+    """
+
     def __init__(self, x=0.0, y=0.0):
         self.x = float(x)
         self.y = float(y)
@@ -14,6 +21,14 @@ class vec2:
 
     def __sub__(self, other):
         return vec2(self.x - other.x, self.y - other.y)
+
+    @staticmethod
+    def fromAngle(angle, length=1):
+        return vec2(length * math.cos(angle), length * math.sin(angle))
+
+    @staticmethod
+    def random(a=0, b=1):
+        return vec2.fromAngle(random.uniform(a, b) * PI_DOUBLE)
 
     def copy(self):
         return vec2(self.x, self.y)
@@ -32,10 +47,14 @@ class vec2:
     def negate(self):
         return vec2(-self.x, -self.y)
 
-    def same(self, shape) -> bool:
-        if not isinstance(shape, vec2):
-            return False
-        return self.x == shape.x and self.y == shape.y
+    def same(self, *args) -> bool:
+        if len(args) == 1:
+            if not isinstance(args, vec2):
+                return False
+            return self.x == args.x and self.y == args.y
+        else:
+            _x, _y = args[0], args[1]
+            return self.x == _x and self.y == _y
 
     def dist(self, _vec2=None):
         temp_vec2 = _vec2
@@ -51,6 +70,9 @@ class vec2:
 
     def len(self):
         return pow(self.len_square(), 0.5)
+
+    def setLen(self, length):
+        return self.normal().mulNum(length)
 
     def dot(self, _vec2):
         return self.x * _vec2.x + self.y * _vec2.y
@@ -81,3 +103,37 @@ class point2(vec2):
 
     def __str__(self):
         return '<point2::{}({}, {})>'.format(self.__class__.__name__, self.x, self.y)
+
+
+class dtm2:
+    """Math2d::determinant2:
+        |x1  y1|\n
+        |x2  y2|
+    @ rewrite __str__, __add__, __mul__, __truediv__\n
+    @ method mul(Number) -> dtm2 : mul a number\n
+    @ method val(None) -> float : the number value of the determinant2
+    """
+
+    def __init__(self, x1, y1, x2, y2):
+        self.x1, self.y1, self.x2, self.y2 = x1, y1, x2, y2
+
+    def __str__(self):
+        return '<dtm2::{}\n(|{}, {}|\n|{}, {}|)>'.format(self.__class__.__name__, self.x1, self.y1, self.x2, self.y2)
+
+    def __add__(self, other):
+        return self.val() + other.val()
+
+    def __mul__(self, other):
+        return self.val() * other.val()
+
+    def __truediv__(self, other):
+        return self.val() / other.val()
+
+    def mul(self, num):
+        return dtm2(self.x1 * num, self.y1 * num, self.x2, self.y2)
+
+    def div(self, num):
+        return dtm2(self.x1 / num, self.y1 / num, self.x2, self.y2)
+
+    def val(self):
+        return self.x1 * self.y2 - self.y1 * self.x2

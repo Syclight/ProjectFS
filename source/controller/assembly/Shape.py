@@ -1,6 +1,6 @@
 from math import pi
 
-from source.util.Math2d import point2
+from source.util.Math2d import point2, vec2, dtm2
 
 
 class Shape:
@@ -39,6 +39,42 @@ class Shape:
 
     def rebuildForBarycenter(self, point):
         pass
+
+
+class Line(Shape):
+    def __init__(self, pos, angle, length=0):
+        self.pos = pos
+        self.dir = vec2.fromAngle(angle)
+        self.length = length
+
+    def setAngle(self, angle):
+        self.dir = vec2.fromAngle(angle)
+
+    def cast(self, a, b):
+        x1 = a.x
+        y1 = a.y
+        x2 = b.x
+        y2 = b.y
+
+        x3 = self.pos.x
+        y3 = self.pos.y
+        x4 = self.pos.x + self.dir.x
+        y4 = self.pos.y + self.dir.y
+        dt = dtm2(x1 - x3, x3 - x4, y1 - y3, y3 - y4)
+        du = dtm2(x1 - x2, x1 - x3, y1 - y2, y1 - y3)
+        dd = dtm2(x1 - x2, x3 - x4, y1 - y2, y3 - y4)
+        dd_val = dd.val()
+
+        if dd_val == 0:
+            return
+
+        t = dt.val() / dd_val
+        u = du.val() / dd_val
+
+        if 0 < t < 1 and u > 0:
+            return vec2(x1 + t * (x2 - x1), y1 + t * (y2 - y1))
+        else:
+            return
 
 
 class Triangle(Shape):
@@ -93,6 +129,11 @@ class Rectangle(Shape):
             return False
         return self.x == shape.x and self.y == shape.y and self.w == shape.w and self.h == shape.h
 
+    def array(self):
+        p1, p2 = point2(self.x, self.y), point2(self.x + self.w, self.y)
+        p4, p3 = point2(self.x, self.y + self.h), point2(self.x + self.w, self.y + self.h)
+        return [p1, p2, p3, p4]
+
     def area(self):
         return self.w * self.h
 
@@ -130,6 +171,31 @@ class Square(Rectangle):
         return '<Shape::{}({}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.w)
 
 
+class Ellipse(Shape):
+    def __init__(self, x, y, a, b):
+        self.x = x
+        self.y = y
+        self.a = a
+        self.b = b
+
+    def __str__(self):
+        return '<Shape::{}({}, {}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.a, self.b)
+
+    def same(self, shape) -> bool:
+        if not isinstance(shape, Ellipse):
+            return False
+        return self.x == shape.x and self.y == shape.y and self.a == shape.a and self.b == shape.b
+
+    def barycenter(self):
+        return point2(self.x, self.y)
+
+    def area(self):
+        return pi * self.a * self.b
+
+    def doubleRange(self):
+        return self.x, self.y, self.a * 2, self.b * 2
+
+
 class Circle(Shape):
     def __init__(self, x, y, r):
         self.x = x
@@ -156,8 +222,9 @@ class Circle(Shape):
     def girth(self):
         return pi * self.r * 2
 
+    # 内接圆
 
-# 内接圆
+
 class InscribedCircle(Circle):
     def __init__(self, shape):
         if isinstance(shape, Square):
