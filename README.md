@@ -130,3 +130,8 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * A-start.py 更名为A_start.py，并做了少量修改。
 * Shape.py 新增了Line与Ellipse
 
+### 2020.4.14 Asheor
+* 对MathUtil.py,Painter.py,ToolsFuc.py,A_star.py进行了细节上的修改
+* 修改了测试TestPainter.py与testSpriteScene.py
+* 添加了RTS_Test.py测试A*和Actor结合，模拟RTS的寻路系统
+

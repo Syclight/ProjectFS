@@ -237,7 +237,7 @@ def Merge(left, right):
     return result
 
 
-# 针对Ioevent3Enum的转换器,将pyameKey转换成IoEvent3的Key
+# 针对Ioevent3Enum的转换器,将pygameKey转换成IoEvent3的Key
 def exKey(key) -> int:
     return int(key) - 97 + 0xC0000
 

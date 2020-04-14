@@ -1,3 +1,9 @@
+__all__ = [
+    'constrain',
+    'mapping',
+]
+
+
 def constrain(x, low, high):
     """
     限制一个数字于最低值与最高值之间

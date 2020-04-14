@@ -118,8 +118,8 @@ def chPos(step, sprite, isY):
 
 # test 组内碰撞检测
 class testSpriteScene(Scene):
-    def __init__(self, screen, config):
-        super(testSpriteScene, self).__init__(screen, config)
+    def __init__(self, screen, config, startClock):
+        super(testSpriteScene, self).__init__(screen, config, startClock)
         self.img = pygame.Surface((5, 5)).convert()
         self.img.fill((255, 255, 255))
         self.sprintsGroup1 = SpriteGroup(RectangleRange(0, 0, 800, 600))

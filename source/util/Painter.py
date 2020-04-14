@@ -1,19 +1,23 @@
 import pygame
 
+__all__ = [
+    'Painter',
+]
+
 
 class Painter:
     """将pygame.draw包装，可直接绘制Shape类型的图形,方便框架使用
 
-    因为使用pygame.draw，如果开启抗锯齿则width参数的值固定为1
+    因为使用pygame.draw，在线框模式下如果开启抗锯齿则width参数的值固定为1
 
     绘制圆和椭圆时，抗锯齿无效"""
 
     def __init__(self, surf):
         self.s = surf
 
-    def Point(self, p, color):
+    def Pixel(self, p, color):
         """
-        绘制一个点
+        绘制一个像素点
 
         :param p: Math2d::vec2 or Math2d::point2
         :param color: tuple (R, G, B)
@@ -65,9 +69,9 @@ class Painter:
             sp, ep = points[0], points[length - 1]
             _sp, _ep = (int(sp.x), int(sp.y)), (int(ep.x), int(ep.y))
             if aa:
-                pygame.draw.aaline(self.s, color, _sp, _ep, 1)
+                pygame.draw.aaline(self.s, color, _ep, _sp, 1)
             else:
-                pygame.draw.line(self.s, color, _sp, _ep, width)
+                pygame.draw.line(self.s, color, _ep, _sp, width)
 
     def Arc(self, color, rect, start_angle, stop_angle, width):
         """
@@ -80,7 +84,7 @@ class Painter:
         :param width: int 线宽
         :return: None
         """
-        _rect = pygame.Rect(rect.x, rect.y, rect.w, rect.h)
+        _rect = (rect.x, rect.y, rect.w, rect.h)
         pygame.draw.arc(self.s, color, _rect, start_angle, stop_angle, width)
 
     def Rect(self, rect, color, width, aa=0):
@@ -89,11 +93,11 @@ class Painter:
 
         :param rect: Shape::Rectangle
         :param color: tuple (R, G, B)
-        :param width: int 线宽
+        :param width: int 线宽 0表示填充
         :param aa: bool 是否抗锯齿
         :return: None
         """
-        _rect = pygame.Rect(rect.x, rect.y, rect.w, rect.h)
+        _rect = (rect.x, rect.y, rect.w, rect.h)
         if width == 0:
             pygame.draw.rect(self.s, color, _rect, 0)
             if aa:
@@ -101,7 +105,7 @@ class Painter:
                 self.Lines(points, color, 1, 1, 1)
         else:
             points = rect.array()
-            self.Lines(points, color, width, aa, 1)
+            self.Lines(points, color, width, 1, aa)
 
     def Triangle(self, triangle, color, width, aa):
         """
@@ -136,7 +140,7 @@ class Painter:
             if aa:
                 self.Lines(points, color, 1, 1, 1)
         else:
-            self.Lines(points, color, width, aa, 1)
+            self.Lines(points, color, width, 1, aa)
 
     def Circle(self, circle, color, width, aa=0):
         """
@@ -162,5 +166,5 @@ class Painter:
         :param aa: bool 是否抗锯齿
         :return: None
         """
-        rect = pygame.Rect(ellipse.x - ellipse.a, ellipse.y - ellipse.b, ellipse.a * 2, ellipse.b * 2)
+        rect = (ellipse.x - ellipse.a, ellipse.y - ellipse.b, ellipse.a * 2, ellipse.b * 2)
         pygame.draw.ellipse(self.s, color, rect, width)

@@ -39,7 +39,7 @@ class AStartArea:
         self.__grid = []
         self.rect = rect
         self.cols, self.rows = cols, rows
-        self.unit_w, self.unit_h = self.rect.w / self.cols, self.rect.w / self.rows
+        self.unit_w, self.unit_h = self.rect.w / self.cols, self.rect.h / self.rows
         self.__openSet, self.__closeSet = [], []
         self.start, self.end = None, None
         self.__initArea()

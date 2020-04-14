@@ -16,7 +16,7 @@ class TestPainterScene(Scene):
             x = random.randint(0, 800)
             y = random.randint(0, 400)
             self.points.append(vec2(x, y))
-        self.rect = Rectangle(100, 100, 200, 100)
+        self.rect = Rectangle(400, 100, 200, 100)
         self.line = Line(vec2(200, 200), math.radians(30), 400)
         self.white = (255, 255, 255)
         self.tra = Triangle(point2(100, 100), point2(60, 180), point2(140, 180))
@@ -24,9 +24,10 @@ class TestPainterScene(Scene):
         self.ellipse = Ellipse(400, 300, 160, 70)
 
     def draw(self):
-        self.painter.Triangle(self.tra, self.white, 1, 1)
-        self.painter.Rect(self.rect, self.white, 1, 0)
+        self.painter.Pixel(point2(700, 500), self.white)
+        self.painter.Triangle(self.tra, self.white, 0, 1)
+        self.painter.Rect(self.rect, self.white, 0, 1)
         self.painter.Circle(self.circle, self.white, 1)
         self.painter.Ellipse(self.ellipse, self.white, 1)
-        self.painter.Lines(self.points, (255, 255, 255), 1, 1, 1)
+        self.painter.Lines(self.points, (255, 255, 255), 1, 0, 1)
         self.painter.Line(self.line, (255, 255, 255), 1, 0)
