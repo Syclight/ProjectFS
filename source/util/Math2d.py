@@ -30,6 +30,9 @@ class vec2:
     def random(a=0, b=1):
         return vec2.fromAngle(random.uniform(a, b) * PI_DOUBLE)
 
+    def orient(self):
+        return math.atan2(self.x, self.y)
+
     def copy(self):
         return vec2(self.x, self.y)
 
@@ -49,9 +52,10 @@ class vec2:
 
     def same(self, *args) -> bool:
         if len(args) == 1:
-            if not isinstance(args, vec2):
+            _v = args[0]
+            if not isinstance(_v, vec2):
                 return False
-            return self.x == args.x and self.y == args.y
+            return self.x == _v.x and self.y == _v.y
         else:
             _x, _y = args[0], args[1]
             return self.x == _x and self.y == _y
@@ -87,10 +91,10 @@ class vec2:
         return vec2(self.x / _len, self.y / _len)
 
     def angle_cos(self, _vec2):
-        return self.dot(_vec2) / self.len() * _vec2.len()
+        return self.dot(_vec2) / (self.len() * _vec2.len())
 
     def angle(self, _vec2):
-        return math.acos(self.angle_cos(_vec2))
+        return math.acos(min(1, max(-1, self.angle_cos(_vec2))))
 
     def rotate(self, angle):
         return vec2(self.x * math.cos(angle) - self.y * math.sin(angle),
@@ -98,7 +102,7 @@ class vec2:
 
 
 class point2(vec2):
-    def __init__(self, x, y):
+    def __init__(self, x=0, y=0):
         super(point2, self).__init__(x, y)
 
     def __str__(self):

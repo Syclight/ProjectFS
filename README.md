@@ -135,3 +135,11 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 修改了测试TestPainter.py与testSpriteScene.py
 * 添加了RTS_Test.py测试A*和Actor结合，模拟RTS的寻路系统
 
+### 2020.4.15 Asheor
+* 将A*寻路结合到场景中，详见RTS_Test.py
+* 修复了Painter画直线时起点有时会错误的bug
+* 修复了Math2d.py中向量求夹角时cos值未定义边界而错误的问题，添加了求正方向的方法
+* MathUtil.py与MathCost.py中添加了插值函数相关的方法，现在支持：
+> 线性插值，三角插值，立方差值(三次插值)，Hermite插值
+* 添加SGFpyException.py,是框架中所有异常的基类
+* A_star.py现在支持插入一个障碍物域与删除障碍物域,并添加了位置错误异常

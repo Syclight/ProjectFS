@@ -35,7 +35,7 @@ class Painter:
         :param aa: bool 是否抗锯齿
         :return: None
         """
-        sp = (int(line.pos.y), int(line.pos.y))
+        sp = (int(line.pos.x), int(line.pos.y))
         eps = line.dir.setLen(line.length)
         ep = (sp[0] + int(eps.x), sp[1] + int(eps.y))
         if aa:

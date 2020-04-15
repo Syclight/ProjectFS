@@ -1,3 +1,15 @@
+from source.controller.assembly.interface.SGFpyException import SGFpyException
+
+
+class CoordinateException(SGFpyException):
+    def __init__(self, pos, _str):
+        self.pos = pos
+        self._str = _str
+
+    def __str__(self):
+        return "Coordinate({}, {}) ".format(self.pos[0], self.pos[1]) + self._str
+
+
 #  启发函数
 def heuristic(a, b):
     return abs(a.i - b.i) + abs(a.j - b.j)
@@ -68,13 +80,19 @@ class AStartArea:
     def addObstacle(self, x, y):
         if self.start is not None or self.end is not None:
             if self.start.i == x and self.start.j == y or self.end.i == x and self.end.j == y:
-                raise Exception('Obstacle pos ({}, {}) should not be startPos or endPos'.format(x, y))
+                raise CoordinateException((x, y), 'Obstacle coordinate should not be startPos or endPos')
         self.__grid[x][y].wall = True
         self.__wallsMap.append((x, y))
 
     def addObstacles(self, pos_list):
         for x, y in pos_list:
             self.addObstacle(x, y)
+
+    def addObstacleArea(self, start_x, size_x, start_y, size_y):
+        _x, _y = start_x, start_y
+        for i in range(0, size_x):
+            for j in range(0, size_y):
+                self.addObstacle(_x + i, _y + j)
 
     def removeObstacle(self, x, y):
         self.__grid[x][y].wall = False
@@ -83,6 +101,12 @@ class AStartArea:
     def removeObstacles(self, pos_list):
         for x, y in pos_list:
             self.removeObstacle(x, y)
+
+    def removeObstacleArea(self, start_x, size_x, start_y, size_y):
+        _x, _y = start_x, start_y
+        for i in range(0, size_x):
+            for j in range(0, size_y):
+                self.removeObstacle(_x + i, _y + j)
 
     def removeAllObstacles(self):
         for x, y in self.__wallsMap:
@@ -102,14 +126,14 @@ class AStartArea:
     def setStart(self, start):
         x, y = start[0], start[1]
         if self.__grid[x][y].wall:
-            raise Exception('There are obstacle at pos ({}, {})'.format(x, y))
+            raise CoordinateException((x, y), 'has obstacle')
         self.start = self.__grid[x][y]
         self.__openSet.append(self.start)
 
     def setEnd(self, end):
         x, y = end[0], end[1]
         if self.__grid[x][y].wall:
-            raise Exception('There are obstacle at pos ({}, {})'.format(x, y))
+            raise CoordinateException((x, y), 'has obstacle')
         self.end = self.__grid[x][y]
 
     def run(self):
@@ -162,7 +186,6 @@ class AStartArea:
                 self.__resList.reverse()
                 self.__resList.append((self.end.i, self.end.j))
                 return self.__resList
-
 
 # area = AStartArea(Rectangle(0, 0, 500, 500), 10, 10)
 # area.addObstacle(4, 4)

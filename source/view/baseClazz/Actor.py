@@ -28,7 +28,7 @@ class Actor:
             raise Exception("Class '{}' must is a subclass of 'Actor'".format(othActor))
         return self.area.intersects(othActor.area)
 
-    def update(self):
+    def update(self, *args):
         pass
 
     def draw(self, screen):
