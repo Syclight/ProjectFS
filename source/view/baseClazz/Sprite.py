@@ -3,7 +3,7 @@ import pygame
 from source.view.element.Elements import ElementHadDoEvent
 from source.controller.assembly.IOEvent import IOEvent3
 from source.controller.dataStructure.QuadTree import QuadTree, Node, RectangleRange
-from source.controller.assembly.Shape import Rectangle
+from source.core.math.Shape import Rectangle
 
 
 class Sprite(pygame.sprite.Sprite):

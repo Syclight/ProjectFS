@@ -1,9 +1,8 @@
 import pygame
 
-from source.controller.assembly.CollidedProbe import CollidedProbe
 from source.controller.assembly.PhysicalBody import rigidBody, physicalScene, BodyType
-from source.controller.assembly.Shape import Rectangle
-from source.util.Math2d import vec2
+from source.core.math.Math2d import vec2
+from source.core.math.Shape import Rectangle
 from source.util.ToolsFuc import ex_toRect
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Scene import Scene

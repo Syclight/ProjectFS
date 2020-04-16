@@ -1,7 +1,7 @@
 import math
 import random
 
-from source.util.MathConst import PI_DOUBLE
+from source.core.math.MathConst import PI_DOUBLE
 
 
 class vec2:
@@ -90,11 +90,16 @@ class vec2:
             return vec2()
         return vec2(self.x / _len, self.y / _len)
 
+    def reflect(self, normal):
+        normal.normal()
+        return self - normal * (2 * self.dot(normal))
+
     def angle_cos(self, _vec2):
         return self.dot(_vec2) / (self.len() * _vec2.len())
 
     def angle(self, _vec2):
         return math.acos(min(1, max(-1, self.angle_cos(_vec2))))
+
 
     def rotate(self, angle):
         return vec2(self.x * math.cos(angle) - self.y * math.sin(angle),

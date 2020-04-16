@@ -1,8 +1,6 @@
 import pygame
 
-from source.controller.assembly.IOEvent import IOEvent3, ElementHadDoEvent
-from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node
-from source.controller.assembly.Shape import Shape, Rectangle
+from source.core.math.Shape import Rectangle
 
 
 class Actor:

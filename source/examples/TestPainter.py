@@ -1,9 +1,9 @@
 import math
 import random
 
-from source.controller.assembly.Shape import Line, Rectangle, Triangle, Circle, Ellipse
-from source.util.Math2d import vec2, point2
-from source.util.Painter import Painter
+from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse
+from source.core.math.Math2d import vec2, point2
+from source.controller.assembly.Painter import Painter
 from source.view.baseClazz.Scene import Scene
 
 

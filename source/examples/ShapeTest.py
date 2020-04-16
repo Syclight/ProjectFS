@@ -1,4 +1,4 @@
-from source.controller.assembly.Shape import Square, Rectangle, CircumscribedCircle
+from source.util.Shape import Square, Rectangle, CircumscribedCircle
 
 # c1 = Circle(10, 10, 5)
 sq1 = Square(10, 10, 5)

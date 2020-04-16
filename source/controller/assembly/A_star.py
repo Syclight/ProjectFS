@@ -1,4 +1,4 @@
-from source.controller.assembly.interface.SGFpyException import SGFpyException
+from source.core.exception.SGFpyException import SGFpyException
 
 
 class CoordinateException(SGFpyException):
@@ -46,7 +46,7 @@ class Spot:
             self.neighbors.append(grid[i + 1][j + 1])
 
 
-class AStartArea:
+class AStarArea:
     def __init__(self, rect, cols, rows, start=None, end=None):
         self.__grid = []
         self.rect = rect

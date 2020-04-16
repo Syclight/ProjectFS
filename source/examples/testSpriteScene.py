@@ -6,7 +6,7 @@ from source.const.Const import gl_WindowHeight
 from source.controller.dataStructure.QuadTree import RectangleRange
 from source.view.scene.Scenes import Scene
 from source.view.baseClazz.Sprite import Sprite, SpriteGroup
-from source.controller.assembly.Shape import Rectangle
+from source.core.math.Shape import Rectangle
 
 
 class GameSprite(Sprite):

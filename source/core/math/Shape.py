@@ -1,6 +1,6 @@
 from math import pi
 
-from source.util.Math2d import point2, vec2, dtm2
+from source.core.math.Math2d import vec2, dtm2, point2
 
 
 class Shape:

@@ -143,3 +143,10 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 > 线性插值，三角插值，立方差值(三次插值)，Hermite插值
 * 添加SGFpyException.py,是框架中所有异常的基类
 * A_star.py现在支持插入一个障碍物域与删除障碍物域,并添加了位置错误异常
+
+### 2020.4.16 Asheor
+* 柏林噪声终于在框架中实现，参考了p5.js，core.math.Noise
+* 重新将代码目录分配，新建了core，主要存放框架的核心支撑代码
+* 数学有管的在core.math下
+* 修改了Scene基类，现在在初始化时，可以直接传参*args
+* 新增了Map.py, noiseTest.py, Random.py

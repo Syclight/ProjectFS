@@ -3,10 +3,10 @@ import random
 import pygame
 
 from source.const.Const import gl_Font
-from source.controller.assembly.A_star import AStartArea, CoordinateException
-from source.controller.assembly.Shape import Rectangle, Line
-from source.util.Math2d import point2
-from source.util.Painter import Painter
+from source.controller.assembly.A_star import AStarArea, CoordinateException
+from source.core.math.Math2d import point2
+from source.core.math.Shape import Rectangle
+from source.controller.assembly.Painter import Painter
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TextElement
@@ -78,7 +78,7 @@ class RobotRunScene(Scene):
     def __init__(self, screen, config, startClock):
         super(RobotRunScene, self).__init__(screen, config, startClock)
         self.w, self.h = self.screen.get_width(), self.screen.get_height()
-        self.__As_MAP = AStartArea(Rectangle(0, 0, 800, 600), 80, 60)
+        self.__As_MAP = AStarArea(Rectangle(0, 0, 800, 600), 80, 60)
         self.__containers = []
         for i in range(0, 6):
             x = int(random.randint(100, self.w - 150) / 10) * 10

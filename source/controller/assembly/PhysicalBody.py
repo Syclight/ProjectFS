@@ -1,7 +1,7 @@
 from source.controller.assembly.CollidedProbe import CollidedProbe
-from source.controller.assembly.Shape import Shape, Rectangle, Circle, Triangle, CircumscribedCircle
-from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node, CircleRange
-from source.util.Math2d import vec2
+from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node
+from source.core.math.Math2d import vec2
+from source.core.math.Shape import Shape
 
 
 class BodyType:
