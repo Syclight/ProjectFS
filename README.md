@@ -150,3 +150,10 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 数学有管的在core.math下
 * 修改了Scene基类，现在在初始化时，可以直接传参*args
 * 新增了Map.py, noiseTest.py, Random.py
+
+### 2020.4.17 Asheor
+* 添加了非常有趣的测试场景，someFunTestScene.py
+> 画板，波图像，绘制球体草稿，与关节 用做框架Scene的教学，代码逻辑参考了p5.js的范例
+* 修改了若干bug
+* 新调整了gameApp的逻辑和新增Scene内置对象
+* 我开通了LOFTER主页: https://syclightframework.lofter.com 欢迎访问

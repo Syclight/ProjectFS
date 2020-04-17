@@ -25,6 +25,7 @@ from source.examples.RTS_Test import RobotRunScene  # Actor与A*结合测试场�
 from source.examples.TestPainter import TestPainterScene  # Painter测试
 from source.examples.noiseTest import noiseTestScene  # 噪声测试
 from source.examples.physicsTest import PhysicsScene  # 力学测试场景
+from source.examples.someFunTestScene import drawingBoard, createWave, sketchSphere, chain  # 范例
 from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测试
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口

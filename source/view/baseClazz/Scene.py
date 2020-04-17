@@ -7,6 +7,10 @@ class Scene:
         if isinstance(args[-1], list):
             self.paramList = args[-1]
         self.config.readConfig()
+        self.sceneCanvas = self.screen.copy()
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+        self.FPS = 0.0
 
         self.isReadyToEnter = False
         self.isEnter = False
@@ -14,21 +18,31 @@ class Scene:
         self.isReadyToEnd = False
         self.nextSceneNum = -1
 
+        self.isFill = True
+        self.fillColor = (0, 0, 0)
+
         self.mousePos = (0, 0)
         self.lastMousePos = (0, 0)
+        self.mouseX, self.mouseY = 0, 0
         self.focus = None
         self.focus_onClick = 0
+
+    def final_mouseMotion__(self, MousePos):
+        self.lastMousePos = self.mousePos
+        self.mousePos = MousePos
+        self.mouseX = self.mousePos[0]
+        self.mouseY = self.mousePos[1]
 
     def draw(self):
         pass
 
-    def doMouseMotion(self, MousePos, MouseRel, Buttons):
+    def doMouseMotion(self, MouseRel, Buttons):
         pass
 
-    def doMouseButtonDownEvent(self, MousePos, Button):
+    def doMouseButtonDownEvent(self, Button):
         pass
 
-    def doMouseButtonUpEvent(self, MousePos, Button):
+    def doMouseButtonUpEvent(self, Button):
         pass
 
     def doKeyEvent(self, Key, Mod, Type, Unicode=None):

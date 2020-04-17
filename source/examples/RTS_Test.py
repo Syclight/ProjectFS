@@ -149,9 +149,9 @@ class RobotRunScene(Scene):
         self.__E_Msg.setText('Robotlocal:({}, {})\nMouselocal:({}, {})\n'.format(p.x, p.y, p2[0], p2[1]))
         self.__E_Msg2.setText(lis_str)
 
-    def doMouseButtonDownEvent(self, MousePos, Button):
+    def doMouseButtonDownEvent(self, Button):
         if Button == 1:
-            self.__end = MousePos
+            self.__end = self.mousePos
             pos = self.__updateMap(self.__end)
             if pos:
                 return

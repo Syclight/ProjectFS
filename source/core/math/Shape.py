@@ -197,10 +197,14 @@ class Ellipse(Shape):
 
 
 class Circle(Shape):
-    def __init__(self, x, y, r):
-        self.x = x
-        self.y = y
-        self.r = r
+    def __init__(self, *args):
+        x = args[0]
+        if isinstance(x, vec2):
+            self.__init__(x.x, x.y, args[1])
+        else:
+            self.x = args[0]
+            self.y = args[1]
+            self.r = args[2]
 
     def __str__(self):
         return '<Shape::{}({}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.r)

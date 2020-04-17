@@ -12,8 +12,9 @@ class Painter:
 
     绘制圆和椭圆时，抗锯齿无效"""
 
-    def __init__(self, surf):
+    def __init__(self, surf, onSurf=False):
         self.s = surf
+        self.on = onSurf
 
     def Pixel(self, p, color):
         """
@@ -57,7 +58,6 @@ class Painter:
         length = len(points)
         if length < 2:
             return
-
         for i in range(0, length - 1):
             p0, p1 = points[i], points[i + 1]
             _p0, _p1 = (int(p0.x), int(p0.y)), (int(p1.x), int(p1.y))
@@ -73,14 +73,14 @@ class Painter:
             else:
                 pygame.draw.line(self.s, color, _ep, _sp, width)
 
-    def Arc(self, color, rect, start_angle, stop_angle, width):
+    def Arc(self, rect, start_angle, stop_angle, color, width):
         """
         绘制一条曲线
 
         :param color: tuple (R, G, B)
         :param rect: Shape::Rectangle 指定弧线所在的椭圆外围的限定矩形
-        :param start_angle: angle 指定弧线的开始位置
-        :param stop_angle: angle 指定弧线的结束位置
+        :param start_angle: angle 指定弧线的开始角度
+        :param stop_angle: angle 指定弧线的结束角度
         :param width: int 线宽
         :return: None
         """
@@ -154,7 +154,14 @@ class Painter:
         """
         pos = (int(circle.x), int(circle.y))
         radius = int(circle.r)
-        pygame.draw.circle(self.s, color, pos, radius, width)
+        if self.on:
+            temp = pygame.Surface((radius * 2, radius * 2)).convert_alpha()
+            if len(color) > 3:
+                temp.set_alpha(color[3])
+            pygame.draw.circle(temp, color, (radius, radius), radius, width)
+            self.s.blit(temp, (pos[0] - radius, pos[1] - radius))
+        else:
+            pygame.draw.circle(self.s, color, pos, radius, width)
 
     def Ellipse(self, ellipse, color, width, aa=0):
         """
@@ -167,4 +174,11 @@ class Painter:
         :return: None
         """
         rect = (ellipse.x - ellipse.a, ellipse.y - ellipse.b, ellipse.a * 2, ellipse.b * 2)
-        pygame.draw.ellipse(self.s, color, rect, width)
+        if self.on:
+            temp = pygame.Surface((ellipse.a * 2, ellipse.b * 2)).convert_alpha()
+            if len(color) > 3:
+                temp.set_alpha(color[3])
+            pygame.draw.ellipse(temp, color, temp.get_rect(), width)
+            self.s.blit(temp, (ellipse.x - ellipse.a, ellipse.y - ellipse.b))
+        else:
+            pygame.draw.ellipse(self.s, color, rect, width)

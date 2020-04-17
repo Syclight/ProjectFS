@@ -1,6 +1,5 @@
 import pygame
 import gc
-import time
 
 from source.controller.assembly.Config import Config
 from source.const.Const import SCENENUM_INIT
@@ -22,6 +21,7 @@ class gameApp:
         self.__screenMod = screenMod
         self.__colorBits = colorBits
         self.__frameControl = False
+        self.__fill = True
 
         from source.config.AppConfig import SceneMap
         if not SceneMap:
@@ -49,8 +49,13 @@ class gameApp:
         while not self.isQuit:
             if self.__frameControl:
                 self.__clock.tick(self.frameRate)
+            else:
+                self.__clock.tick()
+            self.__scene.FPS = round(self.__clock.get_fps(), 1)
 
-            self.__screen.fill((0, 0, 0))
+            if self.__scene.isFill or self.__fill:
+                self.__screen.fill(self.__scene.fillColor)
+                self.__fill = False
 
             # 画屏幕
             self.__scene.draw()
@@ -69,11 +74,14 @@ class gameApp:
                     self.isQuit = True
                     break
                 elif event.type == pygame.MOUSEMOTION:
-                    self.__scene.doMouseMotion(event.pos, event.rel, event.buttons)
+                    self.__scene.final_mouseMotion__(event.pos)
+                    self.__scene.doMouseMotion(event.rel, event.buttons)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.__scene.doMouseButtonDownEvent(event.pos, event.button)
+                    self.__scene.final_mouseMotion__(event.pos)
+                    self.__scene.doMouseButtonDownEvent(event.button)
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    self.__scene.doMouseButtonUpEvent(event.pos, event.button)
+                    self.__scene.final_mouseMotion__(event.pos)
+                    self.__scene.doMouseButtonUpEvent(event.button)
                 elif event.type == pygame.KEYDOWN:
                     self.__scene.doKeyEvent(event.key, event.mod, 0, event.unicode)
                 elif event.type == pygame.KEYUP:

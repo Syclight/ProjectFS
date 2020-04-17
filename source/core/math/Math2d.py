@@ -10,8 +10,11 @@ class vec2:
     """
 
     def __init__(self, x=0.0, y=0.0):
-        self.x = float(x)
-        self.y = float(y)
+        if isinstance(x, tuple) or isinstance(x, list):
+            self.__init__(x[0], x[1])
+        else:
+            self.x = float(x)
+            self.y = float(y)
 
     def __str__(self):
         return '<vec2::{}({}, {})>'.format(self.__class__.__name__, self.x, self.y)
@@ -31,7 +34,7 @@ class vec2:
         return vec2.fromAngle(random.uniform(a, b) * PI_DOUBLE)
 
     def orient(self):
-        return math.atan2(self.x, self.y)
+        return math.atan2(self.y, self.x)
 
     def copy(self):
         return vec2(self.x, self.y)
@@ -69,14 +72,19 @@ class vec2:
     def len_square(self):
         return self.x * self.x + self.y * self.y
 
-    def mulNum(self, num):
+    def mul(self, num):
         return vec2(self.x * num, self.y * num)
+
+    def dev(self, num):
+        return vec2(self.x / num, self.y / num)
 
     def len(self):
         return pow(self.len_square(), 0.5)
 
     def setLen(self, length):
-        return self.normal().mulNum(length)
+        v = self.normal().mul(length)
+        self.x, self.y = v.x, v.y
+        return self
 
     def dot(self, _vec2):
         return self.x * _vec2.x + self.y * _vec2.y
@@ -90,6 +98,14 @@ class vec2:
             return vec2()
         return vec2(self.x / _len, self.y / _len)
 
+    def limit(self, n):
+        v = vec2(self.x, self.y)
+        len_sq = self.len_square()
+        if len_sq > n * n:
+            v = v.dev(math.sqrt(len_sq)).mul(n)
+        self.x, self.y = v.x, v.y
+        return self
+
     def reflect(self, normal):
         normal.normal()
         return self - normal * (2 * self.dot(normal))
@@ -99,7 +115,6 @@ class vec2:
 
     def angle(self, _vec2):
         return math.acos(min(1, max(-1, self.angle_cos(_vec2))))
-
 
     def rotate(self, angle):
         return vec2(self.x * math.cos(angle) - self.y * math.sin(angle),

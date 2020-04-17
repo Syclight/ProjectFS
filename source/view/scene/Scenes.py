@@ -155,38 +155,36 @@ class TitleScene(Scene):
                 self.isMusicPlay = False
                 self.isEnd = True
 
-    def doMouseMotion(self, MousePos, MouseRel, Buttons):
-        self.lastMousePos = self.mousePos
-        self.mousePos = MousePos
+    def doMouseMotion(self, MouseRel, Buttons):
         if not eq(Buttons, (0, 0, 0)) or self.__ElementsList is None:
             return
         if len(self.__ElementsList) > 0 and self.focus is None:
             for e in self.__ElementsList:
-                if InElement(MousePos, e):
+                if InElement(self.mousePos, e):
                     self.focus = e
                     self.focus.Events.doMouseIn()
-                    print('确定焦点元素：', self.focus.area, '\n鼠标位置：', MousePos)
+                    print('确定焦点元素：', self.focus.area, '\n鼠标位置：', self.mousePos)
                     break
-        if not InElement(MousePos, self.focus) and self.focus is not None:
+        if not InElement(self.mousePos, self.focus) and self.focus is not None:
             self.focus.Events.doMouseOut()
             if self.focus.EventsHadDo.hadDoMouseLeftKeyDown:
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
                 self.focus.Events.doMouseLeftKeyUp()
-            print('失去焦点元素：', self.focus.area, '\n鼠标位置：', MousePos)
+            print('失去焦点元素：', self.focus.area, '\n鼠标位置：', self.mousePos)
             self.focus = None
 
-    def doMouseButtonDownEvent(self, MousePos, Button):
+    def doMouseButtonDownEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus_onClick = 1
                 self.focus.Events.doMouseLeftKeyDown()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
 
-    def doMouseButtonUpEvent(self, MousePos, Button):
+    def doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus.Events.doMouseLeftKeyUp()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
@@ -574,10 +572,7 @@ class OptionScene(Scene):
         if self.isReadyToEnd:
             self.isEnd = True
 
-    def doMouseMotion(self, MousePos, MouseRel, Buttons):
-        self.lastMousePos = self.mousePos
-        self.mousePos = MousePos
-
+    def doMouseMotion(self, MouseRel, Buttons):
         # 鼠标移动事件
         for e in self.__ElementsMap['Interact']:
             if InElement(self.mousePos, e):
@@ -593,17 +588,17 @@ class OptionScene(Scene):
                     e.EventsHadDo.hadDoMouseLeftKeyDown = False
                     e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
-    def doMouseButtonDownEvent(self, MousePos, Button):
+    def doMouseButtonDownEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus_onClick = 1
                 self.focus.Events.doMouseLeftKeyDown()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
 
-    def doMouseButtonUpEvent(self, MousePos, Button):
+    def doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus.Events.doMouseLeftKeyUp()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
@@ -650,9 +645,7 @@ class Continue_Scene(Scene):
         else:
             self.isEnd = True
 
-    def doMouseMotion(self, MousePos, MouseRel, Buttons):
-        self.lastMousePos = self.mousePos
-        self.mousePos = MousePos
+    def doMouseMotion(self, MouseRel, Buttons):
 
         # 鼠标移动事件
         for e in self.__ElementsList:
@@ -669,9 +662,9 @@ class Continue_Scene(Scene):
                     e.EventsHadDo.hadDoMouseLeftKeyDown = False
                     e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
-    def doMouseButtonDownEvent(self, MousePos, Button):
+    def doMouseButtonDownEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus_onClick = 1
                 self.focus.Events.doMouseLeftKeyDown()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
@@ -679,9 +672,9 @@ class Continue_Scene(Scene):
         if Button == 3:  # 左键
             self.__retSignalIsReadyToEnd(SCENENUM_TITLE)
 
-    def doMouseButtonUpEvent(self, MousePos, Button):
+    def doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标右键
-            if InElement(MousePos, self.focus):
+            if InElement(self.mousePos, self.focus):
                 self.focus.Events.doMouseLeftKeyUp()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True

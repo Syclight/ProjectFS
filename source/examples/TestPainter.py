@@ -27,7 +27,7 @@ class TestPainterScene(Scene):
         self.painter.Pixel(point2(700, 500), self.white)
         self.painter.Triangle(self.tra, self.white, 0, 1)
         self.painter.Rect(self.rect, self.white, 0, 1)
-        self.painter.Circle(self.circle, self.white, 1)
+        self.painter.Circle(self.circle, (255, 255, 255), 1)
         self.painter.Ellipse(self.ellipse, self.white, 1)
         self.painter.Lines(self.points, (255, 255, 255), 1, 0, 1)
         self.painter.Line(self.line, (255, 255, 255), 1, 0)
