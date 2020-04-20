@@ -7,7 +7,6 @@ class Scene:
         if isinstance(args[-1], list):
             self.paramList = args[-1]
         self.config.readConfig()
-        self.sceneCanvas = self.screen.copy()
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.FPS = 0.0
@@ -26,12 +25,6 @@ class Scene:
         self.mouseX, self.mouseY = 0, 0
         self.focus = None
         self.focus_onClick = 0
-
-    def final_mouseMotion__(self, MousePos):
-        self.lastMousePos = self.mousePos
-        self.mousePos = MousePos
-        self.mouseX = self.mousePos[0]
-        self.mouseY = self.mousePos[1]
 
     def draw(self):
         pass

@@ -153,7 +153,13 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 
 ### 2020.4.17 Asheor
 * 添加了非常有趣的测试场景，someFunTestScene.py
-> 画板，波图像，绘制球体草稿，与关节 用做框架Scene的教学，代码逻辑参考了p5.js的范例
+> 画板，波图像，绘制球体草稿与链条。用做框架Scene的教学，代码逻辑参考了p5.js的范例
 * 修改了若干bug
 * 新调整了gameApp的逻辑和新增Scene内置对象
 * 我开通了LOFTER主页: https://syclightframework.lofter.com 欢迎访问
+
+### 2020.4.20 Asheor
+* 修改了若干代码
+* 主要是研究canvas的实现，发现需要硬件加速来完成，不然像素计算太慢了。
+* 添加了Matrix.py 用于矩阵的计算。
+* 进一步修改scene的基类的结构，使其更加合理。

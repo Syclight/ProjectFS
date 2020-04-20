@@ -2,7 +2,7 @@ import math
 import random
 
 from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse
-from source.core.math.Math2d import vec2, point2
+from source.core.math.Vector import vec2, point2
 from source.controller.assembly.Painter import Painter
 from source.view.baseClazz.Scene import Scene
 
@@ -24,7 +24,7 @@ class TestPainterScene(Scene):
         self.ellipse = Ellipse(400, 300, 160, 70)
 
     def draw(self):
-        self.painter.Pixel(point2(700, 500), self.white)
+        self.painter.Pixel(point2(799, 599), self.white)
         self.painter.Triangle(self.tra, self.white, 0, 1)
         self.painter.Rect(self.rect, self.white, 0, 1)
         self.painter.Circle(self.circle, (255, 255, 255), 1)

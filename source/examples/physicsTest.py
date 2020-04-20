@@ -3,7 +3,7 @@ import pygame
 
 from source.controller.assembly.IOEvent import IOEvent3, ioEvent3Enum
 from source.core.math.Shape import Rectangle
-from source.core.math.Math2d import vec2
+from source.core.math.Vector import vec2
 from source.core.math.MathUtil import constrain
 from source.util.ToolsFuc import exKey
 from source.view.baseClazz.Scene import Scene

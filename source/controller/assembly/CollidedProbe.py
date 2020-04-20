@@ -10,20 +10,20 @@ class CollidedProbe:
         pasV = pas.vel.copy()
 
         M = act.mass + pas.mass
-        actV_ = (actV.mulNum(act.mass - pas.mass) + pasV.mulNum(2 * pas.mass)).mulNum(1 / M)
-        pasV_ = (pasV.mulNum(pas.mass - act.mass) + actV.mulNum(2 * act.mass)).mulNum(1 / M)
+        actV_ = (actV.mul(act.mass - pas.mass) + pasV.mul(2 * pas.mass)).dev(M)
+        pasV_ = (pasV.mul(pas.mass - act.mass) + actV.mul(2 * act.mass)).dev(M)
 
-        actAveV = (actV + actV_).mulNum(0.5)
-        pasAveV = (pasV + pasV_).mulNum(0.5)
+        actAveV = (actV + actV_).mul(0.5)
+        pasAveV = (pasV + pasV_).mul(0.5)
 
-        actD = actAveV.mulNum(1)
-        pasD = pasAveV.mulNum(1)
+        actD = actAveV.mul(1)
+        pasD = pasAveV.mul(1)
 
         actD_inv = actD.invert()
         pasD_inv = pasD.invert()
 
-        actF_ = actD_inv.mulNum((0.5 * act.mass * (actV_.dot(actV_) - actV.dot(actV))))
-        pasF_ = pasD_inv.mulNum((0.5 * pas.mass * (pasV_.dot(pasV_) - pasV.dot(pasV))))
+        actF_ = actD_inv.mul((0.5 * act.mass * (actV_.dot(actV_) - actV.dot(actV))))
+        pasF_ = pasD_inv.mul((0.5 * pas.mass * (pasV_.dot(pasV_) - pasV.dot(pasV))))
 
         if pas.collideArea.bottom() > act.collideArea.top():
             pas.collideArea.y = act.collideArea.top() - pas.collideArea.h

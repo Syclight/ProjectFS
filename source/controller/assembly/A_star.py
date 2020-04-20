@@ -66,12 +66,7 @@ class AStarArea:
         self.__wallsMap = []
 
     def __initArea(self):
-        for i in range(0, self.cols):
-            self.__grid.append([])
-
-        for i in range(0, self.cols):
-            for j in range(0, self.rows):
-                self.__grid[i].append(Spot(i, j))
+        self.__grid = [[Spot(i, j) for j in range(self.rows)] for i in range(self.cols)]
 
         for i in range(0, self.cols):
             for j in range(0, self.rows):

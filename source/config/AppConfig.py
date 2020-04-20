@@ -21,6 +21,7 @@ TitleScene： className 下一个场景的类名称
 from source.const.Const import SCENENUM_INIT
 from source.examples.ActorTest import ActorScene  # 物理场景测试
 from source.examples.AstartTest import AstartTest  # A*寻路图形化演示
+from source.examples.CanvasTest import canvasTest, water2d
 from source.examples.RTS_Test import RobotRunScene  # Actor与A*结合测试场景
 from source.examples.TestPainter import TestPainterScene  # Painter测试
 from source.examples.noiseTest import noiseTestScene  # 噪声测试
@@ -30,7 +31,7 @@ from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测�
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [noiseTestScene]}
+SceneMap = {SCENENUM_INIT: [LogoScene]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):

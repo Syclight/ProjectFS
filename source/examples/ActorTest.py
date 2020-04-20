@@ -1,7 +1,7 @@
 import pygame
 
 from source.controller.assembly.PhysicalBody import rigidBody, physicalScene, BodyType
-from source.core.math.Math2d import vec2
+from source.core.math.Vector import vec2
 from source.core.math.Shape import Rectangle
 from source.util.ToolsFuc import ex_toRect
 from source.view.baseClazz.Actor import Actor

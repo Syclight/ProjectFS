@@ -2,7 +2,10 @@ import random
 
 import pygame
 
+from source.const.Const import gl_Font
+from source.util.ToolsFuc import centeredXPos
 from source.view.baseClazz.Scene import Scene
+from source.view.element.Elements import TextElement
 
 
 def heuristic(a, b):
@@ -62,6 +65,8 @@ class AstartTest(Scene):
         self.done = False
         self.noSolution = False
         self.points = []
+        self.__E_TEXT = TextElement(pygame.Rect(centeredXPos(self.width, 220), 260, 220, 60), '', gl_Font, 50,
+                                    (255, 255, 0), 1)
 
         for i in range(0, self.cols):
             self.grid.append([])
@@ -117,7 +122,7 @@ class AstartTest(Scene):
                             neighbor.previous = current
         else:
             self.done = True
-            print('no solution!')
+            self.__E_TEXT.setText('寻路失败')
             self.noSolution = True
 
         # self.screen.fill((255, 255, 255))
@@ -141,12 +146,15 @@ class AstartTest(Scene):
                 temp = temp.previous
         elif self.done and not self.noSolution:
             self.path.append(self.end)
-            print('succeed!')
+            self.__E_TEXT.setText('寻路成功')
+
 
         for i in range(0, len(self.path)):
             e = self.path[i]
             if e is not None:
                 e.show(self.screen, (0, 0, 255), self.w, self.h)
+
+        self.__E_TEXT.draw(self.screen)
 
         # for i in range(0, len(pathN)):
         #     e = pathN[i]

@@ -4,7 +4,7 @@ import pygame
 
 from source.const.Const import gl_Font
 from source.controller.assembly.A_star import AStarArea, CoordinateException
-from source.core.math.Math2d import point2
+from source.core.math.Vector import point2
 from source.core.math.Shape import Rectangle
 from source.controller.assembly.Painter import Painter
 from source.view.baseClazz.Actor import Actor

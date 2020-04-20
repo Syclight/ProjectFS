@@ -1,6 +1,6 @@
 from source.controller.assembly.CollidedProbe import CollidedProbe
 from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node
-from source.core.math.Math2d import vec2
+from source.core.math.Vector import vec2
 from source.core.math.Shape import Shape
 
 
@@ -75,7 +75,7 @@ class physicalScene:
 
         for a in self.__bodies:
             if a.active:
-                gravity = self.gravityAc.mulNum(a.mass)
+                gravity = self.gravityAc.mul(a.mass)
                 a.applyForce(gravity)
                 a.update(self.activeArea, self.__unitTime)
                 if a.collideArea.right() > self.__right:
@@ -115,7 +115,7 @@ class rigidBody(physicalBody):
         self.restitution = 1
 
     def applyForce(self, force):
-        f = force.mulNum(1 / self.mass)
+        f = force.mul(1 / self.mass)
         self.acc += f
 
     def dis_bary(self):
@@ -131,6 +131,6 @@ class rigidBody(physicalBody):
     def update(self, restrictedArea, unitTime):
         self.vel += self.acc
         self.pos += self.vel
-        self.acc = self.acc.mulNum(0)
+        self.acc = self.acc.mul(0)
 
         self.collideArea.rebuildForBarycenter(self.pos)

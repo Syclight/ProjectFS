@@ -1,6 +1,7 @@
 from math import pi
 
-from source.core.math.Math2d import vec2, dtm2, point2
+from source.core.math.Matrix import dtm2
+from source.core.math.Vector import vec2, point2
 
 
 class Shape:
@@ -42,10 +43,13 @@ class Shape:
 
 
 class Line(Shape):
-    def __init__(self, pos, angle, length=0):
-        self.pos = pos
-        self.dir = vec2.fromAngle(angle)
-        self.length = length
+    def __init__(self, x, y, angle=0, length=0):
+        if isinstance(x, vec2):
+            self.__init__(x.x, x.y, y, angle)
+        else:
+            self.pos = point2(x, y)
+            self.dir = vec2.fromAngle(angle)
+            self.length = length
 
     def setAngle(self, angle):
         self.dir = vec2.fromAngle(angle)
@@ -172,11 +176,14 @@ class Square(Rectangle):
 
 
 class Ellipse(Shape):
-    def __init__(self, x, y, a, b):
-        self.x = x
-        self.y = y
-        self.a = a
-        self.b = b
+    def __init__(self, x, y, a=2, b=1):
+        if isinstance(x, vec2):
+            self.__init__(x.x, x.y, y, a)
+        else:
+            self.x = x
+            self.y = y
+            self.a = a
+            self.b = b
 
     def __str__(self):
         return '<Shape::{}({}, {}, {}, {})>'.format(self.__class__.__name__, self.x, self.y, self.a, self.b)

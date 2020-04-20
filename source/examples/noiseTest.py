@@ -5,10 +5,9 @@ import pygame
 
 from source.const.Const import gl_Font
 from source.controller.assembly.Painter import Painter
-from source.core.math.Math2d import point2, vec2
-from source.core.math.MathConst import PI, PI_DOUBLE
+from source.core.math.Vector import point2, vec2
 from source.core.math.Noise import noise
-from source.core.math.Shape import Circle, Rectangle, Line
+from source.core.math.Shape import Circle
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TextElement
 
@@ -68,6 +67,7 @@ class Particle:
 class noiseTestScene(Scene):
     def __init__(self, *args):
         super(noiseTestScene, self).__init__(*args)
+        self.sceneCanvas = pygame.Surface((800, 600))
         self.sceneCanvas.fill((255, 255, 255))
         self.noiseScale = 0.02
         self._height, self._width = 600, 800

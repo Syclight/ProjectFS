@@ -3,7 +3,7 @@ import random
 from math import cos, sin
 
 from source.controller.assembly.Painter import Painter
-from source.core.math.Math2d import point2
+from source.core.math.Vector import point2
 from source.core.math.MathConst import PI, PI_DOUBLE
 from source.core.math.MathUtil import mapping
 from source.core.math.Shape import Circle, Line
