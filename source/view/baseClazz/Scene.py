@@ -16,12 +16,6 @@ class Scene:
         if isinstance(args[-1], list):
             self.paramList = args[-1]
 
-        #Config
-        self.config_isAA = False
-        self.config_volBGM = 0.0
-        self.config_volSound = 0.0
-        self.config_frameRate = 0
-
         self.caption = None
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
