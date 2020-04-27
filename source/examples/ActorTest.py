@@ -1,6 +1,6 @@
 import pygame
 
-from source.controller.assembly.PhysicalBody import rigidBody, physicalScene, BodyType
+from source.core.assembly.PhysicalBody import rigidBody, physicalScene, BodyType
 from source.core.math.Vector import vec2
 from source.core.math.Shape import Rectangle
 from source.util.ToolsFuc import ex_toRect

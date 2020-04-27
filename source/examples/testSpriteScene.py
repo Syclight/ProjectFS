@@ -2,8 +2,9 @@ import random
 
 import pygame
 
-from source.const.Const import gl_WindowHeight
-from source.controller.dataStructure.QuadTree import RectangleRange
+from source.const.Const import gl_WindowHeight, gl_Font
+from source.core.dataStructure.QuadTree import RectangleRange
+from source.view.element.Elements import TextElement
 from source.view.scene.Scenes import Scene
 from source.view.baseClazz.Sprite import Sprite, SpriteGroup
 from source.core.math.Shape import Rectangle
@@ -123,6 +124,7 @@ class testSpriteScene(Scene):
         self.img = pygame.Surface((5, 5)).convert()
         self.img.fill((255, 255, 255))
         self.sprintsGroup1 = SpriteGroup(RectangleRange(0, 0, 800, 600))
+        self.__E_FPS = TextElement(pygame.Rect(self.width - 80, 0, 80, 20), 'FPS:', gl_Font, 18, (0, 255, 0), 1)
         for i in range(0, 1000):
             x, y = random.randint(0, 800), random.randint(0, 600)
             self.sprintsGroup1.add(CubeSprite(self.img, pygame.Rect(x, y, 5, 5)))
@@ -133,9 +135,11 @@ class testSpriteScene(Scene):
             w.highLight = True
         self.sprintsGroup1.draw(self.screen)
         self.sprintsGroup1.update()
+        self.__E_FPS.draw(self.screen)
 
     def doClockEvent(self, NowClock):
-        pass
+        fps = 'FPS:' + str(self.FPS)
+        self.__E_FPS.setText(fps)
 
     # def doKeyPressedEvent(self, keyPressedList):
     #     for key in keyPressedList:

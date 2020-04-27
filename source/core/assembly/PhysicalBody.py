@@ -1,5 +1,5 @@
-from source.controller.assembly.CollidedProbe import CollidedProbe
-from source.controller.dataStructure.QuadTree import RectangleRange, QuadTree, Node
+from source.core.assembly.CollidedProbe import CollidedProbe
+from source.core.dataStructure.QuadTree import RectangleRange, QuadTree, Node
 from source.core.math.Vector import vec2
 from source.core.math.Shape import Shape
 

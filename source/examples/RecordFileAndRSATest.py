@@ -1,4 +1,4 @@
-from source.controller.assembly.RecordFile import RecordFile
+from source.core.assembly.RecordFile import RecordFile
 
 # m = {'DATE': '2020-3-22', 'TIME': '12:00:00', 'HP': '98', 'MP': '22'}
 m = ['2020-3-22', '12:00:00', '98', '22', 'AR56']

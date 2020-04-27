@@ -4,7 +4,8 @@ import random
 import pygame
 
 from source.const.Const import gl_Font
-from source.controller.assembly.Painter import Painter
+from source.core.assembly.Painter import Painter
+from source.core.math.MathConst import PI_DOUBLE
 from source.core.math.Vector import point2, vec2
 from source.core.math.Noise import noise
 from source.core.math.Shape import Circle
@@ -76,45 +77,45 @@ class noiseTestScene(Scene):
         self.zoff = 0
         self.cols, self.rows = math.floor(self._width / self.scl), math.floor(self._height / self.scl)
         self.__E_FPS = TextElement(pygame.Rect(self.width - 80, 0, 80, 20), 'FPS:', gl_Font, 18, (0, 255, 0), 1)
-        # self.particles = []
-        # self.flowField = [vec2()] * (self.cols * self.rows)
-        # for i in range(0, 2500):
-        #     self.particles.append(Particle(self._width, self._height))
+        self.particles = []
+        self.flowField = [vec2()] * (self.cols * self.rows)
+        for i in range(0, 2500):
+            self.particles.append(Particle(self._width, self._height))
 
     # 噪音测试1
-    def draw(self):
-        for x in range(0, 800):
-            noiseVal = noise((self.mouseX + x) * self.noiseScale, self.mouseY * self.noiseScale)
-            Painter(self.screen).Lines([point2(x, self.mouseY + noiseVal * 80), point2(x, 600)],
-                                       (noiseVal * 255, noiseVal * 255, noiseVal * 255), 1, 0)
-        self.__E_FPS.draw(self.screen)
-
     # def draw(self):
-    #     yoff = 0
-    #     for y in range(0, self.rows):
-    #         xoff = 0
-    #         for x in range(0, self.cols):
-    #             index = x + y * self.cols
-    #             angle = noise(xoff, yoff, self.zoff) * PI_DOUBLE * 4
-    #             v = vec2.fromAngle(angle)
-    #             v.setLen(1)
-    #             self.flowField[index] = v
-    #             xoff += self.inc
-    #             # line = Line(point2(x * self.scl, y * self.scl), v.orient(), 10)
-    #             # Painter(self.sceneCanvas).Line(line, (255, 255, 255), 1, 1)
-    #
-    #         yoff += self.inc
-    #         self.zoff += 0.0003
-    #
-    #     for p in self.particles:
-    #         p.follow(self.scl, self.cols, self.flowField)
-    #         p.update()
-    #         p.edges()
-    #         p.show(self.sceneCanvas)
-    #
-    #     self.screen.blit(self.sceneCanvas, (0, 0))
-    #
+    #     for x in range(0, 800):
+    #         noiseVal = noise((self.mouseX + x) * self.noiseScale, self.mouseY * self.noiseScale)
+    #         Painter(self.screen).Lines([point2(x, self.mouseY + noiseVal * 80), point2(x, 600)],
+    #                                    (noiseVal * 255, noiseVal * 255, noiseVal * 255), 1, 0)
     #     self.__E_FPS.draw(self.screen)
+
+    def draw(self):
+        yoff = 0
+        for y in range(0, self.rows):
+            xoff = 0
+            for x in range(0, self.cols):
+                index = x + y * self.cols
+                angle = noise(xoff, yoff, self.zoff) * PI_DOUBLE * 4
+                v = vec2.fromAngle(angle)
+                v.setLen(1)
+                self.flowField[index] = v
+                xoff += self.inc
+                # line = Line(point2(x * self.scl, y * self.scl), v.orient(), 10)
+                # Painter(self.sceneCanvas).Line(line, (255, 255, 255), 1, 1)
+
+            yoff += self.inc
+            self.zoff += 0.0003
+
+        for p in self.particles:
+            p.follow(self.scl, self.cols, self.flowField)
+            p.update()
+            p.edges()
+            p.show(self.sceneCanvas)
+
+        self.screen.blit(self.sceneCanvas, (0, 0))
+
+        self.__E_FPS.draw(self.screen)
 
     def doClockEvent(self, NowClock):
         fps = 'FPS:' + str(self.FPS)

@@ -3,6 +3,9 @@ import configparser
 
 
 # 空的surface
+from source.core.math.Vector import point2
+
+
 def blankSurface(size, color):
     temp = pygame.Surface(size).convert()
     temp.fill(color)
@@ -26,9 +29,9 @@ def blankTextSurface(size_WH, background_color, text, font, font_size, font_colo
 
 # 裁剪资源图
 def clipResImg(tarImg, rect, colorKey):
-    temp = pygame.Surface((rect.width, rect.height)).convert()
+    temp = pygame.Surface((rect[2], rect[3])).convert()
     temp.set_colorkey(colorKey)
-    temp.blit(tarImg, (-rect.left, -rect.top))
+    temp.blit(tarImg, (-rect[1], -rect[0]))
     return temp
 
 
@@ -57,7 +60,7 @@ def centeredXYPos(bg_width, obj_width, bg_height, obj_height) -> []:
 
 # 判断pos是否在矩形区域内
 def InRect(pos, rect) -> bool:
-    if rect.left + rect.width > pos[0] > rect.left and rect.top < pos[1] < rect.top + rect.height:
+    if rect[0] + rect[2] > pos[0] > rect[0] and rect[1] < pos[1] < rect[1] + rect[3]:
         return True
     return False
 
@@ -70,14 +73,11 @@ def InCircular(pos, cir) -> bool:
 
 
 # 判断pos是否在Element内
-def InElement(pos, element, _type=0) -> bool:
+def InElement(pos, element) -> bool:
     if not element:
         return False
     area = element.area
-    if _type == 0:
-        return InRect(pos, area)
-    elif _type == 1:
-        return InCircular(pos, area)
+    return area.contains(point2(pos))
 
 
 # 判断pos是否在Sprite内

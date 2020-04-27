@@ -1,4 +1,4 @@
-from xml.dom.minidom import parse
+# from xml.dom.minidom import parse
 import xml.dom.minidom
 
 from source.const.Const import DATATYPE_STR_BOOL, DATATYPE_STR_INT, DATATYPE_STR_STR, DATATYPE_STR_COMPLEX, \

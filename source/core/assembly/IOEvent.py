@@ -113,7 +113,7 @@ class ElementHadDoEvent:
         self.hadDoMouseLeftKeyUp = True
         self.hadDoMouseLeftKeyDown = False
         self.hadDoMouseLeftKeyClick = False
-        self.hadDoMouseRightKeyUp = False
+        self.hadDoMouseRightKeyUp = True
         self.hadDoMouseRightKeyDown = False
         self.hadDoMouseRightKeyClick = False
         self.hadDoMouseMidKeyUp = False
@@ -126,6 +126,9 @@ class ElementHadDoEvent:
 
 
 class IOEvent:
+    def doMouseMotion(self):
+        pass
+
     def doMouseIn(self):
         pass
 
@@ -205,6 +208,9 @@ class IOEvent2:
         self.keyboardKeyUp = {}
         self.keyboardKeyDown = {}
         self.keyboardKeyDowning = {}
+
+    def doMouseMotion(self):
+        pass
 
     def doMouseIn(self):
         if len(self.mouseIn) > 0:

@@ -1,14 +1,12 @@
 import time
 from operator import eq
 
-import moviepy
-
-from source.controller.assembly.IOEvent import ioEvent3Enum
+from source.core.assembly.IOEvent import ioEvent3Enum
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TitleConstElement, TitleOptElement, TextElement, ImgElement, OptButtonElement, \
     OptUIElement, SaveDataElement
 from source.const.Const import *
-from source.controller.assembly.RecordFile import RecordFile
+from source.core.assembly.RecordFile import RecordFile
 from source.util.ToolsFuc import *
 from moviepy.editor import *
 
@@ -68,47 +66,56 @@ class TitleScene(Scene):
         self.res_optionNewGame = pygame.image.load(gl_ImgPath + self.titleOptionName)
         self.res_title = pygame.image.load(gl_ImgPath + self.titleName)
         # 创建相应的Element
-        self.__board = TitleConstElement(pygame.Rect(gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80),
+        self.__board = TitleConstElement((gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80),
                                          blankSurface((380, 180), (255, 255, 255, 100)))
-        self.__title = TitleConstElement(pygame.Rect(0, 0, 465, 74),
-                                         clipResImg(self.res_title, pygame.Rect(0, 0, 465, 74), (0, 0, 0)))
-        self.__text = TextElement(pygame.Rect(gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80),
-                                  const_Text_titlePage_initShow, gl_Font, 16, (0, 0, 0),
-                                  self.config.getTextAntiAlias())
-        self.__optNewGame = TitleOptElement(pygame.Rect(140, 140, 116, 30),
-                                            self.res_optionNewGame, pygame.Rect(0, 0, 116, 30),
+        self.__title = TitleConstElement((0, 0, 465, 74), clipResImg(self.res_title, (0, 0, 465, 74), (0, 0, 0)))
+        self.__text = TextElement((gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80), const_Text_titlePage_initShow,
+                                  gl_Font, 16, (0, 0, 0), self.config.getTextAntiAlias())
+        self.__optNewGame = TitleOptElement((140, 140, 116, 30), self.res_optionNewGame, (0, 0, 116, 30),
                                             (128, 128, 128))
-        self.__optContinue = TitleOptElement(pygame.Rect(125, 180, 116, 30),
-                                             self.res_optionNewGame, pygame.Rect(0, 116, 116, 30),
+        self.__optContinue = TitleOptElement((125, 180, 116, 30), self.res_optionNewGame, (0, 116, 116, 30),
                                              (128, 128, 128))
-        self.__optOption = TitleOptElement(pygame.Rect(130, 220, 116, 30),
-                                           self.res_optionNewGame, pygame.Rect(0, 232, 116, 30),
+        self.__optOption = TitleOptElement((130, 220, 116, 30), self.res_optionNewGame, (0, 232, 116, 30),
                                            (128, 128, 128))
-        self.__optExit = TitleOptElement(pygame.Rect(135, 260, 61, 30),
-                                         self.res_optionNewGame, pygame.Rect(0, 348, 61, 30), (128, 128, 128))
+        self.__optExit = TitleOptElement((135, 260, 61, 30), self.res_optionNewGame, (0, 348, 61, 30), (128, 128, 128))
 
         # self.__ExitMessageBox = MessageBox(gl_WindowWidth, gl_WindowHeight, '确定要结束程序吗？')
 
         # 将全部element记录到列表中
-        self.__ElementsList = [self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
-                               self.__optOption, self.__optExit]
+        # self.__ElementsList = [self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
+        #                        self.__optOption, self.__optExit]
+        self.render.add(self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
+                        self.__optOption, self.__optExit)
+        self.render.close()
         # 这里绑定和控件有交互的事件
         # ---NewGame选项绑定事件---
-        self.__optNewGame.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_GAME_PROLOGUE))
-        self.__optNewGame.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_NewGame))
-        self.__optNewGame.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
+        self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                             lambda: self.__retSignalIsReadyToEnd(SCENENUM_GAME_PROLOGUE), 1)
+        self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseIn,
+                                             lambda: self.__changeBoardText(const_Text_titlePage_NewGame), 1)
+        self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseOut,
+                                             lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
         # ---Continue选项绑定事件---
-        self.__optContinue.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_CONTINUE))
-        self.__optContinue.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Continue))
-        self.__optContinue.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
+        self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                              lambda: self.__retSignalIsReadyToEnd(SCENENUM_CONTINUE), 1)
+        self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseIn,
+                                              lambda: self.__changeBoardText(const_Text_titlePage_Continue), 1)
+        self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseOut,
+                                              lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
         # ---Option选项绑定事件---
-        self.__optOption.Events.mouseLeftKeyClick.append(lambda: self.__retSignalIsReadyToEnd(SCENENUM_OPT))
-        self.__optOption.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Option))
-        self.__optOption.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
+        self.__optOption.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                            lambda: self.__retSignalIsReadyToEnd(SCENENUM_OPT), 1)
+        self.__optOption.Events.appendEvent(ioEvent3Enum.mouseIn,
+                                            lambda: self.__changeBoardText(const_Text_titlePage_Option), 1)
+        self.__optOption.Events.appendEvent(ioEvent3Enum.mouseOut,
+                                            lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
         # ---Exit选项绑定事件---
-        self.__optExit.Events.mouseIn.append(lambda: self.__changeBoardText(const_Text_titlePage_Exit))
-        self.__optExit.Events.mouseOut.append(lambda: self.__changeBoardText(const_Text_titlePage_initShow))
-        self.__optExit.Events.mouseLeftKeyClick.append(lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
+        self.__optExit.Events.appendEvent(ioEvent3Enum.mouseIn,
+                                          lambda: self.__changeBoardText(const_Text_titlePage_Exit), 1)
+        self.__optExit.Events.appendEvent(ioEvent3Enum.mouseOut,
+                                          lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
+        self.__optExit.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
+                                          lambda: pygame.event.post(pygame.event.Event(12)), 1)
 
         # 渲染参数
         self.__step_in = 2
@@ -142,9 +149,9 @@ class TitleScene(Scene):
             self.flag = True
         blitAlpha(self.screen, self.bg, (0, 0), self.alpha)
         if self.flag and not self.isReadyToEnd:
-            for e in self.__ElementsList:
-                e.draw(self.screen)
-                # self.__screen.blit(e.res_surface, (e.area.left, e.area.top))
+            self.render.render(self.screen)
+            # for e in self.__ElementsList:
+            #     e.draw(self.screen)
         if self.isReadyToEnd:
             self.res_wave_bgm.fadeout(2000)
             if self.alpha > 0:
@@ -154,44 +161,6 @@ class TitleScene(Scene):
                 self.res_wave_bgm.stop()
                 self.isMusicPlay = False
                 self.isEnd = True
-
-    def doMouseMotion(self, MouseRel, Buttons):
-        if not eq(Buttons, (0, 0, 0)) or self.__ElementsList is None:
-            return
-        if len(self.__ElementsList) > 0 and self.focus is None:
-            for e in self.__ElementsList:
-                if InElement(self.mousePos, e):
-                    self.focus = e
-                    self.focus.Events.doMouseIn()
-                    print('确定焦点元素：', self.focus.area, '\n鼠标位置：', self.mousePos)
-                    break
-        if not InElement(self.mousePos, self.focus) and self.focus is not None:
-            self.focus.Events.doMouseOut()
-            if self.focus.EventsHadDo.hadDoMouseLeftKeyDown:
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
-                self.focus.Events.doMouseLeftKeyUp()
-            print('失去焦点元素：', self.focus.area, '\n鼠标位置：', self.mousePos)
-            self.focus = None
-
-    def doMouseButtonDownEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus_onClick = 1
-                self.focus.Events.doMouseLeftKeyDown()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
-
-    def doMouseButtonUpEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus.Events.doMouseLeftKeyUp()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
-                if self.focus_onClick == 1:
-                    self.focus.Events.doMouseLeftKeyClick()
-                    self.focus.EventsHadDo.hadDoMouseLeftKeyClick = True
-                self.focus_onClick = 0
 
 
 # 新游戏序章场景
@@ -237,11 +206,11 @@ class Title_PrologueScene(Scene):
                                const_Text_NewGame__Dialogue_3, const_Text_NewGame__Dialogue_4,
                                const_Text_NewGame__Dialogue_5]
 
-        self.__TextShow = TextElement(pygame.Rect(200, 460, 270, 18), self.__TextList[0], gl_Font_oth, 16,
-                                      (255, 255, 255), self.config.getTextAntiAlias())
-        self.__ImgShow = ImgElement(pygame.Rect(80, 0, 640, 480), gl_ImgPath + self.res_Img1)
-        self.__DialogueShow = TextElement(pygame.Rect(0, 500, 430, 18), self.__DialogueList[0], gl_Font_oth, 16,
-                                          (255, 255, 255), self.config.getTextAntiAlias())
+        self.__TextShow = TextElement((200, 460, 270, 18), self.__TextList[0], gl_Font_oth, 16, (255, 255, 255),
+                                      self.config.getTextAntiAlias())
+        self.__ImgShow = ImgElement((80, 0, 640, 480), gl_ImgPath + self.res_Img1)
+        self.__DialogueShow = TextElement((0, 500, 430, 18), self.__DialogueList[0], gl_Font_oth, 16, (255, 255, 255),
+                                          self.config.getTextAntiAlias())
 
         # 注册元素
         self.__ElementsList = []
@@ -309,10 +278,10 @@ class Title_PrologueScene(Scene):
                             self.res_Sound_PourWine.play()
                         if self.__index == 4:
                             self.res_Sound_Drink.play()
-                self.screen.blit(self.__ImgShow.res_surface, (self.__ImgShow.area.left, self.__ImgShow.area.top))
+                self.screen.blit(self.__ImgShow.res_surface, (self.__ImgShow.area.x, self.__ImgShow.area.y))
                 self.screen.blit(self.__DialogueShow.res_surface, (
                     centeredXPos(self.screen.get_width(), len(self.__DialogueShow.Text) * self.__DialogueShow.Size),
-                    self.__DialogueShow.area.top))
+                    self.__DialogueShow.area.y))
         else:
             self.nextSceneNum = SCENENUM_GAME_STARTCG
             self.isEnd = True
@@ -338,11 +307,11 @@ class Prologue_StartCGScene(Scene):
 
 def ChePos(e, isDown):
     if isDown:
-        e.area.top += 1
-        e.area.left += 1
+        e.area.x += 1
+        e.area.y += 1
     else:
-        e.area.top -= 1
-        e.area.left -= 1
+        e.area.x -= 1
+        e.area.y -= 1
 
 
 class OptionScene(Scene):
@@ -384,46 +353,43 @@ class OptionScene(Scene):
 
         self.res_Img_BG = pygame.image.load(gl_ImgPath + self.res_Img_BG_Name)
 
-        self.__E_BGBlankL1 = OptButtonElement(pygame.Rect(40, 60, 200, 40), (255, 255, 255, 100))
-        self.__E_BGBlankL2 = OptButtonElement(pygame.Rect(40, 110, 200, 40), (255, 255, 255, 100))
-        self.__E_BGBlankL3 = OptButtonElement(pygame.Rect(40, 160, 200, 40), (255, 255, 255, 100))
-        self.__E_BGBlankLRet = OptButtonElement(pygame.Rect(50, 520, 80, 40), (255, 255, 255, 100))
-        self.__E_BGBlankLApply = OptButtonElement(pygame.Rect(150, 520, 80, 40), (255, 255, 255, 100))
-        self.__E_BGBlankR = TitleConstElement(pygame.Rect(260, 60, 510, 500),
-                                              blankSurface((510, 500), (255, 255, 255, 100)))
-        self.__E_Text_Apply = TextElement(pygame.Rect(centeredXPos(80, 40, 150), centeredYPos(40, 20, 520), 120, 20),
-                                          '应用', gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
-        self.__E_Text_Ret = TextElement(pygame.Rect(centeredXPos(80, 40, 50), centeredYPos(40, 20, 520), 120, 20),
-                                        '返回', gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
+        self.__E_BGBlankL1 = OptButtonElement((40, 60, 200, 40), (255, 255, 255, 100))
+        self.__E_BGBlankL2 = OptButtonElement((40, 110, 200, 40), (255, 255, 255, 100))
+        self.__E_BGBlankL3 = OptButtonElement((40, 160, 200, 40), (255, 255, 255, 100))
+        self.__E_BGBlankLRet = OptButtonElement((50, 520, 80, 40), (255, 255, 255, 100))
+        self.__E_BGBlankLApply = OptButtonElement((150, 520, 80, 40), (255, 255, 255, 100))
+        self.__E_BGBlankR = TitleConstElement((260, 60, 510, 500), blankSurface((510, 500), (255, 255, 255, 100)))
+        self.__E_Text_Apply = TextElement((centeredXPos(80, 40, 150), centeredYPos(40, 20, 520), 120, 20), '应用',
+                                          gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
+        self.__E_Text_Ret = TextElement((centeredXPos(80, 40, 50), centeredYPos(40, 20, 520), 120, 20), '返回',
+                                        gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
 
-        self.__E_Text_Draw = TextElement(pygame.Rect(centeredXPos(200, 80, 40), centeredYPos(40, 20, 60), 80, 20),
-                                         '画面设置', gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
-        self.__E_Text_AntiAlias = TextElement(pygame.Rect(270, 70, 120, 20), '抗锯齿：', gl_Font_opt, 18, (0, 0, 0),
+        self.__E_Text_Draw = TextElement((centeredXPos(200, 80, 40), centeredYPos(40, 20, 60), 80, 20), '画面设置',
+                                         gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
+        self.__E_Text_AntiAlias = TextElement((270, 70, 120, 20), '抗锯齿：', gl_Font_opt, 18, (0, 0, 0),
                                               self.config.getTextAntiAlias())
-
-        self.__E_Text_AA_Val = TextElement(pygame.Rect(670, 70, 20, 20), self.__KV_AA['key'], gl_Font_opt, 18,
-                                           (0, 0, 0),
+        self.__E_Text_AA_Val = TextElement((670, 70, 20, 20), self.__KV_AA['key'], gl_Font_opt, 18, (0, 0, 0),
                                            self.config.getTextAntiAlias())
-        self.__E_UI_AA_RightButton = OptUIElement(pygame.Rect(700, 70, 20, 20), gl_UIPath + self.res_UI_RightButton)
-        self.__E_UI_AA_LeftButton = OptUIElement(pygame.Rect(640, 70, 20, 20), gl_UIPath + self.res_UI_LeftButton)
 
-        self.__E_Text_Wave = TextElement(pygame.Rect(centeredXPos(200, 80, 40), centeredYPos(40, 20, 110), 80, 20),
-                                         '声音设置', gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
-        self.__E_Text_BGMVolume = TextElement(pygame.Rect(270, 70, 120, 20), '音乐音量：', gl_Font_opt, 18, (0, 0, 0),
+        self.__E_UI_AA_RightButton = OptUIElement((700, 70, 20, 20), gl_UIPath + self.res_UI_RightButton)
+        self.__E_UI_AA_LeftButton = OptUIElement((640, 70, 20, 20), gl_UIPath + self.res_UI_LeftButton)
+        self.__E_Text_Wave = TextElement((centeredXPos(200, 80, 40), centeredYPos(40, 20, 110), 80, 20), '声音设置',
+                                         gl_Font_opt, 20, (0, 0, 0), self.config.getTextAntiAlias())
+        self.__E_Text_BGMVolume = TextElement((270, 70, 120, 20), '音乐音量：', gl_Font_opt, 18, (0, 0, 0),
                                               self.config.getTextAntiAlias())
-        self.__E_Text_BGM_Val = TextElement(pygame.Rect(660, 70, 30, 20), str(self.config.VolumeBGM),
-                                            gl_Font_opt, 18, (0, 0, 0), self.config.getTextAntiAlias())
-        self.__E_UI_BGM_RightButton = OptUIElement(pygame.Rect(700, 70, 20, 20), gl_UIPath + self.res_UI_RightButton)
-        self.__E_UI_BGM_LeftButton = OptUIElement(pygame.Rect(630, 70, 20, 20), gl_UIPath + self.res_UI_LeftButton)
-        self.__E_Text_SoundVolume = TextElement(pygame.Rect(270, 100, 120, 20), '音效音量：', gl_Font_opt, 18, (0, 0, 0),
+        self.__E_Text_BGM_Val = TextElement((660, 70, 30, 20), str(self.config.VolumeBGM), gl_Font_opt, 18, (0, 0, 0),
+                                            self.config.getTextAntiAlias())
+        self.__E_UI_BGM_RightButton = OptUIElement((700, 70, 20, 20), gl_UIPath + self.res_UI_RightButton)
+        self.__E_UI_BGM_LeftButton = OptUIElement((630, 70, 20, 20), gl_UIPath + self.res_UI_LeftButton)
+        self.__E_Text_SoundVolume = TextElement((270, 100, 120, 20), '音效音量：', gl_Font_opt, 18, (0, 0, 0),
                                                 self.config.getTextAntiAlias())
-        self.__E_Text_Sou_Val = TextElement(pygame.Rect(660, 100, 30, 20), str(self.config.VolumeSound),
-                                            gl_Font_opt, 18, (0, 0, 0), self.config.getTextAntiAlias())
-        self.__E_UI_Sou_RightButton = OptUIElement(pygame.Rect(700, 100, 20, 20), gl_UIPath + self.res_UI_RightButton)
-        self.__E_UI_Sou_LeftButton = OptUIElement(pygame.Rect(630, 100, 20, 20), gl_UIPath + self.res_UI_LeftButton)
+        self.__E_Text_Sou_Val = TextElement((660, 100, 30, 20), str(self.config.VolumeSound), gl_Font_opt, 18,
+                                            (0, 0, 0), self.config.getTextAntiAlias())
+        self.__E_UI_Sou_RightButton = OptUIElement((700, 100, 20, 20), gl_UIPath + self.res_UI_RightButton)
+        self.__E_UI_Sou_LeftButton = OptUIElement((630, 100, 20, 20), gl_UIPath + self.res_UI_LeftButton)
 
         self.__E_Text_Licence = TextElement(
-            pygame.Rect(centeredXPos(200, 120, 40), centeredYPos(40, 20, 160), 120, 20), '开源软件许可', gl_Font_opt, 20,
+            (centeredXPos(200, 120, 40), centeredYPos(40, 20, 160), 120, 20), '开源软件许可', gl_Font_opt, 20,
             (0, 0, 0), self.config.getTextAntiAlias())
         self.__E_Img_Licence = ImgElement(self.__E_BGBlankR.area, gl_ImgPath + 'OPT_L.lice', 255, (128, 128, 128))
 
@@ -588,24 +554,6 @@ class OptionScene(Scene):
                     e.EventsHadDo.hadDoMouseLeftKeyDown = False
                     e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
-    def doMouseButtonDownEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus_onClick = 1
-                self.focus.Events.doMouseLeftKeyDown()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
-
-    def doMouseButtonUpEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus.Events.doMouseLeftKeyUp()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
-                if self.focus_onClick == 1:
-                    self.focus.Events.doMouseLeftKeyClick()
-                self.focus_onClick = 0
-
 
 class Continue_Scene(Scene):
     __ElementsList = None
@@ -628,11 +576,11 @@ class Continue_Scene(Scene):
                 dataList = RecordFile(RECORDFILE_SAVE_PATH, n).getList()
                 if dataList is not None:
                     self.__ElementsList.append(
-                        SaveDataElement(pygame.Rect(83, 30, 636, 114), gl_UIPath + self.__res_n_OPT, 255, dataList))
+                        SaveDataElement((83, 30, 636, 114), gl_UIPath + self.__res_n_OPT, 255, dataList))
         if len(self.__ElementsList) == 0:
-            self.__ElementsList.append((TextElement(
-                pygame.Rect(centeredXPos(800, 220), centeredXPos(600, 35), 220, 35), '未找到游戏记录', gl_Font_oth, 30,
-                (255, 255, 255, 255), self.config.getTextAntiAlias())))
+            self.__ElementsList.append(
+                (TextElement((centeredXPos(800, 220), centeredXPos(600, 35), 220, 35), '未找到游戏记录', gl_Font_oth, 30,
+                             (255, 255, 255, 255), self.config.getTextAntiAlias())))
 
     def __retSignalIsReadyToEnd(self, SceneNum):
         self.isReadyToEnd = True
@@ -663,21 +611,6 @@ class Continue_Scene(Scene):
                     e.EventsHadDo.hadDoMouseLeftKeyUp = True
 
     def doMouseButtonDownEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus_onClick = 1
-                self.focus.Events.doMouseLeftKeyDown()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
         if Button == 3:  # 左键
             self.__retSignalIsReadyToEnd(SCENENUM_TITLE)
 
-    def doMouseButtonUpEvent(self, Button):
-        if Button == 1:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
-                self.focus.Events.doMouseLeftKeyUp()
-                self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
-                self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
-                if self.focus_onClick == 1:
-                    self.focus.Events.doMouseLeftKeyClick()
-                self.focus_onClick = 0

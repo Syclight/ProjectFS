@@ -152,8 +152,12 @@ class Painter:
         :param aa: bool 是否抗锯齿
         :return: None
         """
-        pos = (int(circle.x), int(circle.y))
-        radius = int(circle.r)
+        if isinstance(circle, list) or isinstance(circle, tuple):
+            pos = (int(circle[0]), int(circle[1]))
+            radius = int(circle[2])
+        else:
+            pos = (int(circle.x), int(circle.y))
+            radius = int(circle.r)
         if self.on:
             temp = pygame.Surface((radius * 2, radius * 2)).convert_alpha()
             if len(color) > 3:

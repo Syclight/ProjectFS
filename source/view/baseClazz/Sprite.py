@@ -1,8 +1,8 @@
 import pygame
 
 from source.view.element.Elements import ElementHadDoEvent
-from source.controller.assembly.IOEvent import IOEvent3
-from source.controller.dataStructure.QuadTree import QuadTree, Node, RectangleRange
+from source.core.assembly.IOEvent import IOEvent3
+from source.core.dataStructure.QuadTree import QuadTree, Node, RectangleRange
 from source.core.math.Shape import Rectangle
 
 
@@ -38,7 +38,7 @@ class Sprite(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
-    def collided_area(self, oth):
+    def collided(self, oth):
         if not isinstance(oth, Sprite):
             raise Exception("Param '{}' must is a subclass of 'Sprite'".format(oth))
         if self.zIndex != oth.zIndex:
@@ -90,7 +90,7 @@ class SpriteGroup(pygame.sprite.Group):
             _range = RectangleRange(e.rect.x, e.rect.y, e.rect.w * 2, e.rect.h * 2)
             sprites = self.__quadTree.query(_range)
             for _s in sprites:
-                if e is not _s.data and e.collided_area(_s.data):
+                if e is not _s.data and e.collided(_s.data):
                     _list.append(_s.data)
             if _list:
                 self.__collideDict[e] = _list

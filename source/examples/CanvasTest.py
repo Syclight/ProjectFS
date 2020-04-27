@@ -1,11 +1,6 @@
 import pygame
 
 from source.const.Const import gl_Font
-from source.controller.assembly.Painter import Painter
-from source.core.draw.Brush import brush
-from source.core.draw.Canvas import canvas
-from source.core.draw.Color import color
-from source.core.math.Vector import vec2, point2
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TextElement
 
@@ -19,6 +14,7 @@ class canvasTest(Scene):
         self.blend = pygame.Surface((300, 300)).convert()
         self.blend.fill((255, 255, 255))
         self.blend.set_alpha(80)
+        self.sceneCanvas = pygame.Surface((self.width, self.height))
         self.sceneCanvas.fill((255, 255, 255))
         self.sceneCanvas.set_alpha(100)
         self.__E_FPS = TextElement(pygame.Rect(self.width - 80, 0, 80, 20), 'FPS:', gl_Font, 18, (0, 255, 0), 1)

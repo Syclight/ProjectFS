@@ -1,7 +1,7 @@
 import random
 import pygame
 
-from source.controller.assembly.IOEvent import IOEvent3, ioEvent3Enum
+from source.core.assembly.IOEvent import IOEvent3, ioEvent3Enum
 from source.core.math.Shape import Rectangle
 from source.core.math.Vector import vec2
 from source.core.math.MathUtil import constrain
@@ -24,13 +24,13 @@ class Mover:
         pygame.draw.circle(screen, (0, 255, 0), loc, self.mass * 2 + 14, 1)
 
     def applyForce(self, force):
-        f = force.mulNum(1 / self.mass)
+        f = force.mul(1 / self.mass)
         self.acceleration += f
 
     def update(self):
         self.velocity += self.acceleration
         self.location += self.velocity
-        self.acceleration = self.acceleration.mulNum(0)
+        self.acceleration = self.acceleration.mul(0)
 
     def edges(self):
         right = self.constraintScope.right()
@@ -63,7 +63,7 @@ class Mover:
 #
 #         for m in self.movers:
 #             gravity = vec2(0, 0.3)
-#             gravity = gravity.mulNum(m.mass)
+#             gravity = gravity.mul(m.mass)
 #             m.applyForce(gravity)
 #
 #
@@ -86,7 +86,7 @@ class Mover:
 #
 #     def draw(self):
 #         gravity = vec2(0, 0.3)
-#         gravity = gravity.mulNum(self.mover.mass)
+#         gravity = gravity.mul(self.mover.mass)
 #         self.mover.applyForce(gravity)
 #
 #         self.mover.update()
@@ -107,7 +107,7 @@ class Mover:
 #             # friction = self.mover.velocity.copy()
 #             # friction = friction.normal()
 #             # c = -0.1
-#             # friction = friction.mulNum(c)
+#             # friction = friction.mul(c)
 #             # self.mover.applyForce(friction)
 
 
@@ -130,11 +130,11 @@ class Attractor:
     def attract(self, m):
         force = self.location - m.location
         d = force.len()
-        d = constrain(d, 1, 8)
+        d = constrain(d, 0, 8)
         force = force.normal()
         strength = (self.G * self.mass * m.mass) / (d * d)
 
-        return force.mulNum(strength)
+        return force.mul(strength)
 
     def display(self, screen):
         loc = int(self.location.x), int(self.location.y)

@@ -163,3 +163,10 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 主要是研究canvas的实现，发现需要硬件加速来完成，不然像素计算太慢了。
 * 添加了Matrix.py 用于矩阵的计算。
 * 进一步修改scene的基类的结构，使其更加合理。
+
+### 2020.4.27 Asheor
+* 修改了gameApp的结构，scene的结构
+> 带有super前缀的方法，不能重写。  
+> 添加了许多内置对象与变量，方便编程
+* 添加了渲染器类，用于分层渲染，类似于html中标签的z-index属性
+* 添加了有趣的例子，用于学习使用该框架编程

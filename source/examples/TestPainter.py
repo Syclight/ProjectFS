@@ -3,7 +3,7 @@ import random
 
 from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse
 from source.core.math.Vector import vec2, point2
-from source.controller.assembly.Painter import Painter
+from source.core.assembly.Painter import Painter
 from source.view.baseClazz.Scene import Scene
 
 

@@ -20,6 +20,8 @@ gl_SoundPath = 'resource/Wave/Sound/'
 gl_VideoPath = 'resource/Video/'
 gl_UIPath = 'resource/UI/'
 
+gl_LogPath = 'logs/'
+
 # option
 GLC_INI_NAME = 'Config.ini'
 GLC_INI_SECTION_WAVE = 'WAVE'

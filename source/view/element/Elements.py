@@ -1,5 +1,5 @@
 from source.view.baseClazz.Element import Element
-from source.controller.assembly.IOEvent import *
+from source.core.assembly.IOEvent import *
 from source.const.Const import *
 from source.util.ToolsFuc import *
 
@@ -7,7 +7,8 @@ from source.util.ToolsFuc import *
 # 消息框Elements
 class MessageBox(Element):
     def __init__(self, bgWidth, bgHeight, text):
-        super(MessageBox, self).__init__(pygame.Rect(centeredXPos(bgWidth, 180, 0), centeredXPos(bgHeight, 100, 0), 180, 100))
+        super(MessageBox, self).__init__(
+            pygame.Rect(centeredXPos(bgWidth, 180, 0), centeredXPos(bgHeight, 100, 0), 180, 100))
         self.__Text = text
         self.__buildSurface()
 
@@ -32,61 +33,61 @@ class MessageBox(Element):
 # 标题页面固定元素
 class TitleConstElement(Element):
     def __init__(self, area, res_Surface):
-        super(TitleConstElement, self).__init__(area, IOEvent())
+        super(TitleConstElement, self).__init__(area)
         self.res_surface = res_Surface
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)
 
     def draw(self, screen):
-        screen.blit(self.res_surface, (self.area.left, self.area.top))
+        screen.blit(self.res_surface, (self.area.x, self.area.y))
 
 
 # -----标题页面可交互元素及事件处理---开始-----
 
 # 鼠标左键按下鼠标改变元素位置事件
 def changeAraPos(e):
-    e.area.top += 1
-    e.area.left += 1
+    e.area.x += 1
+    e.area.y += 1
 
 
 # 鼠标左键放开鼠标移出还原元素位置事件
 def backAraPos(e):
-    e.area.top -= 1
-    e.area.left -= 1
+    e.area.x -= 1
+    e.area.y -= 1
 
 
 # 鼠标移入改变样式
 def changeStyle(e):
-    e.setClipRect(pygame.Rect(e.ClipRect.left + 30, e.ClipRect.top, e.ClipRect.width, e.ClipRect.height))
+    e.setClipRect((e.ClipRect[0] + 30, e.ClipRect[1], e.ClipRect[2], e.ClipRect[3]))
 
 
 # 鼠标移出改变样式
 def backStyle(e):
-    e.setClipRect(pygame.Rect(e.ClipRect.left - 30, e.ClipRect.top, e.ClipRect.width, e.ClipRect.height))
+    e.setClipRect((e.ClipRect[0] - 30, e.ClipRect[1], e.ClipRect[2], e.ClipRect[3]))
 
 
 # 标题页面选项元素
 class TitleOptElement(Element):
     def __init__(self, area, res_img, clipRect, colorKey):
-        super(TitleOptElement, self).__init__(area, IOEvent2())
+        super(TitleOptElement, self).__init__(area)
         self.res_Img = res_img
         self.ClipRect = clipRect
         self.ColorKey = colorKey
         self.__buildSurface()
 
-        self.Events.mouseIn.append(lambda: changeStyle(self))
-        self.Events.mouseOut.append(lambda: backStyle(self))
-        self.Events.mouseLeftKeyDown.append(lambda: changeAraPos(self))
-        self.Events.mouseLeftKeyUp.append(lambda: backAraPos(self))
+        self.Events.appendEvent(ioEvent3Enum.mouseIn, lambda: changeStyle(self), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseOut, lambda: backStyle(self), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: changeAraPos(self), 0)
+        self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp, lambda: backAraPos(self), 0)
 
     def __buildSurface(self):
-        self.res_surface = pygame.Surface((self.ClipRect.width, self.ClipRect.height)).convert()
+        self.res_surface = pygame.Surface((self.ClipRect[2], self.ClipRect[3])).convert()
         self.res_surface.set_colorkey(self.ColorKey)
-        self.res_surface.blit(self.res_Img, (-self.ClipRect.top, -self.ClipRect.left))
+        self.res_surface.blit(self.res_Img, (-self.ClipRect[1], -self.ClipRect[0]))
 
     def draw(self, screen):
-        screen.blit(self.res_surface, (self.area.left, self.area.top))
+        screen.blit(self.res_surface, (self.area.x, self.area.y))
 
     def setResImg(self, res_Img):
         self.res_Img = res_Img
@@ -133,7 +134,7 @@ class TextElement(Element):
     def __buildSurface(self):
         textTemp = pygame.font.Font(self.Font, self.Size)
         strList = self.Text.split('\n')
-        self.res_surface = pygame.Surface((self.area.width, self.area.height)).convert()
+        self.res_surface = pygame.Surface((self.area.w, self.area.h)).convert()
         self.res_surface.fill((128, 128, 128))
         self.res_surface.set_colorkey((128, 128, 128))
         Line = 0
@@ -146,7 +147,7 @@ class TextElement(Element):
             self.res_surface.set_alpha(self.Color[3])
 
     def draw(self, screen):
-        screen.blit(self.res_surface, (self.area.left, self.area.top))
+        screen.blit(self.res_surface, (self.area.x, self.area.y))
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)
@@ -194,7 +195,7 @@ class ImgElement(Element):
             self.res_surface.set_colorkey(self.ColorKey)
 
     def draw(self, screen):
-        screen.blit(self.res_surface, (self.area.left, self.area.top))
+        screen.blit(self.res_surface, (self.area.x, self.area.y))
 
     def setPath(self, path):
         self.Path = path
@@ -219,11 +220,11 @@ class RenderUnionElement(Element):
 # 鼠标左键按下鼠标改变元素位置事件
 def Pos(e, isDown):
     if isDown:
-        e.area.top += 1
-        e.area.left += 1
+        e.area.x += 1
+        e.area.y += 1
     else:
-        e.area.top -= 1
-        e.area.left -= 1
+        e.area.x -= 1
+        e.area.y -= 1
 
 
 class OptButtonElement(Element):
@@ -238,10 +239,10 @@ class OptButtonElement(Element):
         self.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: Pos(self, True), 0)
 
     def __buildSurface(self):
-        self.res_surface = blankSurface((self.area[2], self.area[3]), self.Color)
+        self.res_surface = blankSurface((self.area.w, self.area.h), self.Color)
 
     def draw(self, screen):
-        screen.blit(self.res_surface, (self.area.left, self.area.top))
+        screen.blit(self.res_surface, (self.area.x, self.area.y))
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)
@@ -275,12 +276,12 @@ class SaveDataElement(ImgElement):
         self.Events.appendEvent(ioEvent3Enum.mouseOut, lambda: self.__setBGAlpha(100), 0)
 
     def __buildBG(self, color):
-        self.__bg = blankSurface((self.area.width - 22, self.area.height - 22), color)
+        self.__bg = blankSurface((self.area[2] - 22, self.area[3] - 22), color)
 
     def __setBGAlpha(self, alpha):
         self.__bg.set_alpha(alpha)
 
     def draw(self, screen):
-        screen.blit(self.__bg, (self.area.left + 11, self.area.top + 11))
+        screen.blit(self.__bg, (self.area.x + 11, self.area.y + 11))
         super().draw(screen)
         self.__E_text_date.draw(screen)

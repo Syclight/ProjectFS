@@ -115,8 +115,8 @@ class Rectangle(Shape):
     def intersects(self, shape) -> bool:
         if not isinstance(shape, Rectangle):
             raise Exception("Param '{}' not a subclass of Shape::Rectangle".format(shape))
-        center1 = self.barycenter()
-        center2 = shape.barycenter()
+        center1 = self.barycenter()  # 获取自身的重心坐标
+        center2 = shape.barycenter()  # 获取要检测的重心坐标
 
         dist_x = abs(center1.x - center2.x)  # 重心位于x方向上的距离
         dist_y = abs(center1.y - center2.y)  # 重心位于y方向上的距离

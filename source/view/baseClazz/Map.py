@@ -1,6 +1,6 @@
 import pygame
 
-from source.controller.assembly.A_star import AStarArea
+from source.core.assembly.A_star import AStarArea
 from source.core.math.Shape import Rectangle
 
 
