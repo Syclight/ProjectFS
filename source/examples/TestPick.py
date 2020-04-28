@@ -1,6 +1,6 @@
 import pygame
 
-from source.const.Const import gl_ImgPath, GLC_INI_NAME, GLC_INI_SECTION_WAVE, GLC_INI_PARAM_ANTIALIAS, \
+from source.core.const.Const import gl_ImgPath, GLC_INI_NAME, GLC_INI_SECTION_WAVE, GLC_INI_PARAM_ANTIALIAS, \
     GLC_INI_SECTION_DRAW, GLC_INI_PARAM_BGMVOLUME, SCENENUM_TITLE, gl_Font_opt, gl_UIPath, GLC_INI_PARAM_SOUNDVOLUME, \
     SCENENUM_OPT_APPLY, gl_SoundPath
 from source.core.assembly.IOEvent import ioEvent3Enum

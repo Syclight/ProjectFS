@@ -11,7 +11,6 @@ from source.core.math.MathUtil import mapping, constrain
 from source.core.math.Shape import Circle, Line
 from source.core.multimedia.MusicPlayer import musicPlayer
 from source.view.baseClazz.Scene import Scene
-from source.view.baseClazz.Sprite import Sprite
 
 
 class drawingBoard(Scene):

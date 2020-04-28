@@ -1,4 +1,4 @@
-from source.const.Const import RECORDFILE_HEAD, RSA_PK_FILE_EXN, RECORDFILE_SAVE_EXN
+from source.core.const.Const import RECORDFILE_HEAD, RSA_PK_FILE_EXN, RECORDFILE_SAVE_EXN
 from source.core.assembly.RSA import rsaEncrypt, rsaDecrypt, outPrivateKeyToPS, getPrivateKeyFromPS
 
 

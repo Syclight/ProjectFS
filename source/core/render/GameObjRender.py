@@ -5,7 +5,7 @@ Element, Actor, 统称为gameObject
 """
 import time
 
-from source.const.Const import gl_LogPath
+from source.core.const.Const import gl_LogPath
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Element import Element
 
@@ -36,6 +36,9 @@ class gameObjRender:
         for tr in temp:
             for e in tr[1]:
                 self.__sortedList.append(e)
+        # for e in reversed(self.__sortedList):
+        #     if e.active:
+        #         self.__sortedRevList.append(e)
         self.__sortedRevList = list(reversed(self.__sortedList))
 
     def add(self, *args):
@@ -152,7 +155,8 @@ class gameObjRender:
     def render(self, sur):
         if not self.__flag_add:
             for e in self.__sortedList:
-                e.draw(sur)
+                if e.visual:
+                    e.draw(sur)
         elif self.__flag_record:
             self.__log += 'Render Log Error: should close before render\n'
             self.__logFile.write('Render Log Error: should close before render\n')

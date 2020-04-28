@@ -7,7 +7,7 @@ from rsa import PrivateKey
 # 存储私钥，用getPrivateKeyFromPS读取
 def outPrivateKeyToPS(path, privateKey) -> None:
     from source.util.ToolsFuc import IntToStr
-    from source.const.Const import NUM_DICT_M
+    from source.core.const.Const import NUM_DICT_M
     _lis = [IntToStr(privateKey.n, NUM_DICT_M), IntToStr(privateKey.e, NUM_DICT_M), IntToStr(privateKey.d, NUM_DICT_M),
             IntToStr(privateKey.p, NUM_DICT_M), IntToStr(privateKey.q, NUM_DICT_M)]
     file = open(path, 'wb')
@@ -19,7 +19,7 @@ def outPrivateKeyToPS(path, privateKey) -> None:
 # 读取用outPrivateKeyToPS存储的私钥
 def getPrivateKeyFromPS(path) -> PrivateKey:
     from source.util.ToolsFuc import StrToInt
-    from source.const.Const import NUM_DICT_M
+    from source.core.const.Const import NUM_DICT_M
     file = open(path, 'rb')
     byte = file.read()
     file.close()

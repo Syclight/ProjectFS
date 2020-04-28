@@ -1,11 +1,12 @@
 import time
 from operator import eq
 
+from source.core.assembly.AssetsFile import AssetsFile, AssetsType
 from source.core.assembly.IOEvent import ioEvent3Enum
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TitleConstElement, TitleOptElement, TextElement, ImgElement, OptButtonElement, \
     OptUIElement, SaveDataElement
-from source.const.Const import *
+from source.core.const.Const import *
 from source.core.assembly.RecordFile import RecordFile
 from source.util.ToolsFuc import *
 from moviepy.editor import *
@@ -59,17 +60,22 @@ class TitleScene(Scene):
         self.titleBgName = 'titleBg.bmp'
         self.titleOptionName = 'titleOpts.bmp'
         self.titleName = 'titleTop.bmp'
+        self.__ast_name = 'I_T.assets'
 
         self.res_wave_bgm = pygame.mixer.Sound(gl_MusicPath + self.wave_bgm)
         self.res_wave_bgm.set_volume(self.config.getVolumeBGM())
         self.bg = pygame.image.load(gl_ImgPath + self.titleBgName)
         self.res_optionNewGame = pygame.image.load(gl_ImgPath + self.titleOptionName)
         self.res_title = pygame.image.load(gl_ImgPath + self.titleName)
+
+        self.__expBoardText = AssetsFile(os.path.join(gl_AssetsPath, 'TitleScene')).decode(
+            self.__ast_name, AssetsType.EXP)
+
         # 创建相应的Element
         self.__board = TitleConstElement((gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80),
                                          blankSurface((380, 180), (255, 255, 255, 100)))
         self.__title = TitleConstElement((0, 0, 465, 74), clipResImg(self.res_title, (0, 0, 465, 74), (0, 0, 0)))
-        self.__text = TextElement((gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80), const_Text_titlePage_initShow,
+        self.__text = TextElement((gl_WindowWidth - 380, gl_WindowHeight - 80, 380, 80), self.__expBoardText[0],
                                   gl_Font, 16, (0, 0, 0), self.config.getTextAntiAlias())
         self.__optNewGame = TitleOptElement((140, 140, 116, 30), self.res_optionNewGame, (0, 0, 116, 30),
                                             (128, 128, 128))
@@ -79,11 +85,6 @@ class TitleScene(Scene):
                                            (128, 128, 128))
         self.__optExit = TitleOptElement((135, 260, 61, 30), self.res_optionNewGame, (0, 348, 61, 30), (128, 128, 128))
 
-        # self.__ExitMessageBox = MessageBox(gl_WindowWidth, gl_WindowHeight, '确定要结束程序吗？')
-
-        # 将全部element记录到列表中
-        # self.__ElementsList = [self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
-        #                        self.__optOption, self.__optExit]
         self.render.add(self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
                         self.__optOption, self.__optExit)
         self.render.close()
@@ -92,28 +93,28 @@ class TitleScene(Scene):
         self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                              lambda: self.__retSignalIsReadyToEnd(SCENENUM_GAME_PROLOGUE), 1)
         self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseIn,
-                                             lambda: self.__changeBoardText(const_Text_titlePage_NewGame), 1)
+                                             lambda: self.__changeBoardText(self.__expBoardText[1]), 1)
         self.__optNewGame.Events.appendEvent(ioEvent3Enum.mouseOut,
-                                             lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
+                                             lambda: self.__changeBoardText(self.__expBoardText[0]), 1)
         # ---Continue选项绑定事件---
         self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                               lambda: self.__retSignalIsReadyToEnd(SCENENUM_CONTINUE), 1)
         self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseIn,
-                                              lambda: self.__changeBoardText(const_Text_titlePage_Continue), 1)
+                                              lambda: self.__changeBoardText(self.__expBoardText[2]), 1)
         self.__optContinue.Events.appendEvent(ioEvent3Enum.mouseOut,
-                                              lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
+                                              lambda: self.__changeBoardText(self.__expBoardText[0]), 1)
         # ---Option选项绑定事件---
         self.__optOption.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                             lambda: self.__retSignalIsReadyToEnd(SCENENUM_OPT), 1)
         self.__optOption.Events.appendEvent(ioEvent3Enum.mouseIn,
-                                            lambda: self.__changeBoardText(const_Text_titlePage_Option), 1)
+                                            lambda: self.__changeBoardText(self.__expBoardText[3]), 1)
         self.__optOption.Events.appendEvent(ioEvent3Enum.mouseOut,
-                                            lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
+                                            lambda: self.__changeBoardText(self.__expBoardText[0]), 1)
         # ---Exit选项绑定事件---
         self.__optExit.Events.appendEvent(ioEvent3Enum.mouseIn,
-                                          lambda: self.__changeBoardText(const_Text_titlePage_Exit), 1)
+                                          lambda: self.__changeBoardText(self.__expBoardText[4]), 1)
         self.__optExit.Events.appendEvent(ioEvent3Enum.mouseOut,
-                                          lambda: self.__changeBoardText(const_Text_titlePage_initShow), 1)
+                                          lambda: self.__changeBoardText(self.__expBoardText[0]), 1)
         self.__optExit.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick,
                                           lambda: pygame.event.post(pygame.event.Event(12)), 1)
 
@@ -178,6 +179,10 @@ class Title_PrologueScene(Scene):
         self.Sound_Weak = 'NG_F_SS_W.wav'
         self.Music_BGM = 'NG_F_SS_BGM.wav'
 
+        # assets name
+        self.__asf_name1 = 'T_P.assets'
+        self.__asf_name2 = 'T_P_C.assets'
+
         # 注册场景
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
@@ -199,12 +204,9 @@ class Title_PrologueScene(Scene):
         self.res_Music_BGM.set_volume(self.config.getVolumeBGM())
 
         # 其它元素
-        self.__TextList = [const_Text_NewGame_Story_1, const_Text_NewGame_Story_2, const_Text_NewGame_Story_3,
-                           const_Text_NewGame_Story_4, const_Text_NewGame_Story_5, const_Text_NewGame_Story_6,
-                           const_Text_NewGame_Story_7, const_Text_NewGame_Story_8]
-        self.__DialogueList = [const_Text_NewGame__Dialogue_1, const_Text_NewGame__Dialogue_2,
-                               const_Text_NewGame__Dialogue_3, const_Text_NewGame__Dialogue_4,
-                               const_Text_NewGame__Dialogue_5]
+        self.__assetsFile = AssetsFile(os.path.join(gl_AssetsPath, 'PrologueScene'))
+        self.__TextList = self.__assetsFile.decode(self.__asf_name1, AssetsType.SUB)
+        self.__DialogueList = self.__assetsFile.decode(self.__asf_name2, AssetsType.SUB)
 
         self.__TextShow = TextElement((200, 460, 270, 18), self.__TextList[0], gl_Font_oth, 16, (255, 255, 255),
                                       self.config.getTextAntiAlias())
@@ -613,4 +615,3 @@ class Continue_Scene(Scene):
     def doMouseButtonDownEvent(self, Button):
         if Button == 3:  # 左键
             self.__retSignalIsReadyToEnd(SCENENUM_TITLE)
-

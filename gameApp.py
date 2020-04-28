@@ -2,7 +2,7 @@ import pygame
 import gc
 
 from source.core.assembly.Config import Config
-from source.const.Const import SCENENUM_INIT
+from source.core.const.Const import SCENENUM_INIT
 from source.util.ToolsFuc import getNotN
 
 

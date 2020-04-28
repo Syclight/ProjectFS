@@ -1,6 +1,5 @@
 from operator import eq
 
-
 from source.core.render.GameObjRender import gameObjRender
 from source.util.ToolsFuc import InElement
 from source.view.baseClazz.Element import Element
@@ -51,6 +50,8 @@ class Scene:
 
     def super_doMouseMotion(self, MouseRel, Buttons):
         for e in self.render.eventHandingList():
+            if not e.active:
+                continue
             if InElement(self.mousePos, e):
                 if InElement(self.lastMousePos, e):
                     e.Events.doMouseMotion()
@@ -70,6 +71,7 @@ class Scene:
         if not InElement(self.mousePos, self.focus):
             self.lastFocus = self.focus
             self.focus = Element((0, 0, 0, 0))
+            self.__focus_onClick = 0
 
         if self.lastFocus.EventsHadDo.hadDoMouseIn:
             self.lastFocus.Events.doMouseOut()
@@ -91,18 +93,18 @@ class Scene:
 
     def super_doMouseButtonDownEvent(self, Button):
         if Button == 1:  # 鼠标左键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseRightKeyUp:
                 self.__focus_onClick = 1
                 self.focus.Events.doMouseLeftKeyDown()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = False
         if Button == 2:  # 鼠标中键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseMidKeyUp:
                 self.focus.Events.doMouseMidKeyDown()
                 self.focus.EventsHadDo.hadDoMouseMidKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseMidKeyUp = False
         if Button == 3:  # 鼠标右键键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseLeftKeyUp:
                 self.focus.Events.doMouseRightKeyDown()
                 self.focus.EventsHadDo.hadDoMouseRightKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseRightKeyUp = False
@@ -112,7 +114,7 @@ class Scene:
 
     def super_doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标左键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseLeftKeyDown:
                 self.focus.Events.doMouseLeftKeyUp()
                 self.focus.EventsHadDo.hadDoMouseLeftKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseLeftKeyUp = True
@@ -121,12 +123,12 @@ class Scene:
                     self.focus.EventsHadDo.hadDoMouseLeftKeyClick = True
                 self.__focus_onClick = 0
         if Button == 2:  # 鼠标中键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseMidKeyDown:
                 self.focus.Events.doMouseMidKeyUp()
                 self.focus.EventsHadDo.hadDoMouseMidKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseMidKeyUp = True
         if Button == 3:  # 鼠标右键
-            if InElement(self.mousePos, self.focus):
+            if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseRightKeyDown:
                 self.focus.Events.doMouseRightKeyUp()
                 self.focus.EventsHadDo.hadDoMouseRightKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseRightKeyUp = True

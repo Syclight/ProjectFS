@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from source.const.Const import gl_WindowHeight, gl_Font
+from source.core.const.Const import gl_WindowHeight, gl_Font
 from source.core.dataStructure.QuadTree import RectangleRange
 from source.view.element.Elements import TextElement
 from source.view.scene.Scenes import Scene

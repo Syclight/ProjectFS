@@ -1,6 +1,6 @@
 from source.view.baseClazz.Element import Element
 from source.core.assembly.IOEvent import *
-from source.const.Const import *
+from source.core.const.Const import *
 from source.util.ToolsFuc import *
 
 

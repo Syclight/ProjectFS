@@ -3,10 +3,10 @@ import random
 
 import pygame
 
-from source.const.Const import gl_Font
+from source.core.const.Const import gl_Font
 from source.core.assembly.Painter import Painter
 from source.core.math.MathConst import PI_DOUBLE
-from source.core.math.Vector import point2, vec2
+from source.core.math.Vector import vec2
 from source.core.math.Noise import noise
 from source.core.math.Shape import Circle
 from source.view.baseClazz.Scene import Scene

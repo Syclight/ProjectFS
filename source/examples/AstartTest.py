@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from source.const.Const import gl_Font
+from source.core.const.Const import gl_Font
 from source.util.ToolsFuc import centeredXPos
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TextElement

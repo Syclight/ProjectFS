@@ -1,6 +1,6 @@
 import pygame
 
-from source.const.Const import gl_Font
+from source.core.const.Const import gl_Font
 from source.view.baseClazz.Scene import Scene
 from source.view.element.Elements import TextElement
 

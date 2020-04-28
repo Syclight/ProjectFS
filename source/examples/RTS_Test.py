@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from source.const.Const import gl_Font
+from source.core.const.Const import gl_Font
 from source.core.assembly.A_star import AStarArea, CoordinateException
 from source.core.math.Vector import point2
 from source.core.math.Shape import Rectangle

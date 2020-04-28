@@ -18,7 +18,7 @@ TitleScene： className 下一个场景的类名称
 
 切记from...import...不能直接导入在代码头。例子中的两行必须写在一起。
 """
-from source.const.Const import SCENENUM_INIT
+from source.core.const.Const import SCENENUM_INIT
 
 from source.examples.ActorTest import ActorScene  # 物理场景测试
 from source.examples.AstartTest import AstartTest  # A*寻路图形化演示
@@ -34,7 +34,7 @@ from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测�
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [LogoScene]}
+SceneMap = {SCENENUM_INIT: [ActorScene]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):
