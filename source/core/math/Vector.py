@@ -25,6 +25,15 @@ class vec2:
     def __sub__(self, other):
         return vec2(self.x - other.x, self.y - other.y)
 
+    def __getitem__(self, item):
+        return self.ary()[item]
+
+    def __setitem__(self, key, value):
+        if key == 0:
+            self.x = value
+        elif key == 1:
+            self.y = value
+
     @staticmethod
     def fromAngle(angle, length=1):
         return vec2(length * math.cos(angle), length * math.sin(angle))
@@ -135,8 +144,11 @@ class vec2:
         return vec2(self.x * math.cos(angle) - self.y * math.sin(angle),
                     self.x * math.sin(angle) + self.y * math.cos(angle))
 
-    def ary(self):
-        return self.x, self.y
+    def ary(self, exp=0):
+        if exp == 0:
+            return self.x, self.y
+        if exp == 1:
+            return int(self.x), int(self.y)
 
 
 class point2(vec2):
@@ -155,6 +167,8 @@ class vec3:
     def __init__(self, x=0.0, y=0.0, z=0.0):
         if isinstance(x, tuple) or isinstance(x, list):
             self.__init__(x[0], x[1], x[2])
+        elif isinstance(x, vec2):
+            self.__init__(x.x, x.y, y)
         else:
             self.x = float(x)
             self.y = float(y)
@@ -168,6 +182,17 @@ class vec3:
 
     def __sub__(self, other):
         return vec3(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __getitem__(self, item):
+        return self.ary()[item]
+
+    def __setitem__(self, key, value):
+        if key == 0:
+            self.x = value
+        elif key == 1:
+            self.y = value
+        elif key == 2:
+            self.z = value
 
     @staticmethod
     def fromAngle(theta, phi, length=1):
@@ -184,7 +209,7 @@ class vec3:
 
     @staticmethod
     def random(a=0, b=1):
-        angle = random.uniform(a, b) * PI_DOUBLE;
+        angle = random.uniform(a, b) * PI_DOUBLE
         vz = random.uniform(a, b) * 2 - 1
         vzBase = math.sqrt(1 - vz * vz)
         vx = vzBase * math.cos(angle)
@@ -300,5 +325,16 @@ class vec3:
         return v.mul(math.cos(angle)) + (1 - math.cos(angle)) * (self.dot(_vec3)) * _vec3 + v.cross(_vec3).mul(
             math.sin(angle))
 
-    def ary(self):
-        return self.x, self.y, self.z
+    def ex_vec2(self):
+        return vec2(self.x, self.y)
+
+    def ary(self, exp=0):
+        """exp: 0 float xyz, 1 int xyz, 2 float xy, 3 int xy"""
+        if exp == 0:
+            return self.x, self.y, self.z
+        elif exp == 1:
+            return int(self.x), int(self.y), int(self.z)
+        elif exp == 3:
+            return self.x, self.y
+        elif exp == 4:
+            return int(self.x), int(self.y)

@@ -56,15 +56,9 @@ class gameApp:
                 self.__clock.tick()
             self.__scene.FPS = round(self.__clock.get_fps(), 1)
 
-            if self.__scene.isFill or self.__fill:
-                self.__screen.fill(self.__scene.fillColor)
-                self.__fill = False
-
             # 画屏幕
             self.__scene.super_draw()
             self.__scene.frameCount += 1
-            pygame.display.update()
-
             self.__scene.super_doClockEvent(pygame.time.get_ticks())
 
             # 事件处理
@@ -97,6 +91,12 @@ class gameApp:
                     self.__scene.mousePos = event.pos
                     self.__scene.mouseX = self.__scene.mousePos[0]
                     self.__scene.mouseY = self.__scene.mousePos[1]
+
+            if not self.isQuit:
+                pygame.display.update()
+                if self.__scene.isFill or self.__fill:
+                    self.__screen.fill(self.__scene.fillColor)
+                    self.__fill = False
 
             # 场景调度
             if self.__scene.isEnd:

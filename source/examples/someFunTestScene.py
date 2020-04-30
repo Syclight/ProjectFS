@@ -7,7 +7,7 @@ import pygame
 from source.core.assembly.Painter import Painter
 from source.core.math.Vector import point2, vec2
 from source.core.math.MathConst import PI, PI_DOUBLE
-from source.core.math.MathUtil import mapping, constrain
+from source.core.math.MathUtil import mapping
 from source.core.math.Shape import Circle, Line
 from source.core.multimedia.MusicPlayer import musicPlayer
 from source.view.baseClazz.Scene import Scene
@@ -189,6 +189,7 @@ class kaleidoscope(Scene):
         self.isFill = False
         self.v = vec2(self.width / 2, self.height / 2)
         self.caption = '测试场景：万花筒  按下鼠标按键进行绘制，按q键清屏'
+        self.painter = Painter(self.screen)
 
     def draw(self):
         if 0 < self.mouseX < self.width and 0 < self.mouseY < self.height:
@@ -203,21 +204,24 @@ class kaleidoscope(Scene):
             v2_l = vec2(self.width / 2 + pmx, self.height / 2 - pmy)
 
             if self.mousePressed:
+                self.painter.push()
                 for i in range(0, self.symmetry):
-                    v1_n = self.__rotateBy(v1_n, self.width / 2, self.height / 2)
-                    v1_l = self.__rotateBy(v1_l, self.width / 2, self.height / 2)
-                    v2_n = self.__rotateBy(v2_n, self.width / 2, self.height / 2)
-                    v2_l = self.__rotateBy(v2_l, self.width / 2, self.height / 2)
+                    # v1_n = self.__rotateBy(v1_n, self.width / 2, self.height / 2)
+                    # v1_l = self.__rotateBy(v1_l, self.width / 2, self.height / 2)
+                    # v2_n = self.__rotateBy(v2_n, self.width / 2, self.height / 2)
+                    # v2_l = self.__rotateBy(v2_l, self.width / 2, self.height / 2)
 
-                    Painter(self.screen).Lines([v1_n, v1_l], (255, 255, 255), 1, 0, 1)
-                    Painter(self.screen).Lines([v2_n, v2_l], (255, 255, 255), 1, 0, 1)
+                    self.painter.rotate(self.width / 2, self.height / 2, self.angle)
+                    self.painter.Lines([v1_n, v1_l], (255, 255, 255), 1, 0, 1)
+                    self.painter.Lines([v2_n, v2_l], (255, 255, 255), 1, 0, 1)
+                self.painter.pop()
 
     # 将v以(x, y)点为中心进行旋转
-    def __rotateBy(self, v, x, y):
-        v = vec2(v.x - x, v.y - y)
-        v = v.rotate(self.angle)
-        v = vec2(v.x + x, v.y + y)
-        return v
+    # def __rotateBy(self, v, x, y):
+    #     v = vec2(v.x - x, v.y - y)
+    #     v = v.rotate(self.angle)
+    #     v = vec2(v.x + x, v.y + y)
+    #     return v
 
     def doKeyEvent(self, Key, Mod, Type, Unicode=None):
         if Key == 113:
@@ -445,3 +449,91 @@ class IFS(Scene):
 
     def draw(self):
         self.screen.blit(self.canvas, self.canvas.get_rect())
+
+
+class LSystemScene(Scene):
+    """L-System 分形树，灵感来源于the Coding Train的视频"""
+
+    def __init__(self, *args):
+        super(LSystemScene, self).__init__(*args)
+
+        rule_str1_1 = 'F->FF+[+F-F-F]-[-F+F+F]'
+        rule_str1_2 = 'X->[-FX]+FX'
+        rule_str1_3 = 'F->F[+FF][-FF]F[-F][+F]F'
+
+        # rule_str2_1 = 'X->F+[[X]-X]-F[-FX]+X'
+        rule_str2_1 = 'X->F[+X]F[-X]+X'
+        rule_str2_2 = 'F->FF'
+
+        self.__rule = self.rule(rule_str1_1)
+        self.__rule2_1 = self.rule(rule_str2_1)
+        self.__rule2_2 = self.rule(rule_str2_2)
+
+        self.isFill = False
+        self.caption = 'L-Systems生成树，鼠标点击，观看树的生长'
+
+        self.l_system = LSystem([self.__rule], 'F', math.radians(35), self.screen)
+        self.l_system.len = 10
+
+    class rule:  # 内部类
+        def __init__(self, _str):
+            self.__str = _str
+            self.a, self.b = _str.split('->')
+
+        def __str__(self):
+            return self.__str
+
+    def setup(self):
+        self.createTextElement('规则：' + str(self.__rule), color=(153, 217, 234))
+        self.createTextElement('根:' + 'F', color=(153, 217, 234))
+        pass
+
+    def doMouseButtonDownEvent(self, Button):
+        self.l_system.generate(self.width / 2, self.height)
+        # self.createTextElement(self.l_system.getSentence())
+
+
+class LSystem:
+    def __init__(self, rules, axiom, angle, sur):
+        self.__axiom = axiom
+        self.__rules = rules
+        self.__sentence = self.__axiom
+        self.__angle = angle
+        self.len = 10
+        self.painter = Painter(sur)
+
+    def generate(self, x, y):
+        nextSentence = ''
+        for i in range(len(self.__sentence)):
+            current = self.__sentence[i]
+            found = False
+            for j in range(len(self.__rules)):
+                if current == self.__rules[j].a:
+                    found = True
+                    nextSentence += self.__rules[j].b
+            if not found:
+                nextSentence += current
+
+        self.__sentence = nextSentence
+        self.__show(x, y)
+
+    def getSentence(self):
+        return self.__sentence
+
+    def __show(self, x=0, y=0):
+        self.painter.resetCurrentMat()
+        self.painter.translate(x, y)
+        for i in range(len(self.__sentence)):
+            current = self.__sentence[i]
+            if current == 'F':
+                self.painter.Lines([point2(0, 0), point2(0, -self.len)], (255, 255, 255), 1, 0)
+                self.painter.translate(0, -self.len)
+            elif current == '+':
+                self.painter.rotate(self.__angle)
+            elif current == '-':
+                self.painter.rotate(-self.__angle)
+            elif current == '[':
+                self.painter.push()
+            elif current == ']':
+                self.painter.pop()
+

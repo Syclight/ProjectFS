@@ -29,12 +29,12 @@ from source.examples.TestPick import pickTest  # pick测试
 from source.examples.noiseTest import noiseTestScene  # 噪声测试
 from source.examples.physicsTest import PhysicsScene  # 力学测试场景
 from source.examples.someFunTestScene import drawingBoard, createWave, sketchSphere, chain, paramEquation, \
-    kaleidoscope, snowScene, MandelbrotSet, JuliaSet, IFS  # 范例
+    kaleidoscope, snowScene, MandelbrotSet, JuliaSet, IFS, LSystemScene  # 范例
 from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测试
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [ActorScene]}
+SceneMap = {SCENENUM_INIT: [LSystemScene]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):

@@ -1,6 +1,7 @@
 import math
 import random
 
+from source.core.math.MathConst import PI
 from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse
 from source.core.math.Vector import vec2, point2
 from source.core.assembly.Painter import Painter
@@ -24,10 +25,10 @@ class TestPainterScene(Scene):
         self.ellipse = Ellipse(400, 300, 160, 70)
 
     def draw(self):
-        self.painter.Pixel(point2(799, 599), self.white)
+        self.painter.Pixel(point2(700, 500), self.white)
         self.painter.Triangle(self.tra, self.white, 0, 1)
         self.painter.Rect(self.rect, self.white, 0, 1)
         self.painter.Circle(self.circle, (255, 255, 255), 1)
         self.painter.Ellipse(self.ellipse, self.white, 1)
-        self.painter.Lines(self.points, (255, 255, 255), 1, 0, 1)
+        self.painter.Lines(self.points, (255, 255, 255), 1, 1, 1)
         self.painter.Line(self.line, (255, 255, 255), 1, 0)

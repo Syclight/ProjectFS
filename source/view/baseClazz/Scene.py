@@ -1,11 +1,12 @@
 from operator import eq
 
+from source.core.component.Constructor import Constructor
 from source.core.render.GameObjRender import gameObjRender
 from source.util.ToolsFuc import InElement
 from source.view.baseClazz.Element import Element
 
 
-class Scene:
+class Scene(Constructor):
     def __init__(self, *args):
         self.screen = args[0]
         self.config = args[1]
@@ -41,11 +42,13 @@ class Scene:
         self.__focus_onClick = 0
 
         self.render = gameObjRender()
+        super().__init__(self.render, self.screen.get_rect())
 
     def super_setup(self):
         self.setup()
 
     def super_draw(self):
+        self.render.render(self.screen)
         self.draw()
 
     def super_doMouseMotion(self, MouseRel, Buttons):
