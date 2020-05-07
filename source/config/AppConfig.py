@@ -24,17 +24,18 @@ from source.examples.ActorTest import ActorScene  # 物理场景测试
 from source.examples.AstartTest import AstartTest  # A*寻路图形化演示
 from source.examples.CanvasTest import canvasTest, water2d
 from source.examples.RTS_Test import RobotRunScene  # Actor与A*结合测试场景
+from source.examples.SpringSimulate import SpringSimulateScene, SpringMassSystemTestScene
 from source.examples.TestPainter import TestPainterScene  # Painter测试
 from source.examples.TestPick import pickTest  # pick测试
-from source.examples.noiseTest import noiseTestScene  # 噪声测试
+from source.examples.noiseTest import noiseTestScene, noise1DScene  # 噪声测试
 from source.examples.physicsTest import PhysicsScene  # 力学测试场景
-from source.examples.someFunTestScene import drawingBoard, createWave, sketchSphere, chain, paramEquation, \
+from source.examples.reference import drawingBoard, createWave, sketchSphere, chain, paramEquation, \
     kaleidoscope, snowScene, MandelbrotSet, JuliaSet, IFS, LSystemScene  # 范例
 from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测试
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [LSystemScene]}
+SceneMap = {SCENENUM_INIT: [SpringSimulateScene]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):

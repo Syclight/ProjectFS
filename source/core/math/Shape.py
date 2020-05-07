@@ -43,6 +43,15 @@ class Shape:
 
 
 class Line(Shape):
+    def __init__(self, x1, y1, x2, y2):
+        if isinstance(x1, vec2):
+            self.__init__(x1.x, x1.y, y1.x, y1.y)
+        else:
+            self.point1 = point2(x1, y2)
+            self.point2 = point2(x2, y2)
+
+
+class Ray(Shape):
     def __init__(self, x, y, angle=0, length=0):
         if isinstance(x, vec2):
             self.__init__(x.x, x.y, y, angle)

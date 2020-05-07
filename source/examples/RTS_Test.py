@@ -79,6 +79,7 @@ class RobotRunScene(Scene):
         super(RobotRunScene, self).__init__(screen, config, startClock)
         self.w, self.h = self.screen.get_width(), self.screen.get_height()
         self.__As_MAP = AStarArea(Rectangle(0, 0, 800, 600), 80, 60)
+        self.caption = 'Actor与A*结合测试场景'
         self.__containers = []
         for i in range(0, 6):
             x = int(random.randint(100, self.w - 150) / 10) * 10

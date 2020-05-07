@@ -1,12 +1,13 @@
 from operator import eq
 
+from source.core.assembly.Painter import Painter
 from source.core.component.Constructor import Constructor
 from source.core.render.GameObjRender import gameObjRender
 from source.util.ToolsFuc import InElement
 from source.view.baseClazz.Element import Element
 
 
-class Scene(Constructor):
+class Scene(Constructor, Painter):
     def __init__(self, *args):
         self.screen = args[0]
         self.config = args[1]
@@ -39,19 +40,29 @@ class Scene(Constructor):
         self.mousePressed = False
         self.keyPressed = False
 
+        self.useDefaultSetup = True
+        self.useDefaultDraw = True
+        self.useDefaultMouseHeading = True
+        self.useDefaultKeyHeading = True
+        self.useDefaultClock = True
+
         self.__focus_onClick = 0
 
         self.render = gameObjRender()
-        super().__init__(self.render, self.screen.get_rect())
 
-    def super_setup(self):
-        self.setup()
+        Constructor.__init__(self, self.render, self.screen.get_rect())
+        Painter.__init__(self, self.screen)
 
-    def super_draw(self):
+    # 默认的处理函数，由useDefault开头的变量控制要不要启用
+    # 默认为开启
+
+    def __setup(self):
+        self.render.close()
+
+    def __draw(self):
         self.render.render(self.screen)
-        self.draw()
 
-    def super_doMouseMotion(self, MouseRel, Buttons):
+    def __doMouseMotive(self, MouseRel, Buttons):
         for e in self.render.eventHandingList():
             if not e.active:
                 continue
@@ -91,10 +102,7 @@ class Scene(Constructor):
             self.lastFocus.EventsHadDo.hadDoMouseRightKeyDown = False
             self.lastFocus.EventsHadDo.hadDoMouseRightKeyUp = True
 
-        # 最后执行重写的方法
-        self.doMouseMotion(MouseRel, Buttons)
-
-    def super_doMouseButtonDownEvent(self, Button):
+    def __doMouseButtonDownEvent(self, Button):
         if Button == 1:  # 鼠标左键
             if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseRightKeyUp:
                 self.__focus_onClick = 1
@@ -112,10 +120,7 @@ class Scene(Constructor):
                 self.focus.EventsHadDo.hadDoMouseRightKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseRightKeyUp = False
 
-        # 最后执行重写的方法
-        self.doMouseButtonDownEvent(Button)
-
-    def super_doMouseButtonUpEvent(self, Button):
+    def __doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标左键
             if InElement(self.mousePos, self.focus) and self.focus.EventsHadDo.hadDoMouseLeftKeyDown:
                 self.focus.Events.doMouseLeftKeyUp()
@@ -136,25 +141,71 @@ class Scene(Constructor):
                 self.focus.EventsHadDo.hadDoMouseRightKeyDown = False
                 self.focus.EventsHadDo.hadDoMouseRightKeyUp = True
 
-        # 最后执行重写的方法
+    def __doClockEvent(self, NowClock):
+        pass
+
+    def __doKeyEvent(self, Key, Mod, Type, Unicode=None):
+        pass
+
+    def __doKeyPressedEvent(self, KeyPressedList):
+        pass
+
+    #  super_开头的是gameApp调用的方法，禁止重写！
+
+    def super_setup(self):
+        if self.useDefaultSetup:
+            self.__setup()
+
+        self.setup()
+
+    def super_draw(self):
+        if self.useDefaultDraw:
+            self.__draw()
+
+        self.draw()
+
+    def super_doMouseMotion(self, MouseRel, Buttons):
+        if self.useDefaultMouseHeading:
+            self.__doMouseMotive(MouseRel, Buttons)
+
+        self.doMouseMotion(MouseRel, Buttons)
+
+    def super_doMouseButtonDownEvent(self, Button):
+        if self.useDefaultMouseHeading:
+            self.__doMouseButtonDownEvent(Button)
+
+        self.doMouseButtonDownEvent(Button)
+
+    def super_doMouseButtonUpEvent(self, Button):
+        if self.useDefaultMouseHeading:
+            self.__doMouseButtonUpEvent(Button)
+
         self.doMouseButtonUpEvent(Button)
 
     def super_doClockEvent(self, NowClock):
+        if self.useDefaultClock:
+            self.__doClockEvent(NowClock)
+
         self.doClockEvent(NowClock)
 
     def super_doKeyEvent(self, Key, Mod, Type, Unicode=None):
+        if self.useDefaultKeyHeading:
+            self.__doKeyEvent(Key, Mod, Type, Unicode)
+
         if Type == 2:
             self.keyPressed = True
         else:
             self.keyPressed = False
-
         self.doKeyEvent(Key, Mod, Type, Unicode)
 
     def super_doKeyPressedEvent(self, KeyPressedList):
+        if self.useDefaultKeyHeading:
+            self.__doKeyPressedEvent(KeyPressedList)
         self.keyPressed = True
         self.doKeyPressedEvent(KeyPressedList)
 
-    # 需要重写的方法
+    # 可以重写的方法
+
     def setup(self):
         pass
 

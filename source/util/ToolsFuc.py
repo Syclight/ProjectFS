@@ -54,7 +54,7 @@ def centeredYPos(bg_height, obj_height, bg_top=0):
 
 
 # 返回垂直位置(X, Y)
-def centeredXYPos(bg_width, obj_width, bg_height, obj_height) -> []:
+def centeredXYPos(bg_width, obj_width, bg_height, obj_height) -> tuple:
     return centeredXPos(bg_width, obj_width), centeredYPos(bg_height, obj_height)
 
 

@@ -6,7 +6,6 @@ from source.core.math.Vector import vec2
 
 class Transform:
     def __init__(self):
-        # self.__currentMat = mat3()
         self.__matStack = [mat3()]
 
     def getMatStack(self):
@@ -14,7 +13,6 @@ class Transform:
 
     def getCurrentMat(self):
         return self.__matStack[0].copy()
-        # return self.__currentMat.copy()
 
     def push(self):
         mat = self.__matStack[0]
@@ -23,24 +21,51 @@ class Transform:
     def pop(self):
         if len(self.__matStack) > 1:
             self.__matStack.pop(0)
-            # self.__currentMat = self.__matStack[0]
 
     def popAll(self):
-        # self.__currentMat = mat3()
         self.__matStack.clear()
         self.__matStack.append(mat3())
 
     def resetCurrentMat(self):
         self.__matStack[0] = mat3()
-        # self.__currentMat = mat3()
 
     def resetAll(self):
-        # self.__currentMat = mat3()
         for i in range(len(self.__matStack)):
             self.__matStack[i] = mat3()
 
-    def scale(self):
-        pass
+    def scale(self, *args):
+        a, b = 1, 1
+        x, y = 0, 0
+        if len(args) == 1:
+            v = args[0]
+            if isinstance(v, list) or isinstance(v, tuple):
+                a, b = v[0], v[1]
+            if isinstance(v, vec2):
+                a, b = v.x, v.y
+        elif len(args) == 2:
+            v = args[0]
+            if isinstance(v, vec2):
+                x, y = v.x, v.y
+                a, b = args[1].x, args[1].y
+            elif isinstance(v, list) or isinstance(v, tuple):
+                x, y = v[0], v[1]
+                a, b = args[1][0], args[1][1]
+            else:
+                a, b = args[0], args[1]
+        elif len(args) == 4:
+            x, y, a, b = args[0], args[1], args[2], args[3]
+
+        _m = mat3()
+        _m.set(0, 0, a)
+        _m.set(1, 1, b)
+
+        _mR = mat3()
+        _mR[0] = 1, 0, x
+        _mR[1] = 0, 1, y
+
+        _m = _m * _mR
+
+        self.__matStack[0] = self.__matStack[0] * _m
 
     def translate(self, *args):
         tx, ty = 0, 0
@@ -52,13 +77,12 @@ class Transform:
                 tx, ty = v.x, v.y
         else:
             tx, ty = args[0], args[1]
+
         _m = mat3()
         _m.set(0, 2, tx)
         _m.set(1, 2, ty)
-        # self.__currentMat = _m * self.__currentMat
-        self.__matStack[0] = self.__matStack[0] * _m
 
-        # self.__matStack[0] = self.__currentMat
+        self.__matStack[0] = self.__matStack[0] * _m
 
     def rotate(self, *args):
         x, y, angle = 0, 0, 0
@@ -88,15 +112,4 @@ class Transform:
         _m = _mL * _m
         _m = _m * _mR
 
-        # self.__currentMat = _m * self.__currentMat
         self.__matStack[0] = self.__matStack[0] * _m
-
-        # self.__matStack[0] = self.__currentMat
-
-
-# m = Transform()
-# m.translate(10, 0)
-# print(m.getMatStack())
-# m.push()
-# m.translate(70, 0)
-# print(m.getMatStack())

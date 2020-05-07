@@ -47,6 +47,7 @@ class TitleScene(Scene):
     def __init__(self, screen, config, clock, paramList=None):
         # 注册场景
         super().__init__(screen, config, clock, paramList)
+        self.useDefaultDraw = False
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
         registerScene(SCENENUM_OPT, OptionScene)
@@ -150,6 +151,7 @@ class TitleScene(Scene):
             self.flag = True
         blitAlpha(self.screen, self.bg, (0, 0), self.alpha)
         if self.flag and not self.isReadyToEnd:
+            # pass
             self.render.render(self.screen)
             # for e in self.__ElementsList:
             #     e.draw(self.screen)

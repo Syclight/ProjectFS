@@ -124,11 +124,12 @@ class gameObjRender:
         self.__add(*args)
 
     def close(self):
-        self.__sortKey()
-        self.__flag_add = False
-        self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n'
-        self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n')
-        self.__logFile.close()
+        if self.__flag_add:
+            self.__sortKey()
+            self.__flag_add = False
+            self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n'
+            self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n')
+            self.__logFile.close()
 
     # def closeLog(self):
     #     self.__logFile.write(

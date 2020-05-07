@@ -30,7 +30,7 @@ class Painter(Transform):
         """
 
         v = super().getCurrentMat().mul_vec3(vec3(p.x, p.y, 1))
-        self.s.set_at([int(v.x), int(v.y)], color)
+        self.s.set_at([int(v.x + 0.5), int(v.y + 0.5)], color)
 
     def Line(self, line, color, width, aa=0):
         """
@@ -42,14 +42,17 @@ class Painter(Transform):
         :param aa: bool 是否抗锯齿
         :return: None
         """
-        v = super().getCurrentMat().mul_vec3(vec3(line.pos.x, line.pos.y, 1))
-        sp = (int(v.x), int(v.y))
-        eps = line.dir.setLen(line.length)
-        ep = (sp[0] + int(eps.x), sp[1] + int(eps.y))
-        if aa:
-            pygame.draw.aaline(self.s, color, sp, ep, 1)
-        else:
-            pygame.draw.line(self.s, color, sp, ep, width)
+        raise Exception('暂时废除，请使用Lines')
+        # sv = super().getCurrentMat().mul_vec3(vec3(line.pos.x, line.pos.y, 1))
+        # sp = (int(sv.x), int(sv.y))
+        # eps = line.dir.setLen(line.length)
+        # # ev = super().getCurrentMat().mul_vec3(vec3(eps, 1))
+        # # ep = (sp[0] + int(ev.x), sp[1] + int(ev.y))
+        # ep = (sp[0] + int(eps.x), sp[1] + int(eps.y))
+        # if aa:
+        #     pygame.draw.aaline(self.s, color, sp, ep, 1)
+        # else:
+        #     pygame.draw.line(self.s, color, sp, ep, width)
 
     def Lines(self, points, color, width, closed, aa=0):
         """
@@ -68,7 +71,7 @@ class Painter(Transform):
             return
         for i in range(0, length - 1):
             p0, p1 = points[i], points[i + 1]
-            _p0, _p1 = (int(p0[0]), int(p0[1])), (int(p1[0]), int(p1[1]))
+            _p0, _p1 = (int(p0[0] + 0.5), int(p0[1] + 0.5)), (int(p1[0] + 0.5), int(p1[1] + 0.5))
             v0 = super().getCurrentMat().mul_vec3(vec3(_p0[0], _p0[1], 1))
             v1 = super().getCurrentMat().mul_vec3(vec3(_p1[0], _p1[1], 1))
             if i == 0:
@@ -97,7 +100,7 @@ class Painter(Transform):
         :return: None
         """
         v = super().getCurrentMat().mul_vec3(vec3(rect.x, rect.y, 1))
-        _rect = (v.x, v.y, rect.w, rect.h)
+        _rect = (int(v.x + 0.5), int(v.y + 0.5), int(rect.w + 0.5), int(rect.h + 0.5))
         pygame.draw.arc(self.s, color, _rect, start_angle, stop_angle, width)
 
     def Rect(self, rect, color, width, aa=0):
@@ -111,7 +114,7 @@ class Painter(Transform):
         :return: None
         """
         v = super().getCurrentMat().mul_vec3(vec3(rect.x, rect.y, 1))
-        _rect = (v.x, v.y, rect.w, rect.h)
+        _rect = (int(v.x + 0.5), int(v.y + 0.5), int(rect.w + 0.5), int(rect.h + 0.5))
         if width == 0:
             pygame.draw.rect(self.s, color, _rect, 0)
             if aa:
@@ -153,7 +156,7 @@ class Painter(Transform):
         _points = []
         for p in points:
             v = super().getCurrentMat().mul_vec3(vec3(p, 1))
-            _points.append((int(v.x), int(v.y)))
+            _points.append((int(v.x + 0.5), int(v.y + 0.5)))
 
         pygame.draw.polygon(self.s, color, _points, width)
 
@@ -171,11 +174,11 @@ class Painter(Transform):
         :return: None
         """
         if isinstance(circle, list) or isinstance(circle, tuple):
-            pos = (int(circle[0]), int(circle[1]))
-            radius = int(circle[2])
+            pos = (int(circle[0] + 0.5), int(circle[1] + 0.5))
+            radius = int(circle[2] + 0.5)
         else:
-            pos = (int(circle.x), int(circle.y))
-            radius = int(circle.r)
+            pos = (int(circle.x + 0.5), int(circle.y + 0.5))
+            radius = int(circle.r + 0.5)
         _pos = super().getCurrentMat().mul_vec3(vec3(pos[0], pos[1], 1))
         if self.on:
             temp = pygame.Surface((radius * 2, radius * 2)).convert_alpha()
