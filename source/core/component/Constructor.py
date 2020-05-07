@@ -4,6 +4,7 @@ from source.view.element.Elements import TextElement, gl_Font
 
 
 class Constructor:
+    """Element 生成器，可以生成Element"""
     nextElementY = 0
     id = 0
 

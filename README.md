@@ -1,6 +1,10 @@
 # ProjectFS
 FS的python重置版，只不过没有资源
 
+关于这个框架的介绍和一些用法：  
+
+* LOFTER主页: https://syclightframework.lofter.com 欢迎访问
+
 ### 2020.3.17 Asheor
 * 修改了main.py 将注释删去，添加了入口函数
 * 修改了gameApp.py中循环的判断条件
@@ -175,3 +179,8 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 添加了Component目录，里面是组件
 > Constructor.py 生成器  
 > Transform.py 变换组件
+
+### 2020.5.7 Asheor
+* 添加了弹簧，质点等物理组件，用于物理模拟。
+* 修改了Scene的部分代码
+* 想转用d2d做这个框架了。。。

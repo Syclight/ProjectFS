@@ -35,7 +35,7 @@ from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测�
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [SpringSimulateScene]}
+SceneMap = {SCENENUM_INIT: [LogoScene]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):
