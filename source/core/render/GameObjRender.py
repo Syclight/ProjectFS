@@ -25,14 +25,15 @@ class gameObjRender:
 
         self.__log = 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime()) + \
                      self.__class__.__name__ + ' be created\n'
-        self.__logFile = open(gl_LogPath + 'render.log', 'a')
-        self.__logFile.write(self.__log)
+        # # self.__logFile = open(gl_LogPath + 'render.log', 'a')
+        # # self.__logFile.write(self.__log)
 
-    def __del__(self):
-        self.__logFile.close()
+    # def __del__(self):
+        # self.__logFile.close()
 
     def __sortKey(self):
         temp = sorted(self.__renderDict.items(), key=lambda a: a[0])
+        self.__sortedList.clear()
         for tr in temp:
             for e in tr[1]:
                 self.__sortedList.append(e)
@@ -44,40 +45,45 @@ class gameObjRender:
     def add(self, *args):
         if not self.__flag_add:
             self.__log += 'Render Log Error: render closed, add ' + str(args) + ' failed\n'
-            self.__logFile.write('Render Log Error: render closed, add ' + str(args) + ' failed\n')
+            # self.__logFile.write('Render Log Error: render closed, add ' + str(args) + ' failed\n')
         else:
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n'
-            self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n')
+            # self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n')
             self.__add(*args)
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add finished\n'
-            self.__logFile.write(
-                'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add finished\n')
+            # self.__logFile.write(
+            #     'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add finished\n')
 
     def remove(self, *args):
         if not self.__flag_add:
             self.__log += 'Render Log Error: render closed, remove ' + str(args) + ' failed\n'
-            self.__logFile.write('Render Log Error: render closed, remove ' + str(args) + ' failed\n')
+            # self.__logFile.write('Render Log Error: render closed, remove ' + str(args) + ' failed\n')
         else:
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove start\n'
-            self.__logFile.write(
-                'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove start\n')
+            # self.__logFile.write(
+            #     'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove start\n')
             self.__remove(*args)
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove finished\n'
-            self.__logFile.write(
-                'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove finished\n')
+            # self.__logFile.write(
+            #     'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' remove finished\n')
 
     def update(self, index, *args):
         if not self.__flag_add:
             self.__log += 'Render Log Error: render closed, update ' + str(args) + ' failed\n'
-            self.__logFile.write('Render Log Error: render closed, update ' + str(args) + ' failed\n')
+            # self.__logFile.write('Render Log Error: render closed, update ' + str(args) + ' failed\n')
         else:
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update start\n'
-            self.__logFile.write(
-                'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update start\n')
+            # self.__logFile.write(
+            #     'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update start\n')
             self.__update(index, *args)
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update finished\n'
-            self.__logFile.write(
-                'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update finished\n')
+            # self.__logFile.write(
+            #     'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' update finished\n')
+
+    def clear(self):
+        self.__sortedRevList.clear()
+        self.__sortedList.clear()
+        self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' clear\n'
 
     def __add(self, *args):
         if len(args) == 1:
@@ -94,9 +100,9 @@ class gameObjRender:
             else:
                 self.__log += 'Render Log Error: ' + x.__class__.__name__ + ' is ' + str(
                     x.__class__) + ' cant insert render record list\n'
-                self.__logFile.write(
-                    'Render Log Error: ' + x.__class__.__name__ + ' is ' + str(
-                        x.__class__) + ' cant insert render record list\n')
+                # # self.__logFile.write(
+                #     'Render Log Error: ' + x.__class__.__name__ + ' is ' + str(
+                #         x.__class__) + ' cant insert render record list\n')
         else:
             for e in args:
                 self.__add(e)
@@ -107,14 +113,13 @@ class gameObjRender:
             if isinstance(x, list) or isinstance(x, tuple):
                 self.__remove(index, x)
             try:
-                lis = self.__renderDict[index]
-                lis.remove(x)
+                self.__renderDict[index].remove(x)
             except ValueError:
                 self.__log += 'Render Log Error: remove value error ' + x.__class__.__name__ + ' \n'
-                self.__logFile.write('Render Log Error: remove value error ' + x.__class__.__name__ + ' \n')
+                # # self.__logFile.write('Render Log Error: remove value error ' + x.__class__.__name__ + ' \n')
             except KeyError:
                 self.__log += 'Render Log Error: remove index error ' + index + ' \n'
-                self.__logFile.write('Render Log Error: index error remove ' + index + ' \n')
+                # # self.__logFile.write('Render Log Error: index error remove ' + index + ' \n')
         else:
             for e in args:
                 self.__remove(e)
@@ -128,21 +133,24 @@ class gameObjRender:
             self.__sortKey()
             self.__flag_add = False
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n'
-            self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n')
-            self.__logFile.close()
+            # # self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' close\n')
+            # # self.__logFile.close()
 
     # def closeLog(self):
-    #     self.__logFile.write(
+    #     # self.__logFile.write(
     #         'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
     #         + self.__class__.__name__ + ' be closed\n')
-    #     self.__logFile.close()
+    #     # self.__logFile.close()
 
     def open(self):
-        self.__logFile = open(gl_LogPath + 'render.log', 'a')
+        # # self.__logFile = open(gl_LogPath + 'render.log', 'a')
         self.__flag_add = True
         self.__flag_record = True
         self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' open\n'
-        self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' open\n')
+        # # self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' open\n')
+
+    def clearLog(self):
+        self.__log = ''
 
     def getLog(self):
         return self.__log
@@ -160,5 +168,11 @@ class gameObjRender:
                     e.draw(sur)
         elif self.__flag_record:
             self.__log += 'Render Log Error: should close before render\n'
-            self.__logFile.write('Render Log Error: should close before render\n')
+            # self.__logFile.write('Render Log Error: should close before render\n')
             self.__flag_record = False
+
+
+# class ScreenRender:
+#     def __init__(self):
+#         self.objectDict = dict()
+#

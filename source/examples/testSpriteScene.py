@@ -1,10 +1,13 @@
+import os
 import random
 
 import pygame
 
+from source.core.assembly.IOEvent import ioEvent3Enum
 from source.core.const.Const import gl_WindowHeight, gl_Font
 from source.core.dataStructure.QuadTree import RectangleRange
-from source.view.element.Elements import TextElement
+from source.util.ToolsFuc import clipResImg, exKey
+from source.view.element.Elements import TextElement, ImgElement
 from source.view.scene.Scenes import Scene
 from source.view.baseClazz.Sprite import Sprite, SpriteGroup
 from source.core.math.Shape import Rectangle
@@ -64,57 +67,57 @@ def chPos(step, sprite, isY):
 
 
 # test 播放动画
-# class testSpriteScene(Scene):
-#     def __init__(self, screen, framework-config):
-#         super(testSpriteScene, self).__init__(screen, framework-config)
-#         self.img = pygame.image.load('F:/练习/PyCharm/PygameTest/resource/Img/TEST_ANIM.jpg').convert_alpha()
-#         self.enemy = GameSprite(clipResImg(self.img, pygame.Rect(0, 0, 278, 153), (45, 45, 45)), 0)
-#         self.enemy.rect.x = 200
-#         self.enemy.rect.y = 200
-#         # self.enemy1 = GameSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png"), 2)
-#         self.enemy1 = gearSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png").convert_alpha(),
-#                                  pygame.Rect(220, 220, 548, 549))
-#         # 创建精灵组
-#         self.enemy_group = SpriteGroup(RectangleRange(0, 0, 800, 600), self.enemy, self.enemy1)
-#         #self.enemy_group = pygame.sprite.Group(self.enemy, self.enemy1)
-#         self.enemy.Events.appendEvent(ioEvent3Enum.key_W | ioEvent3Enum.keyDowning,
-#                                       lambda: chPos(-1, self.enemy, True), 1)
-#         self.enemy.Events.appendEvent(ioEvent3Enum.key_S | ioEvent3Enum.keyDowning,
-#                                       lambda: chPos(1, self.enemy, True), 1)
-#         self.enemy.Events.appendEvent(ioEvent3Enum.key_A | ioEvent3Enum.keyDowning,
-#                                       lambda: chPos(-1, self.enemy, False), 1)
-#         self.enemy.Events.appendEvent(ioEvent3Enum.key_D | ioEvent3Enum.keyDowning,
-#                                       lambda: chPos(1, self.enemy, False), 1)
-#         self.interval = None
-#         self.clipRect = pygame.Rect(0, 0, 278, 153)
-#         self.__flag_raw = 1
-#
-#     def draw(self):
-#         self.enemy_group.update()
-#         self.enemy_group.draw(self.screen)
-#
-#     def doClockEvent(self, nowClock):
-#         print(self.enemy_group.getCollideDict())
-#
-#         self.interval = nowClock - self.startClock
-#         if self.interval >= 100:
-#             self.startClock = nowClock
-#             if self.clipRect.top >= 612 and self.clipRect.left >= 278:
-#                 self.clipRect = pygame.Rect(-278, 0, 278, 153)
-#                 self.__flag_raw = 1
-#             if self.__flag_raw == 1:
-#                 self.clipRect = pygame.Rect(self.clipRect.left + self.clipRect.width, self.clipRect.top,
-#                                             278, 153)
-#                 self.__flag_raw = 2
-#             elif self.__flag_raw == 2:
-#                 self.clipRect = pygame.Rect(0, self.clipRect.top + self.clipRect.height, 278, 153)
-#                 self.__flag_raw = 1
-#             self.enemy.image = clipResImg(self.img, self.clipRect, (45, 45, 45))
-#
-#     def doKeyPressedEvent(self, keyPressedList):
-#         for key in keyPressedList:
-#             self.enemy.Events.doKeyboardKeyDowning(exKey(key))
-#             self.enemy1.Events.doKeyboardKeyDowning(exKey(key))
+class testAnimScene(Scene):
+    def __init__(self, *args):
+        super(testAnimScene, self).__init__(*args)
+        self.img = pygame.image.load('F:/练习/PyCharm/PygameTest/resource/Img/TEST_ANIM.jpg').convert_alpha()
+        self.enemy = GameSprite(clipResImg(self.img, pygame.Rect(0, 0, 278, 153), (45, 45, 45)), 0)
+        self.enemy.rect.x = 200
+        self.enemy.rect.y = 200
+        # self.enemy1 = GameSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png"), 2)
+        self.enemy1 = gearSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png").convert_alpha(),
+                                 pygame.Rect(220, 220, 548, 549))
+        # 创建精灵组
+        self.enemy_group = SpriteGroup(RectangleRange(0, 0, 800, 600), self.enemy, self.enemy1)
+        # self.enemy_group = pygame.sprite.Group(self.enemy, self.enemy1)
+        self.enemy.Events.appendEvent(ioEvent3Enum.key_W | ioEvent3Enum.keyDowning,
+                                      lambda: chPos(-1, self.enemy, True), 1)
+        self.enemy.Events.appendEvent(ioEvent3Enum.key_S | ioEvent3Enum.keyDowning,
+                                      lambda: chPos(1, self.enemy, True), 1)
+        self.enemy.Events.appendEvent(ioEvent3Enum.key_A | ioEvent3Enum.keyDowning,
+                                      lambda: chPos(-1, self.enemy, False), 1)
+        self.enemy.Events.appendEvent(ioEvent3Enum.key_D | ioEvent3Enum.keyDowning,
+                                      lambda: chPos(1, self.enemy, False), 1)
+        self.interval = None
+        self.clipRect = pygame.Rect(0, 0, 278, 153)
+        self.__flag_raw = 1
+
+    def draw(self):
+        self.enemy_group.update()
+        self.enemy_group.draw(self.screen)
+
+    def doClockEvent(self, nowClock):
+        print(self.enemy_group.getCollideDict())
+
+        self.interval = nowClock - self.startClock
+        if self.interval >= 100:
+            self.startClock = nowClock
+            if self.clipRect.top >= 612 and self.clipRect.left >= 278:
+                self.clipRect = pygame.Rect(-278, 0, 278, 153)
+                self.__flag_raw = 1
+            if self.__flag_raw == 1:
+                self.clipRect = pygame.Rect(self.clipRect.left + self.clipRect.width, self.clipRect.top,
+                                            278, 153)
+                self.__flag_raw = 2
+            elif self.__flag_raw == 2:
+                self.clipRect = pygame.Rect(0, self.clipRect.top + self.clipRect.height, 278, 153)
+                self.__flag_raw = 1
+            self.enemy.image = clipResImg(self.img, self.clipRect, (45, 45, 45))
+
+    def doKeyPressedEvent(self, keyPressedList):
+        for key in keyPressedList:
+            self.enemy.Events.doKeyboardKeyDowning(exKey(key))
+            self.enemy1.Events.doKeyboardKeyDowning(exKey(key))
 
 
 # test 组内碰撞检测
@@ -144,3 +147,32 @@ class testSpriteScene(Scene):
     # def doKeyPressedEvent(self, keyPressedList):
     #     for key in keyPressedList:
     #         self.sp1.Events.doKeyboardKeyDowning(exKey(key))
+
+
+class trueAnimScene(Scene):
+    def __init__(self, *args):
+        super(trueAnimScene, self).__init__(*args)
+        self.allFilesName = list()
+        self.path = 'F:/图片/壁纸/'
+        self.length = 0
+        self.index = -1
+        # self.img = pygame.image.load(self.path + '0.jpg')
+        self.img = ImgElement((0, 0, 1280, 720), self.path + '0.jpg')
+        self.allImg = list()
+
+    def setup(self):
+        for name in os.listdir(self.path):
+            self.allImg.append(ImgElement((0, 0, 1280, 720), self.path + name))
+            # self.allFilesName.append(self.path + name)
+        self.length = len(self.allImg)
+
+    def doClockEvent(self, NowClock):
+        self.index += 1
+        if self.index >= self.length:
+            self.index = 0
+        self.img = self.allImg[self.index]
+        # self.img.setPath(self.allFilesName[self.index])
+        print(self.FPS)
+
+    def draw(self):
+        self.img.draw(self.screen)

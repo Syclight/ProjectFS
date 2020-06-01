@@ -4,19 +4,17 @@ from source.core.math.Shape import Rectangle
 
 
 class Actor:
-    def __init__(self, texture, area=None, physicalBody=None, visual=True, zIndex=0, frozen=False):
+    def __init__(self, texture, area=None, physicalBody=None, visual=True, zIndex=0, active=False):
         self.texture = texture
         self.visual = visual
         self.zIndex = zIndex
         self.physicalBody = physicalBody
-        self.frozen = frozen
+        self.active = active
         self.area = area
-        if not self.area:
-            x = self.texture.get_rect().x
-            y = self.texture.get_rect().y
+        if self.area is None:
             w = self.texture.get_rect().w
             h = self.texture.get_rect().h
-            self.area = Rectangle(x, y, w, h)
+            self.area = Rectangle(0, 0, w, h)
         else:
             self.texture = pygame.transform.scale(self.texture, (self.area.w, self.area.h))
         self.initArea = self.area
@@ -30,7 +28,7 @@ class Actor:
         pass
 
     def draw(self, screen):
-        pass
+        screen.blit(self.texture, self.area.local())
 
 
 # class ActorGroup:

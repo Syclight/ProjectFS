@@ -184,3 +184,7 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 添加了弹簧，质点等物理组件，用于物理模拟。
 * 修改了Scene的部分代码
 * 想转用d2d做这个框架了。。。
+
+### 2020.6.1 Asheor
+* 添加了一个sgf-py GUITools, AnimeEditor
+* 目前只支持变换(transform), 不支持形变(deformation)

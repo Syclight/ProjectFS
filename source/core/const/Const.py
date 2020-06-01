@@ -1,5 +1,5 @@
-gl_WindowWidth = 800
-gl_WindowHeight = 600
+gl_WindowWidth = 800  # 1280
+gl_WindowHeight = 600  # 720
 
 #collidedAreaType
 RECT = 0

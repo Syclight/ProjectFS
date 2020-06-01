@@ -153,7 +153,7 @@ class TextElement(Element):
         self.res_surface.set_alpha(alpha)
 
     def setText(self, text):
-        self.Text = text
+        self.Text = str(text)
         self.__buildSurface()
 
     def setFont(self, font):
@@ -187,6 +187,7 @@ class ImgElement(Element):
         self.Path = path
         self.Alpha = alpha
         self.ColorKey = colorKey
+        self.res_surface = None
         self.__buildSurface()
 
     def __buildSurface(self):
@@ -200,6 +201,9 @@ class ImgElement(Element):
     def setPath(self, path):
         self.Path = path
         self.__buildSurface()
+
+    def setImg(self, suf):
+        self.res_surface = suf
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)

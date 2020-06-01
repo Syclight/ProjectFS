@@ -119,6 +119,12 @@ class Scene(Constructor, Painter):
                 self.focus.Events.doMouseRightKeyDown()
                 self.focus.EventsHadDo.hadDoMouseRightKeyDown = True
                 self.focus.EventsHadDo.hadDoMouseRightKeyUp = False
+        if Button == 4:  # 滚轮向上
+            if InElement(self.mousePos, self.focus):
+                self.focus.Events.doMouserRollUp()
+        if Button == 5:  # 滚轮向下
+            if InElement(self.mousePos, self.focus):
+                self.focus.Events.doMouserRollDown()
 
     def __doMouseButtonUpEvent(self, Button):
         if Button == 1:  # 鼠标左键

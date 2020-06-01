@@ -291,7 +291,7 @@ class snowFlake:
             ary.remove(self)
 
     def display(self, sur):
-        Painter(sur).Circle((self.posX, self.posY, self.size / 2), (255, 255, 255), 1)
+        Painter(sur).Circle((self.posX, self.posY, self.size / 2), (255, 255, 255), 0)
 
 
 class MandelbrotSet(Scene):

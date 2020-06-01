@@ -147,6 +147,12 @@ class Rectangle(Shape):
         p4, p3 = point2(self.x, self.y + self.h), point2(self.x + self.w, self.y + self.h)
         return [p1, p2, p3, p4]
 
+    def size(self):
+        return self.w, self.h
+
+    def local(self):
+        return self.x, self.y
+
     def area(self):
         return self.w * self.h
 

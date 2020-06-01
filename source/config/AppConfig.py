@@ -28,14 +28,15 @@ from source.examples.SpringSimulate import SpringSimulateScene, SpringMassSystem
 from source.examples.TestPainter import TestPainterScene  # Painter测试
 from source.examples.TestPick import pickTest  # pick测试
 from source.examples.noiseTest import noiseTestScene, noise1DScene  # 噪声测试
-from source.examples.physicsTest import PhysicsScene  # 力学测试场景
+from source.examples.physicsTest import PhysicsScene, verletScene, verletSceneRotate  # 力学测试场景
 from source.examples.reference import drawingBoard, createWave, sketchSphere, chain, paramEquation, \
     kaleidoscope, snowScene, MandelbrotSet, JuliaSet, IFS, LSystemScene  # 范例
-from source.examples.testSpriteScene import testSpriteScene  # 精灵场景测试
+from source.examples.testSpriteScene import testSpriteScene, testAnimScene, trueAnimScene  # 精灵场景测试
+from source.guitools.AnimaEditor import AnimaEditor
 from source.view.baseClazz.Scene import Scene  # 空场景
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [LogoScene]}
+SceneMap = {SCENENUM_INIT: [AnimaEditor]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):

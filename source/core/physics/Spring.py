@@ -20,7 +20,6 @@ class Spring:
         if var_len != 0:
             force += variable.dev(var_len).mul((var_len - self.length) * (-self.K))
         force += (self.beginMass.velocity - self.endMass.velocity).negate().mul(self.frictionConst)
-
         if not fixed:
             self.beginMass.applyForce(force)
             self.beginMass.update()

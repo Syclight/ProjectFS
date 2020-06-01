@@ -10,13 +10,13 @@ class SpringSimulateScene(Scene):
         super(SpringSimulateScene, self).__init__(*args)
         self.m1, self.m2, self.m3, self.m4 = Mass(40), Mass(40), Mass(40), Mass(40)
         self.m5 = Mass(40)
-        self.spring1 = Spring(self.m1, self.m2, 100, 0.8, 1)
-        self.spring2 = Spring(self.m1, self.m3, 100, 0.8, 1)
-        self.spring3 = Spring(self.m2, self.m4, 100, 0.8, 1)
-        self.spring4 = Spring(self.m3, self.m4, 100, 0.8, 1)
+        self.spring1 = Spring(self.m1, self.m2, 100, 0.2, 1)
+        self.spring2 = Spring(self.m1, self.m3, 100, 0.2, 1)
+        self.spring3 = Spring(self.m2, self.m4, 100, 0.2, 1)
+        self.spring4 = Spring(self.m3, self.m4, 100, 0.2, 1)
 
-        self.spring5 = Spring(self.m2, self.m5, 100, 0.8, 1)
-        self.spring6 = Spring(self.m4, self.m5, 100, 0.8, 1)
+        self.spring5 = Spring(self.m2, self.m5, 100, 0.2, 1)
+        self.spring6 = Spring(self.m4, self.m5, 100, 0.2, 1)
 
         self.target = self.m5
 

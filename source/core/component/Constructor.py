@@ -41,8 +41,10 @@ class Constructor:
     def getCreatedElement(self, index):
         return self.__CreatedElementList[index]
 
-    def createTextElement(self, text, pos=(0, 0), size=18, color=(255, 255, 255)):
-        length = len(text) * size
+    def createTextElement(self, text="TextElement", pos=(0, 0), size=18, length=None, color=(255, 255, 255),
+                          font=gl_Font, zIndex=999):
+        if length is None:
+            length = len(text) * size
         _top, _left = 0, self.nextElementY
         if isinstance(pos, tuple) or isinstance(pos, list):
             _top, _left = pos[0], self.nextElementY + pos[1]
@@ -51,7 +53,8 @@ class Constructor:
         elif isinstance(pos, int):
             _top, _left = self.__getPos(pos, length, size)
 
-        e = TextElement((_top, _left, length * size + 2, size + 2), text, gl_Font, size, color, 1)
+        e = TextElement((_top, _left, length * size + 2, size + 2), text, font, size, color, 1)
+        e.zIndex = zIndex
         self.__CreatedElementList.append(e)
         self.__render.open()
         self.__render.add(e)
@@ -59,4 +62,3 @@ class Constructor:
         self.nextElementY += size + 4
         self.id += 1
         return e
-

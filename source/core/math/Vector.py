@@ -39,6 +39,10 @@ class vec2:
         return vec2(length * math.cos(angle), length * math.sin(angle))
 
     @staticmethod
+    def fromPoint(p1, p2):
+        return vec2(p2.x - p1.x, p2.y - p1.y)
+
+    @staticmethod
     def random(a=0, b=1):
         return vec2.fromAngle(random.uniform(a, b) * PI_DOUBLE)
 
@@ -46,6 +50,9 @@ class vec2:
     def lerp_between(v1, v2, amt):
         tar = v1.copy()
         return tar.lerp(v2, amt)
+
+    def to_str(self, a=3):
+        return '<vec2::({}, {})>'.format(round(self.x, a), round(self.y, a))
 
     def orient(self):
         return math.atan2(self.y, self.x)
@@ -208,6 +215,10 @@ class vec3:
         return vec3(length * sinTheta * sinPhi, -length * cosTheta, length * sinTheta * cosPhi)
 
     @staticmethod
+    def fromPoint(p1, p2):
+        return vec3(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z)
+
+    @staticmethod
     def random(a=0, b=1):
         angle = random.uniform(a, b) * PI_DOUBLE
         vz = random.uniform(a, b) * 2 - 1
@@ -220,6 +231,9 @@ class vec3:
     def lerp_between(v1, v2, amt):
         tar = v1.copy()
         return tar.lerp(v2, amt)
+
+    def to_str(self, a=3):
+        return '<vec3::({}, {}, {})>'.format(round(self.x, a), round(self.y, a), round(self.z, a))
 
     def copy(self):
         return vec3(self.x, self.y, self.z)
@@ -338,3 +352,41 @@ class vec3:
             return self.x, self.y
         elif exp == 4:
             return int(self.x), int(self.y)
+
+
+class vec4:
+    def __init__(self, x=0.0, y=0.0, z=0.0, w=0.0):
+        if (isinstance(x, tuple) or isinstance(x, list)) and (isinstance(y, tuple) or isinstance(y, list)):
+            self.__init__(x[0], x[1], y[0], y[1])
+        elif isinstance(x, tuple) or isinstance(x, list):
+            self.__init__(x[0], x[1], x[2], x[3])
+        elif isinstance(x, vec2) and isinstance(y, vec2):
+            self.__init__(x.x, x.y, y.x, y.y)
+        elif isinstance(x, vec3):
+            self.__init__(x.x, x.y, x.z, y)
+        else:
+            self.x = float(x)
+            self.y = float(y)
+            self.z = float(z)
+            self.w = float(w)
+
+    def __str__(self):
+        return '<vec4::({}, {}, {}, {})>'.format(self.x, self.y, self.z, self.w)
+
+    def to_str(self, a=3):
+        return '<vec4::({}, {}, {}, {})>'.format(round(self.x, a), round(self.y, a), round(self.z, a), round(self.w, a))
+
+    def ary(self, exp=0):
+        """exp: 0 float xyzw, 1 int xyzw, 2 float xy, 3 int xy, 4 float zw, 5 int zw"""
+        if exp == 0:
+            return self.x, self.y, self.z, self.w
+        elif exp == 1:
+            return int(self.x), int(self.y), int(self.z), int(self.w)
+        elif exp == 2:
+            return self.x, self.y
+        elif exp == 3:
+            return int(self.x), int(self.y)
+        elif exp == 4:
+            return self.z, self.w
+        elif exp == 5:
+            return int(self.z), int(self.w)

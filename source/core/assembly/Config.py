@@ -29,8 +29,8 @@ class Config:
     def getFrameRate(self):
         if self.FrameRate == 0:
             return 0
-        if self.FrameRate < 30:
-            return 30
+        # if self.FrameRate < 30:
+        #     return 30
         if self.FrameRate > 120:
             return 120
         return self.FrameRate
