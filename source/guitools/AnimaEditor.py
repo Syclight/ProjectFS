@@ -12,7 +12,7 @@ from source.util.ToolsFuc import centeredXPos, centeredYPos, InElement
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Element import Element
 from source.view.baseClazz.Scene import Scene
-from source.view.element.Button import Button
+from source.view.element.control import InputElement
 from source.view.element.Elements import TextElement, ioEvent3Enum, ImgElement
 
 
@@ -31,6 +31,27 @@ from source.view.element.Elements import TextElement, ioEvent3Enum, ImgElement
 #         self.actor = Actor(texture, area)
 #         self.element = ImgElement(area, name)
 #         self.id = _id
+
+class showImgWin(ImgElement):
+    def __init__(self, area):
+        super(showImgWin, self).__init__(area, path=None, alpha=255, colorKey=None)
+
+    def showImg(self, currentOperation):
+        _tex = currentOperation.getInitTexture()
+        _texW = _tex.get_rect().w
+        _texH = _tex.get_rect().h
+        if _texH > _texW:
+            scaleSizeY = self.area.size()[1]
+            scaleSizeX = scaleSizeY / _texH * _texW
+            blitLocal = (centeredXPos(self.area.w, scaleSizeX), 0)
+        else:
+            scaleSizeX = self.area.size()[0]
+            scaleSizeY = scaleSizeX / _texW * _texH
+            blitLocal = (0, centeredYPos(self.area.h, scaleSizeY))
+        suf = pygame.transform.scale(_tex, (int(scaleSizeX), int(scaleSizeY)))
+        self.clear((0, 0, 0))
+        self.res_surface.blit(suf, blitLocal)
+
 
 class butElement(TextElement):
     def __init__(self, area, text, font, size, color, antiAlias):
@@ -66,6 +87,9 @@ class Operation(ImgElement):
         self.Events.appendEvent(ioEvent3Enum.mouseRollUp, lambda: self.__evn_downsizeTex(0), 0)
 
         self.__index = 0
+
+    # def showOperate(self):
+    #
 
     def __evn_downsizeTex(self, typ):
         if typ:
@@ -130,7 +154,7 @@ class AnimaEditor(Scene):
         self.butSetIntpol = butElement((370, 10, 66, 18), "插值方式", gl_Font_opt, 16, (255, 255, 255), 1)
         self.butHelp = butElement((440, 10, 34, 18), "帮助", gl_Font_opt, 16, (255, 255, 255), 1)
 
-        self.currentShow = ImgElement((532, 0, 268, 200), "F:\\练习\\PyCharm\\PygameTest\\resource\\iocn\\black.bmp")
+        self.currentShow = showImgWin((600, 0, 200, 150))
         self.currentShow.zIndex = 999
 
         self.butReshow = butElement((10, self.height - 30, 34, 18), "回放", gl_Font_opt, 16, (255, 255, 255), 1)
@@ -141,8 +165,11 @@ class AnimaEditor(Scene):
 
         self.__flg_currentShowIsDownsize = False
         self.currentShow.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__evn_scale(), 1)
-        self.currtOp = None
 
+        self.inputBox = InputElement((centeredXPos(self.width, 200), self.height - 30, 200, 20), "input")
+        self.inputBox.zIndex = 999
+
+        self.currtOp = None
         self.__prop_Interval = 1
 
         self.__recordStartTime = 0
@@ -150,12 +177,10 @@ class AnimaEditor(Scene):
 
     def __evn_scale(self):
         if not self.__flg_currentShowIsDownsize:
-            self.currentShow.area.x += int(self.currentShow.area.x * 0.2)
-            self.currentShow.area.h = int(self.currentShow.area.h * 0.4)
+            self.currentShow.area.x = 750
             self.__flg_currentShowIsDownsize = True
         else:
-            self.currentShow.area.x = 532
-            self.currentShow.area.h = 200
+            self.currentShow.area.x = 600
             self.__flg_currentShowIsDownsize = False
 
     def setup(self):
@@ -173,6 +198,7 @@ class AnimaEditor(Scene):
         self.render.add(self.butHelp)
         self.render.add(self.butReshowAll)
         self.render.add(self.butClearData)
+        self.render.add(self.inputBox)
         self.render.close()
         self.id = 0
 
@@ -186,7 +212,8 @@ class AnimaEditor(Scene):
         self.butReshowAll.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__evn_reshowAll(), 1)
         self.butClearData.Events.appendEvent(ioEvent3Enum.mouseLeftKeyClick, lambda: self.__evn_clearData(), 1)
 
-        self.createTextElement("", pos=self.BOTTOM_RIGHT, length=180, font=gl_Font_opt)
+        self.createTextElement("", pos=self.BOTTOM_RIGHT, length=180, font=gl_Font_opt, color=(255, 127, 39))
+        self.createTextElement("FPS:" + str(self.FPS), pos=self.TOP_RIGHT, font=gl_Font_opt, color=(255, 127, 39))
 
     def __evn_clearData(self):
         if self.currtOp:
@@ -245,6 +272,9 @@ class AnimaEditor(Scene):
 
     def __evn_start(self):
         if len(self.materialList) > 0:
+            if self.__flg_reshow or self.__flg_reshowAll:
+                self.getCreatedElement(0).setText("正在播放,无法录制")
+                return
             if not self.__flg_isStart:
                 # if not self.__flg_isStart and self.currtOp:
                 self.__flg_isStart = True
@@ -255,18 +285,20 @@ class AnimaEditor(Scene):
                 self.getCreatedElement(0).setText("捕捉动画停止")
                 self.butStart.setText("开始")
 
-    def __evn_stop(self):
-        if self.__flg_isStart:
-            self.__flg_isStart = False
-            self.getCreatedElement(0).setText("捕捉动画停止")
+    # def __evn_stop(self):
+    #     if self.__flg_isStart:
+    #         self.__flg_isStart = False
+    #         self.getCreatedElement(0).setText("捕捉动画停止")
 
     def __evn_selMaterials(self):
         root = tkinter.Tk()
         root.withdraw()
-        _nameTuple = tkinter.filedialog.askopenfilenames(title='选择一个文件', filetypes=[('Images', '.jpg .jpge .bmp .png'), ('sgfPyAnimeData', '.anime')])
+        _nameTuple = tkinter.filedialog.askopenfilenames(title='选择一个文件', filetypes=[('Images', '.jpg .jpge .bmp .png'),
+                                                                                    ('sgfPyAnimeData', '.anime')])
         for name in _nameTuple:
             op = Operation(name, self.width, self.height, self.id)
             op.Events.appendEvent(ioEvent3Enum.mouseLeftKeyDown, lambda: self.__evn_curt(), 1)
+            op.Events.appendEvent(ioEvent3Enum.mouseRightKeyDown, lambda: self.__evn_start(), 1)
             self.materialList.append(op)
             self.render.open()
             self.render.add(op)
@@ -305,9 +337,9 @@ class AnimaEditor(Scene):
             self.currtOp.area.rebuildForBarycenter(barycenter)
 
     def doClockEvent(self, NowClock):
+        self.getCreatedElement(1).setText("FPS:" + str(self.FPS))
         if self.currtOp:
-            suf = pygame.transform.scale(self.currtOp.getInitTexture(), self.currentShow.area.size())
-            self.currentShow.setImg(suf)
+            self.currentShow.showImg(self.currtOp)
         if self.currtOp and self.__flg_isStart:
             if self.__recordStartTime == 0:
                 self.__recordStartTime = NowClock
@@ -320,8 +352,7 @@ class AnimaEditor(Scene):
             for op in self.materialList:
                 op.showAnime()
 
-
-    # def draw(self):
-    #     self.render.render(self.screen)
-    #     for actor in self.materialList:
-    #         actor.draw(self.screen)
+    def doKeyEvent(self, Key, Mod, Type, Unicode):
+        if Type == 0:
+            self.inputBox.Events.doKeyDown(Key)
+        print(Key, chr(Key), Mod, Unicode)

@@ -182,7 +182,7 @@ class TextElement(Element):
 
 # 图像元素及其事件处理
 class ImgElement(Element):
-    def __init__(self, area, path, alpha=255, colorKey=None):
+    def __init__(self, area, path=None, alpha=255, colorKey=None):
         super(ImgElement, self).__init__(area)
         self.Path = path
         self.Alpha = alpha
@@ -191,12 +191,21 @@ class ImgElement(Element):
         self.__buildSurface()
 
     def __buildSurface(self):
-        self.res_surface = pygame.image.load(self.Path)
+        if self.Path is None:
+            self.res_surface = blankSurface(self.area.size(), (0, 0, 0, self.Alpha))
+        else:
+            self.res_surface = pygame.image.load(self.Path)
         if self.ColorKey:
             self.res_surface.set_colorkey(self.ColorKey)
 
     def draw(self, screen):
         screen.blit(self.res_surface, (self.area.x, self.area.y))
+
+    def chaSize(self, w=None, h=None):
+        if w:
+            self.res_surface.get_rect().w = w
+        if h:
+            self.res_surface.get_rect().h = h
 
     def setPath(self, path):
         self.Path = path
@@ -207,6 +216,9 @@ class ImgElement(Element):
 
     def setAlpha(self, alpha):
         self.res_surface.set_alpha(alpha)
+
+    def clear(self, color):
+        self.res_surface.fill(color)
 
 
 # 序章场景

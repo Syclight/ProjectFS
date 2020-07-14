@@ -92,9 +92,9 @@ class RobotRunScene(Scene):
             self.__As_MAP.addObstacleArea(_x, _w, _y, _h)
 
         self.__A_Robot = RobotActor(Rectangle(0, 0, 100, 100))
-        self.__E_Msg = TextElement(pygame.Rect(600, 0, 200, 60), 'Robotlocal:(0, 0)\nMouselocal:(0, 0)', gl_Font,
-                                   12, (255, 255, 255), 1)
-        self.__E_Msg2 = TextElement(pygame.Rect(600, 40, 200, 600), 'Astart:\n', gl_Font, 10, (255, 255, 255), 1)
+        self.__E_Msg = TextElement((600, 0, 200, 60), 'Robotlocal:(0, 0)\nMouselocal:(0, 0)', gl_Font, 12,
+                                   (255, 255, 255), 1)
+        self.__E_Msg2 = TextElement((600, 40, 200, 600), 'Astart:\n', gl_Font, 10, (255, 255, 255), 1)
         self.__pathList = []
         self.__normalLis = []
         self.__build_As_Map()

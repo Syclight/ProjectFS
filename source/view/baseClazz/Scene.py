@@ -32,6 +32,9 @@ class Scene(Constructor, Painter):
         self.fillColor = (0, 0, 0)
         self.frameCount = 0
 
+        self.bgSurface = None
+        self.bgSurfacePos = (0, 0)
+
         self.mousePos = (0, 0)
         self.lastMousePos = (0, 0)
         self.mouseX, self.mouseY = 0, 0
@@ -45,6 +48,8 @@ class Scene(Constructor, Painter):
         self.useDefaultMouseHeading = True
         self.useDefaultKeyHeading = True
         self.useDefaultClock = True
+
+        self.letDefaultDrawLast = False
 
         self.__focus_onClick = 0
 
@@ -165,10 +170,14 @@ class Scene(Constructor, Painter):
         self.setup()
 
     def super_draw(self):
+        if self.bgSurface:
+            self.screen.blit(self.bgSurface, self.bgSurfacePos)
+        if self.letDefaultDrawLast:
+            self.draw()
         if self.useDefaultDraw:
             self.__draw()
-
-        self.draw()
+        if not self.letDefaultDrawLast:
+            self.draw()
 
     def super_doMouseMotion(self, MouseRel, Buttons):
         if self.useDefaultMouseHeading:

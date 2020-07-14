@@ -186,5 +186,9 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 想转用d2d做这个框架了。。。
 
 ### 2020.6.1 Asheor
-* 添加了一个sgf-py GUITools, AnimeEditor
+* 添加了一个sgf-py GUITools, AnimeEditor, 可用该工具制作简单的变换动画
 * 目前只支持变换(transform), 不支持形变(deformation)
+
+### 2020.7.13 Asheor
+* 优化了Scene
+* 使用框架写了一个数独游戏 SudokuGame

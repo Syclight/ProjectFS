@@ -303,7 +303,7 @@ class MandelbrotSet(Scene):
 
         self.width, self.height = 600, 600
         self.canvas = pygame.Surface((self.width, self.height))
-
+        # self.canvas.lock()
         self.max_iteration = 100
         for x in range(self.width):
             for y in range(self.height):
@@ -325,6 +325,7 @@ class MandelbrotSet(Scene):
                     bright = 0
 
                 self.canvas.set_at([x, y], (bright, bright, bright))
+        # self.canvas.unlock()
 
     def draw(self):
         self.screen.blit(self.canvas, self.canvas.get_rect())
@@ -337,8 +338,8 @@ class JuliaSet(Scene):
         super(JuliaSet, self).__init__(*args)
         self.caption = '测试场景: JuliaSet'
 
-        self.real = 0.285  # -0.70176  # -0.8 # 实部
-        self.imaginary = 0.01  # -0.3842  # 0.156 # 虚部
+        self.real = -0.70176  # 0.285  # -0.70176  # -0.8 # 实部
+        self.imaginary = -0.3842  # 0.01  # -0.3842  # 0.156 # 虚部
 
         self.width, self.height = 600, 600
         self.canvas = pygame.Surface((self.width, self.height))
@@ -538,3 +539,65 @@ class LSystem:
                 self.painter.pop()
 
 
+# AnimatedCircle
+class CircleEle(Circle):
+    def __init__(self, x, y):
+        super(CircleEle, self).__init__(x, y, 1)
+        self.growing = True
+
+    def grow(self):
+        if self.growing:
+            self.r = self.r + 1
+
+    def edges(self, width, height):
+        return self.x + self.r > width or self.x - self.r < 0 or self.y + self.r > height or self.y - self.r < 0
+
+
+class AnimatedCircle(Scene):
+    def __init__(self, *args):
+        super(AnimatedCircle, self).__init__(*args)
+        self.__circleLis = list()
+        self.useDefaultDraw = False
+        self.__total = 100
+
+    def setup(self):
+        self.caption = "AnimatedCircle"
+        self.__circleLis.append(CircleEle(230, 350))
+
+    def doClockEvent(self, NowClock):
+        _c = self.__createCircle()
+        _len = len(self.__circleLis)
+        if _len < self.__total:
+            if _c is not None:
+                self.__circleLis.append(_c)
+
+    def draw(self):
+        for c in self.__circleLis:
+            if c.edges(self.width, self.height):
+                c.growing = False
+            else:
+                for oth in self.__circleLis:
+                    if c != oth:
+                        _d = vec2(c.x, c.y).dist(vec2(oth.x, oth.y))
+                        if _d - 2 < c.r + oth.r:
+                            c.growing = False
+                            break
+            self.Circle(c, (255, 255, 255), 1)
+            c.grow()
+
+    def __createCircle(self):
+        _x = random.randint(0, 800)
+        _y = random.randint(0, 600)
+
+        _flg_valid = True
+
+        for c in self.__circleLis:
+            _d = vec2(c.x, c.y).dist(vec2(_x, _y))
+            if _d < c.r:
+                _flg_valid = False
+                break
+
+        if _flg_valid:
+            return CircleEle(_x, _y)
+        else:
+            return None

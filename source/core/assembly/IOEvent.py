@@ -311,6 +311,7 @@ class IOEvent3:
         self.__Events = {0xA0000: [], 0xA0001: [], 0xA0002: [], 0xA0003: [], 0xA0004: [], 0xA0005: [], 0xA0006: [],
                          0xA0007: [], 0xA0008: [], 0xA0009: [], 0xA000A: [], 0xA000B: [], 0xA000C: [], 0xA000D: [],
                          0xA000E: [],
+                         0xB1000: [], 0xB2000: [], 0xB3000: [],
                          0xF1000: [], 0xF2000: [], 0xF3000: [], 0xF1001: [], 0xF2001: [], 0xF3001: [], 0xF1002: [],
                          0xF2002: [], 0xF3002: [], 0xF1003: [], 0xF2003: [], 0xF3003: [], 0xF1004: [], 0xF2004: [],
                          0xF3004: [], 0xF1005: [], 0xF2005: [], 0xF3005: [], 0xF1006: [], 0xF2006: [], 0xF3006: [],
@@ -454,6 +455,10 @@ class IOEvent3:
         for e in self.__Events[0xA000E]:
             self.__KVMapping[e]()
 
+    def doKeyUp(self, key):
+        for e in self.__Events[ioEvent3Enum.keyUp]:
+            self.__KVMapping[e](key)
+
     def doKeyboardKeyUp(self, keyEnum):
         _key = keyEnum | ioEvent3Enum.keyUp
         if _key not in self.__Events.keys():
@@ -461,12 +466,20 @@ class IOEvent3:
         for e in self.__Events[_key]:
             self.__KVMapping[e]()
 
+    def doKeyDown(self, key):
+        for e in self.__Events[ioEvent3Enum.keyDown]:
+            self.__KVMapping[e](key)
+
     def doKeyboardKeyDown(self, keyEnum):
         _key = keyEnum | ioEvent3Enum.keyDown
         if _key not in self.__Events.keys():
             return
         for e in self.__Events[_key]:
             self.__KVMapping[e]()
+
+    def doKeyDowning(self, key):
+        for e in self.__Events[ioEvent3Enum.keyDowning]:
+            self.__KVMapping[e](key)
 
     def doKeyboardKeyDowning(self, keyEnum):
         _key = keyEnum | ioEvent3Enum.keyDowning

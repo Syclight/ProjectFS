@@ -61,6 +61,7 @@ class TitleScene(Scene):
         self.titleBgName = 'titleBg.bmp'
         self.titleOptionName = 'titleOpts.bmp'
         self.titleName = 'titleTop.bmp'
+        self.__res_s_cloud = 'T_S_C.png'
         self.__ast_name = 'I_T.assets'
 
         self.res_wave_bgm = pygame.mixer.Sound(gl_MusicPath + self.wave_bgm)
@@ -68,6 +69,7 @@ class TitleScene(Scene):
         self.bg = pygame.image.load(gl_ImgPath + self.titleBgName)
         self.res_optionNewGame = pygame.image.load(gl_ImgPath + self.titleOptionName)
         self.res_title = pygame.image.load(gl_ImgPath + self.titleName)
+        self.__frameRate = self.config.getFrameRate()
 
         self.__expBoardText = AssetsFile(os.path.join(gl_AssetsPath, 'TitleScene')).decode(
             self.__ast_name, AssetsType.EXP)
@@ -86,8 +88,12 @@ class TitleScene(Scene):
                                            (128, 128, 128))
         self.__optExit = TitleOptElement((135, 260, 61, 30), self.res_optionNewGame, (0, 348, 61, 30), (128, 128, 128))
 
+        self.__spriteCloud = ImgElement((801, -120, 750, 396), gl_ImgPath + self.__res_s_cloud)
+        self.__spriteCloud.zIndex = -1
+        self.__step = 1
+
         self.render.add(self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
-                        self.__optOption, self.__optExit)
+                        self.__optOption, self.__optExit, self.__spriteCloud)
         self.render.close()
         # 这里绑定和控件有交互的事件
         # ---NewGame选项绑定事件---
@@ -122,7 +128,6 @@ class TitleScene(Scene):
         # 渲染参数
         self.__step_in = 2
         self.__step_out = 5
-        self.__frameRate = self.config.getFrameRate()
         if self.__frameRate != 0:
             self.__step_in = 255 / (2 * self.__frameRate)
             self.__step_out = 255 / (1.5 * self.__frameRate)
@@ -165,6 +170,14 @@ class TitleScene(Scene):
                 self.isMusicPlay = False
                 self.isEnd = True
 
+    def doClockEvent(self, NowClock):
+        _x = self.__spriteCloud.area.x
+        if _x < -750:
+            self.__spriteCloud.area.x = 801
+        # self.__step *= -1
+        self.__spriteCloud.area.x -= self.__step
+        # print((NowClock, _x))
+
 
 # 新游戏序章场景
 class Title_PrologueScene(Scene):
@@ -190,6 +203,8 @@ class Title_PrologueScene(Scene):
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
 
         # 音频
+        pygame.mixer.music.load(gl_MusicPath + "TP_F_SS_BGM.mp3")
+
         self.res_Sound_PourWine = pygame.mixer.Sound(gl_SoundPath + self.Sound_PourWine)
         self.res_Sound_PourWine.set_volume(self.config.getVolumeSound())
 
@@ -240,6 +255,8 @@ class Title_PrologueScene(Scene):
 
         if not self.isReadyToEnd:
             if self.__flag_Num == 0:
+                if not pygame.mixer.music.get_busy():
+                    pygame.mixer.music.play()
                 if self.interval > self.__TextShow_Interval:
                     self.__alpha = 0
                     self.startClock = pygame.time.get_ticks()
@@ -248,6 +265,7 @@ class Title_PrologueScene(Scene):
                         self.__index = 0
                         self.__flag_Num = 1
                         self.__alpha = 0
+                        pygame.mixer.music.stop()
                         self.__ElementsList = [self.__ImgShow, self.__DialogueShow]
                     else:
                         self.__TextShow.setText(self.__TextList[self.__index])

@@ -6,7 +6,7 @@ import configparser
 from source.core.math.Vector import point2
 
 
-def blankSurface(size, color):
+def blankSurface(size, color=(255, 255, 255)):
     temp = pygame.Surface(size).convert()
     temp.fill(color)
     if len(color) > 3:
