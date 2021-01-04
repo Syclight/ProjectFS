@@ -192,3 +192,7 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 ### 2020.7.13 Asheor
 * 优化了Scene
 * 使用框架写了一个数独游戏 SudokuGame
+
+### 2021.1.4 Asheor
+* 新年好，考完研了。。不知道考的怎么样
+* 修改了若干bug

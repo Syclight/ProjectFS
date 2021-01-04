@@ -2,7 +2,7 @@ import math
 import random
 
 from source.core.math.MathConst import PI
-from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse
+from source.core.math.Shape import Line, Rectangle, Triangle, Circle, Ellipse, Ray
 from source.core.math.Vector import vec2, point2
 from source.core.assembly.Painter import Painter
 from source.view.baseClazz.Scene import Scene
@@ -18,7 +18,7 @@ class TestPainterScene(Scene):
             y = random.randint(0, 400)
             self.points.append(vec2(x, y))
         self.rect = Rectangle(400, 100, 200, 100)
-        self.line = Line(vec2(200, 200), math.radians(30), 400)
+        self.line = Ray(vec2(200, 200), math.radians(30), 400)
         self.white = (255, 255, 255)
         self.tra = Triangle(point2(100, 100), point2(60, 180), point2(140, 180))
         self.circle = Circle(400, 300, 100)

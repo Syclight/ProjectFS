@@ -93,7 +93,7 @@ class TitleScene(Scene):
         self.__step = 1
 
         self.render.add(self.__board, self.__title, self.__text, self.__optNewGame, self.__optContinue,
-                        self.__optOption, self.__optExit, self.__spriteCloud)
+                        self.__optOption, self.__optExit)
         self.render.close()
         # 这里绑定和控件有交互的事件
         # ---NewGame选项绑定事件---
@@ -170,13 +170,13 @@ class TitleScene(Scene):
                 self.isMusicPlay = False
                 self.isEnd = True
 
-    def doClockEvent(self, NowClock):
-        _x = self.__spriteCloud.area.x
-        if _x < -750:
-            self.__spriteCloud.area.x = 801
-        # self.__step *= -1
-        self.__spriteCloud.area.x -= self.__step
-        # print((NowClock, _x))
+    # def doClockEvent(self, NowClock):
+    #     _x = self.__spriteCloud.area.x
+    #     if _x < -750:
+    #         self.__spriteCloud.area.x = 801
+    #     # self.__step *= -1
+    #     self.__spriteCloud.area.x -= self.__step
+    #     # print((NowClock, _x))
 
 
 # 新游戏序章场景
@@ -203,7 +203,7 @@ class Title_PrologueScene(Scene):
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
 
         # 音频
-        pygame.mixer.music.load(gl_MusicPath + "TP_F_SS_BGM.mp3")
+        #pygame.mixer.music.load(gl_MusicPath + "TP_F_SS_BGM.mp3")
 
         self.res_Sound_PourWine = pygame.mixer.Sound(gl_SoundPath + self.Sound_PourWine)
         self.res_Sound_PourWine.set_volume(self.config.getVolumeSound())
@@ -255,8 +255,8 @@ class Title_PrologueScene(Scene):
 
         if not self.isReadyToEnd:
             if self.__flag_Num == 0:
-                if not pygame.mixer.music.get_busy():
-                    pygame.mixer.music.play()
+                # if not pygame.mixer.music.get_busy():
+                #     pygame.mixer.music.play()
                 if self.interval > self.__TextShow_Interval:
                     self.__alpha = 0
                     self.startClock = pygame.time.get_ticks()

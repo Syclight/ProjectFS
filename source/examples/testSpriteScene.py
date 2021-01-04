@@ -153,11 +153,11 @@ class trueAnimScene(Scene):
     def __init__(self, *args):
         super(trueAnimScene, self).__init__(*args)
         self.allFilesName = list()
-        self.path = 'F:/图片/壁纸/'
+        self.path = 'F:\\图片\\ACG\\pix\\'
         self.length = 0
         self.index = -1
         # self.img = pygame.image.load(self.path + '0.jpg')
-        self.img = ImgElement((0, 0, 1280, 720), self.path + '0.jpg')
+        self.img = ImgElement((0, 0, 1280, 720), self.path + 'Banshee_Queen_Mercy_1.jpg')
         self.allImg = list()
 
     def setup(self):

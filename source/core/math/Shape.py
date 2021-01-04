@@ -236,6 +236,9 @@ class Circle(Shape):
             return False
         return self.x == shape.x and self.y == shape.y and self.r == shape.r
 
+    def contains(self, point) -> bool:
+        return (self.x - point.x) ** 2 + (self.y - point.y) ** 2 < self.r ** 2
+
     def barycenter(self):
         return point2(self.x, self.y)
 

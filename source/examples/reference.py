@@ -601,3 +601,19 @@ class AnimatedCircle(Scene):
             return CircleEle(_x, _y)
         else:
             return None
+
+
+#
+class FollowMouseScene(Scene):
+    def __init__(self, *args):
+        super(FollowMouseScene, self).__init__(*args)
+        self.__littleCircle = Circle(self.width / 2, self.height / 2, 20)
+        self.__bigCircle = Circle(self.width / 2, self.height / 2, 100)
+
+    def draw(self):
+        self.Circle(self.__bigCircle, (255, 255, 255), 1)
+        self.Circle(self.__littleCircle, (255, 255, 255), 1)
+
+    def doClockEvent(self, NowClock):
+        self.__littleCircle.x, self.__littleCircle.y = self.mouseX, self.mouseY
+

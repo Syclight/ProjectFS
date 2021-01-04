@@ -199,7 +199,8 @@ class SudokuMapLv0(SudokuMap):
             self.__index += 1
 
             if number != 0:
-                resName = self.__resImgPath + self.__resImgName + self.__resStaticImgName + str(number) + self.__resStaticImgExt
+                resName = self.__resImgPath + self.__resImgName + self.__resStaticImgName + str(
+                    number) + self.__resStaticImgExt
             else:
                 resName = self.__resImgPath + self.__resImgName + "0" + self.__resImgExt
             element = SudokuSprite(ret, resName)
@@ -271,17 +272,18 @@ class SudokuGame(Scene):
 
         self.createTextElement("Time:", color=(0, 0, 0), size=14)
         self.createTextElement("Level:" + self.__sudokuMap.getName(), color=(0, 0, 0), size=14, pos=self.TOP_RIGHT)
-        self.caption = "Sududo Game 数独的游戏 v1.0.0  by 小叮铃制作组"
+        self.caption = "Sudoku Game 数独的游戏 v1.0.0  by 小叮铃制作组"
 
         self.render.open()
         self.render.add(self.__allSprite)
         self.render.close()
         # print(self.render,log())
 
-        # self.__sudokuMap.playBGM()
+        self.__sudokuMap.playBGM()
 
     def draw(self):
-        if not self.__isSuc and self.__nowSelect and self.__nowSelect.area.x > 0:
+        if not self.__isSuc and self.__nowSelect and self.__nowSelect.area.x > 0 and isinstance(self.__nowSelect,
+                                                                                                SudokuSprite):
             self.screen.blit(self.__mask, (self.__nowSelect.area.x, self.__nowSelect.area.y))
         if self.__isSuc:
             self.createTextElement("成功！", pos=self.CENTER, color=(100, 104, 255), font=gl_Font_opt, size=60)
@@ -295,6 +297,8 @@ class SudokuGame(Scene):
 
     def doKeyEvent(self, Key, Mod, Type, Unicode):
         inputCorrect = False
+        if not isinstance(self.__nowSelect, SudokuSprite):
+            return
         if self.__nowSelect and self.__nowSelect.area.x > 0 and Type == 0:
             if self.__nowSelect.getIsStatic():
                 return
@@ -316,6 +320,3 @@ class SudokuGame(Scene):
                     self.__insertList.append(pos[1] * 9 + pos[0])
                     if len(self.__insertList) == len(self.__allSprite):
                         self.__isSuc = True
-
-
-

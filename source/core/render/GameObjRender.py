@@ -6,6 +6,7 @@ Element, Actor, 统称为gameObject
 import time
 
 from source.core.const.Const import gl_LogPath
+from source.core.dataStructure.TopologicalSort import AOVNet, Node
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Element import Element
 
@@ -172,7 +173,17 @@ class gameObjRender:
             self.__flag_record = False
 
 
-# class ScreenRender:
-#     def __init__(self):
-#         self.objectDict = dict()
-#
+class gameObjectRender0:
+    def __init__(self):
+        self.__objectAOVNet = AOVNet()
+        self.__max = 0
+
+    def add(self, obj):
+        if not isinstance(Element, obj):
+            return
+
+    def __add(self, _id, obj):
+        zIndex = obj.zIndex
+        self.__max = zIndex if zIndex > self.__max else self.__max
+        self.__objectAOVNet.insert(_id, Node(obj))
+

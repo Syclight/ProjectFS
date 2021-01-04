@@ -14,7 +14,7 @@ from source.view.element.Elements import TextElement
 
 class RobotActor(Actor):
     def __init__(self, area):
-        path = 'F:/练习/PyCharm/PygameTest/resource/Test/robot.png'
+        path = 'F:/Practice/PyCharm/PygameTest/resource/Test/robot.png'
         super(RobotActor, self).__init__(pygame.image.load(path), area)
         self.__linePoints = [point2(), point2()]
         self.__startCord = self.area.barycenter()
@@ -67,7 +67,7 @@ class RobotActor(Actor):
 
 class Container(Actor):
     def __init__(self, area):
-        path = 'F:/练习/PyCharm/PygameTest/resource/Test/container.jpg'
+        path = 'F:/Practice/PyCharm/PygameTest/resource/Test/container.jpg'
         super(Container, self).__init__(pygame.image.load(path), area)
 
     def draw(self, screen):

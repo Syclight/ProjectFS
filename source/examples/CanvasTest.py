@@ -42,6 +42,7 @@ class water2d(Scene):
         self.cols, self.rows = 200, 200
         self.current = [[0 for i in range(self.cols)] for j in range(self.rows)]
         self.previous = [[0 for i in range(self.cols)] for j in range(self.rows)]
+        self.caption = "波纹模拟 点击屏幕左上角200X200的区域查看效果"
         # self.background(220, 220, 220)
         self.dampening = 0.9
         # self.previous[100][100] = 255
