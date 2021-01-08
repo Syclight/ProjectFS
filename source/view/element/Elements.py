@@ -1,7 +1,9 @@
+import pygame
+
+from source.util.ToolsFuc import blankSurface, centeredXPos, centeredYPos
 from source.view.baseClazz.Element import Element
-from source.core.assembly.IOEvent import *
-from source.core.const.Const import *
-from source.util.ToolsFuc import *
+from source.core.assembly.IOEvent import ioEvent3Enum
+from source.core.const.Const import gl_Font_opt, const_Text_LineSize, gl_Font_oth
 
 
 # 消息框Elements
@@ -195,6 +197,7 @@ class ImgElement(Element):
             self.res_surface = blankSurface(self.area.size(), (0, 0, 0, self.Alpha))
         else:
             self.res_surface = pygame.image.load(self.Path)
+            self.res_surface.set_alpha(self.Alpha)
         if self.ColorKey:
             self.res_surface.set_colorkey(self.ColorKey)
 

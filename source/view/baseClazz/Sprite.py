@@ -1,7 +1,6 @@
 import pygame
 
-from source.view.element.Elements import ElementHadDoEvent
-from source.core.assembly.IOEvent import IOEvent3
+from source.core.assembly.IOEvent import IOEvent3, ElementHadDoEvent
 from source.core.dataStructure.QuadTree import QuadTree, Node, RectangleRange
 from source.core.math.Shape import Rectangle
 
@@ -17,26 +16,45 @@ class Sprite(pygame.sprite.Sprite):
 
         """
 
-    def __init__(self, image, rect=None):
+    def __init__(self, image=None, rect=None):
         super().__init__()
         self.image = image
+        if isinstance(self.image, str):
+            self.image = pygame.image.load(image)
         self.rect = rect
-        if self.rect is None:
+        if self.rect is None and self.image:
             self.rect = self.image.get_rect()
+        elif self.image:
+            self.image = pygame.transform.scale(self.image, (rect.w, rect.h))
 
         self.Events = IOEvent3()
         self.EventsHadDo = ElementHadDoEvent()
         self.visual = True
+        self.active = True
         self.zIndex = 0
         self.physicalBodyType = None
+        if isinstance(rect, tuple):
+            self.collidedArea = Rectangle(self.rect[0], self.rect[1], self.rect[2], self.rect[3])
+        else:
+            self.collidedArea = Rectangle(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
+
+    def setRect(self, rec):
+        if (isinstance(rec, tuple) or isinstance(rec, list)) and len(rec) >= 4:
+            self.rect = pygame.Rect(rec[0], rec[1], rec[2], rec[3])
+        else:
+            self.rect = rec
+        self.image = pygame.transform.scale(self.image, (self.rect.w, self.rect.h))
         self.collidedArea = Rectangle(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
 
-    def setRect(self, rect):
-        self.rect = rect
-        self.collidedArea = Rectangle(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
+    def setImg(self, arg):
+        if isinstance(arg, str):
+            self.image = pygame.image.load(arg)
+        if isinstance(arg, pygame.Surface):
+            self.image = arg
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect)
+        if self.image:
+            surface.blit(self.image, self.rect)
 
     def collided(self, oth):
         if not isinstance(oth, Sprite):

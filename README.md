@@ -194,5 +194,9 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 * 使用框架写了一个数独游戏 SudokuGame
 
 ### 2021.1.4 Asheor
-* 新年好，考完研了。。不知道考的怎么样
+* 新年好，考完研了。
 * 修改了若干bug
+
+### 2021.1.8 Asheor
+* 改进了若干代码，完善了框架
+* 添加了Origin的相关代码

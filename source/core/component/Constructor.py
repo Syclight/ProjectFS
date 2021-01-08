@@ -1,6 +1,7 @@
+from source.core.const.Const import gl_Font
 from source.core.math.Vector import vec2
 from source.util.ToolsFuc import centeredXPos, centeredYPos, centeredXYPos
-from source.view.element.Elements import TextElement, gl_Font
+from source.view.element.Elements import TextElement
 
 
 class Constructor:
@@ -43,6 +44,17 @@ class Constructor:
 
     def createTextElement(self, text="TextElement", pos=(0, 0), size=18, length=None, color=(255, 255, 255),
                           font=gl_Font, zIndex=999):
+        """
+
+        :param text:
+        :param pos: 可以是int型数字代码， 0，上居中
+        :param size:
+        :param length:
+        :param color:
+        :param font:
+        :param zIndex:
+        :return:
+        """
         if length is None:
             length = len(text) * size
         _top, _left = 0, self.nextElementY

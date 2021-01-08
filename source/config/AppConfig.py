@@ -35,7 +35,7 @@ from source.examples.reference import drawingBoard, createWave, sketchSphere, ch
 from source.examples.testSpriteScene import testSpriteScene, testAnimScene, trueAnimScene  # 精灵场景测试
 from source.guitools.AnimaEditor import AnimaEditor  # GUITools 动画编辑器
 from source.view.baseClazz.Scene import Scene  # 空场景
-from source.view.origin.Scenes import OriginLogo # 起源
+from source.view.origin.Scenes import OriginLogo  # 起源
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
 SceneMap = {SCENENUM_INIT: [OriginLogo]}

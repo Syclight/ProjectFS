@@ -9,6 +9,7 @@ from source.core.math.Vector import vec2, vec3
 from source.core.math.MathUtil import constrain
 from source.util.ToolsFuc import exKey
 from source.view.baseClazz.Scene import Scene
+from source.view.element.Elements import ImgElement
 
 
 class Mover:
@@ -293,9 +294,13 @@ class verletSceneRotate(Scene):
 
     def setup(self):
         self.createTextElement()
+        self.m.applyForce(vec2(300, 300))
+        self.m.drag = 0
 
     def doClockEvent(self, NowClock):
         self.m.update(0.01)
+        if abs(self.m.ang_vel) <= 3:
+            self.m.drag = 0
 
     def draw(self):
         self.push()
@@ -303,6 +308,7 @@ class verletSceneRotate(Scene):
         self.Rect(self.m.area, (255, 255, 255), 1)
         self.pop()
         if self.mousePressed:
-            self.m.applyForce(vec2(300, 300))
+            self.m.applyForce(vec2(100, 100))
+            self.m.drag = 0.03
         self.getCreatedElement(0).setText(self.m.angle)
 

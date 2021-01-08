@@ -70,12 +70,12 @@ def chPos(step, sprite, isY):
 class testAnimScene(Scene):
     def __init__(self, *args):
         super(testAnimScene, self).__init__(*args)
-        self.img = pygame.image.load('F:/练习/PyCharm/PygameTest/resource/Img/TEST_ANIM.jpg').convert_alpha()
+        self.img = pygame.image.load('F:/Practice/PyCharm/PygameTest/resource/Img/TEST_ANIM.jpg').convert_alpha()
         self.enemy = GameSprite(clipResImg(self.img, pygame.Rect(0, 0, 278, 153), (45, 45, 45)), 0)
         self.enemy.rect.x = 200
         self.enemy.rect.y = 200
         # self.enemy1 = GameSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png"), 2)
-        self.enemy1 = gearSprite(pygame.image.load("F:/练习/PyCharm/PygameTest/resource/Img/gear.png").convert_alpha(),
+        self.enemy1 = gearSprite(pygame.image.load("F:/Practice/PyCharm/PygameTest/resource/Img/gear.png").convert_alpha(),
                                  pygame.Rect(220, 220, 548, 549))
         # 创建精灵组
         self.enemy_group = SpriteGroup(RectangleRange(0, 0, 800, 600), self.enemy, self.enemy1)

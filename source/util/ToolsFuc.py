@@ -1,17 +1,23 @@
 import pygame
 import configparser
 
-
 # 空的surface
+from source.core.math.Shape import Rectangle
 from source.core.math.Vector import point2
+from source.view.baseClazz.Sprite import Sprite
 
 
-def blankSurface(size, color=(255, 255, 255)):
+def blankSurface(size, color=(255, 255, 255, 255)):
     temp = pygame.Surface(size).convert()
     temp.fill(color)
     if len(color) > 3:
         temp.set_alpha(color[3])
     return temp
+
+
+# 从文件读取图片资源作为Surface
+def createSurfaceFromFile(file_path):
+    return pygame.image.load(file_path)
 
 
 # 文字surface
@@ -74,6 +80,8 @@ def InCircular(pos, cir) -> bool:
 
 # 判断pos是否在Element内
 def InElement(pos, element) -> bool:
+    if isinstance(element, Sprite):
+        return InSprite(pos, element)
     if not element:
         return False
     area = element.area
@@ -195,6 +203,11 @@ def exKey(key) -> int:
 # 将Shape.py中的形状转换为pygame.Rect
 def ex_toRect(rect) -> pygame.Rect:
     return pygame.Rect(rect.x, rect.y, rect.w, rect.h)
+
+
+# 将pygame.Rect转换为Shape.py中的Rectangle
+def ex_toRectTangle(rect) -> Rectangle:
+    return Rectangle(rect.x, rect.y, rect.w, rect.h)
 
 
 # 在一维容器中选出非n数的地址值

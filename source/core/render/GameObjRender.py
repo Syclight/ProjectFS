@@ -7,6 +7,7 @@ import time
 
 from source.core.const.Const import gl_LogPath
 from source.core.dataStructure.TopologicalSort import AOVNet, Node
+from source.view.baseClazz.Sprite import Sprite
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Element import Element
 
@@ -45,7 +46,7 @@ class gameObjRender:
 
     def add(self, *args):
         if not self.__flag_add:
-            self.__log += 'Render Log Error: render closed, add ' + str(args) + ' failed\n'
+            self.__log += 'Render Log Error: render closed, please use open() function open render before do this, add ' + str(args) + ' failed\n'
             # self.__logFile.write('Render Log Error: render closed, add ' + str(args) + ' failed\n')
         else:
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n'
@@ -89,7 +90,7 @@ class gameObjRender:
     def __add(self, *args):
         if len(args) == 1:
             x = args[0]
-            if isinstance(x, Element) or isinstance(x, Actor):
+            if isinstance(x, Element) or isinstance(x, Actor) or isinstance(x, Sprite):
                 z = x.zIndex
                 if z in self.__renderDict.keys():
                     self.__renderDict[x.zIndex].append(x)
