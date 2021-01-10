@@ -16,16 +16,20 @@ class Sprite(pygame.sprite.Sprite):
 
         """
 
-    def __init__(self, image=None, rect=None):
+    def __init__(self, image, rect=None, isScale=True):
         super().__init__()
         self.image = image
+        self.rect = rect
+        if isinstance(rect, list) or isinstance(rect, tuple):
+            self.rect = pygame.Rect(rect[0], rect[1], rect[2], rect[3])
+        elif isinstance(rect, Rectangle):
+            self.rect = pygame.Rect(rect.x, rect.y, rect.w, rect.h)
         if isinstance(self.image, str):
             self.image = pygame.image.load(image)
-        self.rect = rect
-        if self.rect is None and self.image:
+        if self.rect is None:
             self.rect = self.image.get_rect()
-        elif self.image:
-            self.image = pygame.transform.scale(self.image, (rect.w, rect.h))
+        elif isScale:
+            self.image = pygame.transform.scale(self.image, (self.rect.w, self.rect.h))
 
         self.Events = IOEvent3()
         self.EventsHadDo = ElementHadDoEvent()
@@ -80,11 +84,16 @@ class SpriteGroup(pygame.sprite.Group):
 
     def __init__(self, activeArea, *sprites):
         super(SpriteGroup, self).__init__(*sprites)
-        if not hasattr(activeArea, 'w'):
-            raise Exception("Class '{}' must have attribute 'w'".format(activeArea))
-        if not hasattr(activeArea, 'h'):
-            raise Exception("Class '{}' must have attribute 'h'".format(activeArea))
-        self.__activeArea = RectangleRange(activeArea.w / 2, activeArea.h / 2, activeArea.w / 2, activeArea.h / 2)
+        # if not hasattr(activeArea, 'w'):
+        #     raise Exception("Class '{}' must have attribute 'w'".format(activeArea))
+        # if not hasattr(activeArea, 'h'):
+        #     raise Exception("Class '{}' must have attribute 'h'".format(activeArea))
+        if isinstance(activeArea, list) or isinstance(activeArea, tuple):
+            self.__activeArea = RectangleRange((activeArea[2] + activeArea[0]) / 2, (activeArea[3] - activeArea[1]) / 2,
+                                               activeArea[2] / 2, activeArea[3] / 2)
+        else:
+            self.__activeArea = RectangleRange((activeArea.w + activeArea.x) / 2, (activeArea.h + activeArea.y) / 2,
+                                               activeArea.w / 2, activeArea.h / 2)
 
         self.__quadTree = QuadTree(self.__activeArea, 4)
         self.__collideDict = {}

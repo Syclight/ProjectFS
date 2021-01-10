@@ -200,3 +200,6 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 ### 2021.1.8 Asheor
 * 改进了若干代码，完善了框架
 * 添加了Origin的相关代码
+
+### 2021.1.10 Asheor
+* 完成了Origin的TitleScene的编写
