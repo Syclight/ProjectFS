@@ -116,15 +116,34 @@ class TitleOptElement(Element):
         self.__buildSurface()
 
 
+class superTextElement(Element):
+    """<size=12, color=red, font=0>是</>"""
+
+    def __init__(self, area, text, line_space):
+        super(superTextElement, self).__init__(area)
+        self.__text = text
+        self.__line_space = line_space
+
+    class Text:
+        def __init__(self, font, size, color):
+            self.font = font
+            self.size = size
+            self.color = color
+
+    def __buildTextAry(self, text):
+        pass
+
+
 # 文字元素及其事件处理
 class TextElement(Element):
-    def __init__(self, area, text, font, size, color, antiAlias):
+    def __init__(self, area, text, font, size, color, antiAlias, line_space=const_Text_LineSize):
         super(TextElement, self).__init__(area)
         self.Font = font
         self.Text = text
         self.Size = size
         self.Color = color
         self.AntiAlias = antiAlias
+        self.LineSpace = line_space
         self.__buildSurface()
 
     # 这里是渲染非透明文本的方法，没有底色
@@ -143,7 +162,7 @@ class TextElement(Element):
         for s in strList:
             if s is not None and s != '':
                 self.res_surface.blit(textTemp.render(s, self.AntiAlias, self.Color),
-                                      (0, Line * (self.Size + const_Text_LineSize)))
+                                      (0, Line * (self.Size + self.LineSpace)))
                 Line += 1
         if len(self.Color) >= 4:
             self.res_surface.set_alpha(self.Color[3])

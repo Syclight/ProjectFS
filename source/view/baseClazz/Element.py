@@ -4,13 +4,14 @@ from source.core.math.Shape import Rectangle
 
 
 class Element:
-    def __init__(self, area, Events=None):
+    def __init__(self, area, msgQueue=None, Events=None):
         _area = None
         if isinstance(area, Shape):
             _area = area
         else:
             _area = Rectangle(area[0], area[1], area[2], area[3])
         self.area = _area
+        self.msgQueue = msgQueue
         self.Events = Events
         if self.Events is None:
             self.Events = IOEvent3()
@@ -18,6 +19,10 @@ class Element:
         self.active = True
         self.zIndex = 0
         self.visual = True
+        self.mouseLastPos = (0, 0)
+        self.mousePos = (0, 0)
+        self.mouseButtons = (0, 0, 0)
+        self.mouseRel = (0, 0)
 
     def recoverEvent(self):
         # self.hadDoMouseIn = False

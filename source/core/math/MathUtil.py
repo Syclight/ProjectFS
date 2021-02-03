@@ -1,9 +1,23 @@
 from math import cos, pi
 
 __all__ = [
-    'constrain', 'mapping',
+    'signal', 'constrain', 'mapping',
     'interpolation_lin', 'interpolation_cos', 'interpolation_cubic', 'interpolation_hermite', 'interpolation_hermite'
 ]
+
+
+def signal(e):
+    """
+    信号函数，如果是0则返回0，正数返回1，负数返回-1
+    :param int or float:
+    :return int:
+    """
+    if e == 0:
+        return 0
+    if e < 0:
+        return -1
+    if e > 0:
+        return 1
 
 
 def constrain(x, low, high):

@@ -1,6 +1,6 @@
-# 生成A-Z键
-# for i in range(65, 91):
-#     print('key_' + chr(i) + ' =', '0x%X' % (0xC0000 + i - 65))
+# 生成a-z键
+# for i in range(97, 123):
+#     print('key_' + chr(i) + ' =', '0x%X' % (0xC0000 + i - 97))
 
 # 生成所有数字
 # for i in range(0, 10):
@@ -9,6 +9,10 @@
 # 生成所有功能键
 # for i in range(1, 13):
 #     print('key_F' + str(i) + ' =', '0x%X' % (0xC0023 + i + 1))
+
+# 生成A-Z键
+# for i in range(65, 91):
+#     print('key_' + chr(i) + ' =', '0x%X' % ((0xC0000 + i - 65) + 0xC0033))
 
 # 生成特殊符号
 # for i in range(33, 48):

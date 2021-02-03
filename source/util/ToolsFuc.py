@@ -4,6 +4,7 @@ import configparser
 # 空的surface
 from source.core.math.Shape import Rectangle
 from source.core.math.Vector import point2
+from source.view.baseClazz.Element import Element
 from source.view.baseClazz.Sprite import Sprite
 
 
@@ -13,7 +14,6 @@ def blankSurface(size, color=(255, 255, 255, 255)):
     if len(color) > 3:
         temp.set_alpha(color[3])
     return temp
-
 
 # 从文件读取图片资源作为Surface
 def createSurfaceFromFile(file_path):

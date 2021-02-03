@@ -1,3 +1,4 @@
+import os
 import time
 from operator import eq
 
@@ -9,13 +10,12 @@ from source.view.element.Elements import TitleConstElement, TitleOptElement, Tex
 from source.core.const.Const import *
 from source.core.assembly.RecordFile import RecordFile
 from source.util.ToolsFuc import *
-from moviepy.editor import *
 
 
 # Logo场景
 class LogoScene(Scene):
-    def __init__(self, screen, config, clock, paramList=None):
-        super().__init__(screen, config, clock, paramList)
+    def __init__(self, *args):
+        super().__init__(*args)
         # 注册与该场景相关的场景
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_TITLE, TitleScene)
@@ -28,6 +28,7 @@ class LogoScene(Scene):
         self.__frameRate = self.config.getFrameRate()
         if self.__frameRate != 0:
             self.__step = 255 / (2 * self.__frameRate)
+        self.setupSystemConsole = False
 
     def draw(self):
         if self.isReadyToEnter:
@@ -44,9 +45,9 @@ class LogoScene(Scene):
 
 # 标题场景
 class TitleScene(Scene):
-    def __init__(self, screen, config, clock, paramList=None):
+    def __init__(self, *args):
         # 注册场景
-        super().__init__(screen, config, clock, paramList)
+        super().__init__(*args)
         self.useDefaultDraw = False
         from source.config.AppConfig import registerScene
         registerScene(SCENENUM_GAME_PROLOGUE, Title_PrologueScene)
@@ -181,9 +182,9 @@ class TitleScene(Scene):
 
 # 新游戏序章场景
 class Title_PrologueScene(Scene):
-    def __init__(self, screen, config, clock, paramList=None):
+    def __init__(self, *args):
         # 初始化场景参数
-        super().__init__(screen, config, clock, paramList)
+        super().__init__(*args)
 
         # resource name
         self.res_Img1 = 'NG_F_SS_1.bmp'
@@ -203,7 +204,7 @@ class Title_PrologueScene(Scene):
         registerScene(SCENENUM_GAME_STARTCG, Prologue_StartCGScene)
 
         # 音频
-        #pygame.mixer.music.load(gl_MusicPath + "TP_F_SS_BGM.mp3")
+        # pygame.mixer.music.load(gl_MusicPath + "TP_F_SS_BGM.mp3")
 
         self.res_Sound_PourWine = pygame.mixer.Sound(gl_SoundPath + self.Sound_PourWine)
         self.res_Sound_PourWine.set_volume(self.config.getVolumeSound())
@@ -311,15 +312,17 @@ class Title_PrologueScene(Scene):
 
 # 序章播放CG的场景，接下来的场景还没有编写，所以这里的下一个场景是开场Logo
 class Prologue_StartCGScene(Scene):
-    def __init__(self, screen, config, clock, paramList=None):
-        super().__init__(screen, config, clock, paramList)
+    def __init__(self, *args):
+        super().__init__(*args)
+        vol = self.config.VolumeBGM
+        print(vol)
         self.__PrologueCG = 'P_M_PCG.mp4'
         # 视频
-        self.__res_CG_clip = VideoFileClip(gl_VideoPath + self.__PrologueCG)
+        self.videoPlayer.add('bg_cg', gl_VideoPath + self.__PrologueCG, volume=[vol * 0.1, vol * 0.1])
 
     def draw(self):
         if not self.isReadyToEnd:
-            self.__res_CG_clip.preview()
+            self.videoPlayer.preview('bg_cg')
             self.isReadyToEnd = True
         else:
             # 这里的下一个场景是开场Logo
@@ -337,8 +340,8 @@ def ChePos(e, isDown):
 
 
 class OptionScene(Scene):
-    def __init__(self, screen, config, clock, paramList=None):
-        super().__init__(screen, config, clock, paramList)
+    def __init__(self, *args):
+        super().__init__(*args)
 
         self.__flag_isEnter = False
         self.__alpha = 0
@@ -346,8 +349,8 @@ class OptionScene(Scene):
         self.__start_time = 0
         self.__now_time = 0
 
-        if paramList is not None:
-            self.__flag_isEnter = paramList[0]
+        if len(self.paramList) > 0:
+            self.__flag_isEnter = self.paramList[0]
 
         # 注册与该场景相关的场景
         from source.config.AppConfig import registerScene
@@ -580,8 +583,8 @@ class OptionScene(Scene):
 class Continue_Scene(Scene):
     __ElementsList = None
 
-    def __init__(self, screen, config, clock, paramList=None):
-        super().__init__(screen, config, clock, paramList)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.__ElementsList = []
         self.__mappingList = []
         self.__res_n_OPT = 'CTU_OPT.png'

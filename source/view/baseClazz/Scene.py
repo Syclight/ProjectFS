@@ -1,10 +1,16 @@
+import math
 from operator import eq
 
+from source.core.assembly.IOEvent import getIOEvent3EnumByAscii
 from source.core.assembly.Painter import Painter
+from source.core.assembly.container import MiniQueue
+from source.core.component.Console import Console
 from source.core.component.Constructor import Constructor
+from source.core.component.VideoPlayer import VideoPlay
 from source.core.render.GameObjRender import gameObjRender
 from source.util.ToolsFuc import InElement
 from source.view.baseClazz.Element import Element
+from source.view.sprite.Sprites import CursorSprite
 
 
 class Scene(Constructor, Painter):
@@ -13,6 +19,8 @@ class Scene(Constructor, Painter):
         self.config = args[1]
         self.config.readConfig()
         self.startClock = args[2]
+        self.mixer = args[3]
+        self.systemConsole = args[4]
         self.paramList = []
         if isinstance(args[-1], list):
             self.paramList = args[-1]
@@ -20,6 +28,8 @@ class Scene(Constructor, Painter):
         self.caption = None
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
+        self.screenRect = self.screen.get_rect()
+        self.screenSize = (self.width, self.height)
         self.FPS = 0.0
 
         self.isReadyToEnter = False
@@ -40,8 +50,11 @@ class Scene(Constructor, Painter):
         self.mouseX, self.mouseY = 0, 0
         self.focus = Element((0, 0, 0, 0))
         self.lastFocus = self.focus
+        self.mouseVisible = True
+        self.mouseLimited = False
         self.mousePressed = False
         self.keyPressed = False
+        self.resetMouse = False
 
         self.useDefaultSetup = True
         self.useDefaultDraw = True
@@ -51,9 +64,18 @@ class Scene(Constructor, Painter):
 
         self.letDefaultDrawLast = False
 
+        self.setupSystemConsole = True
+        self.__recordMouseZIndexBeforeSystemConsoleShow = 0
+        self.mouseSprite = CursorSprite()
+
         self.__focus_onClick = 0
 
+        # 数据容器
+        self.keyboardEventQueue = MiniQueue(1000)
+        self.systemConsole.msgQueue = self.keyboardEventQueue
+
         self.render = gameObjRender()
+        self.videoPlayer = VideoPlay()
 
         Constructor.__init__(self, self.render, self.screen.get_rect())
         Painter.__init__(self, self.screen)
@@ -62,6 +84,9 @@ class Scene(Constructor, Painter):
     # 默认为开启
 
     def __setup(self):
+        self.render.add(self.mouseSprite)
+        if self.setupSystemConsole:
+            self.render.add(self.systemConsole)
         self.render.close()
 
     def __draw(self):
@@ -72,6 +97,11 @@ class Scene(Constructor, Painter):
             if not e.active:
                 continue
             if InElement(self.mousePos, e):
+                if isinstance(e, Element):
+                    e.mouseLastPos = (self.lastMousePos[0] - e.area.x, self.lastMousePos[1] - e.area.y)
+                    e.mousePos = (self.mouseX - e.area.x, self.mouseY - e.area.y)
+                e.mouseButtons = Buttons
+                e.mouseRel = MouseRel
                 if InElement(self.lastMousePos, e):
                     e.Events.doMouseMotion()
 
@@ -156,7 +186,10 @@ class Scene(Constructor, Painter):
         pass
 
     def __doKeyEvent(self, Key, Mod, Type, Unicode=None):
-        pass
+        if Type == 0:  # 按下
+            self.focus.Events.doKeyDown(getIOEvent3EnumByAscii(Key))
+        if Type == 1:  # 松开
+            self.focus.Events.doKeyUp(getIOEvent3EnumByAscii(Key))
 
     def __doKeyPressedEvent(self, KeyPressedList):
         pass
@@ -206,6 +239,18 @@ class Scene(Constructor, Painter):
     def super_doKeyEvent(self, Key, Mod, Type, Unicode=None):
         if self.useDefaultKeyHeading:
             self.__doKeyEvent(Key, Mod, Type, Unicode)
+
+        if Key == 282 and Type == 0 and Mod == 0:
+            visual = self.systemConsole.visual
+            active = self.systemConsole.active
+            if not visual and not active:
+                self.__recordMouseZIndexBeforeSystemConsoleShow = self.mouseSprite.zIndex
+                self.mouseSprite.zIndex = self.systemConsole.zIndex
+            if visual and active:
+                self.mouseSprite.zIndex = self.__recordMouseZIndexBeforeSystemConsoleShow
+            self.systemConsole.visual = not self.systemConsole.visual
+            self.systemConsole.active = not self.systemConsole.active
+            self.focus = self.systemConsole
 
         if Type == 2:
             self.keyPressed = True

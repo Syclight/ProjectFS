@@ -1,10 +1,9 @@
 import pygame
-from pygame.sprite import Group, spritecollide
+from pygame.sprite import spritecollide
 
 from source.core.assembly.IOEvent import ioEvent3Enum
-from source.core.math.Vector import vec3, vec2
-from source.util.ToolsFuc import createSurfaceFromFile, ex_toRectTangle, centeredXPos, blankSurface, centeredYPos, \
-    clipResImg
+from source.core.math.Vector import vec3
+from source.util.ToolsFuc import createSurfaceFromFile, centeredXPos, blankSurface, centeredYPos
 from source.view.baseClazz.Scene import Scene
 from source.view.baseClazz.Sprite import Sprite, SpriteGroup
 from source.view.element.Elements import ImgElement
@@ -90,18 +89,6 @@ class TravellerSprite(Sprite):
                 self.beginTime = 0
 
 
-class CursorSprite(Sprite):
-    def __init__(self, *args, colorKey=(0, 0, 0)):
-        super(CursorSprite, self).__init__(*args)
-        self.zIndex = 100
-        self.image.set_colorkey(colorKey)
-        self.visual = False
-
-    def update(self, pos):
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]
-
-
 class OptionSprite(Sprite):
     def __init__(self, *args, colorKey=(0, 0, 0), clipSize=(0, 0)):
         super(OptionSprite, self).__init__(*args, isScale=False)
@@ -144,7 +131,7 @@ class PenElement(ImgElement):
 class ReflectElement(ImgElement):
     def __init__(self, *args):
         super(ReflectElement, self).__init__(*args)
-        self.vel = 1
+        self.vel = 2
         self.max_rectY = self.area.y + 20
         self.min_rectY = self.area.y - 20
         self.zIndex = 19
@@ -188,6 +175,35 @@ class MaskElement(ImgElement):
             self.__beginTime = 0
 
 
+class OriginCGLogo(Scene):
+    def __init__(self, *args):
+        super(OriginCGLogo, self).__init__(*args)
+        # 注册与该场景相关的场景
+        from source.config.AppConfig import registerScene
+        registerScene(101, OriginTitle)
+        self.resPath = {'CG': 'logo.mp4'}
+        self.useDefaultDraw = False
+
+    def setup(self):
+        self.mouseVisible = False
+        self.setupSystemConsole = False
+        self.resetMouse = True
+        self.mouseX, self.mouseY = self.width / 2, self.height / 2
+        self.mouseLimited = True
+        self.caption = 'FinialSound:Origin 终曲：起源 v1.0.0'
+        self.videoPlayer.add('CG', g_resPath + self.resPath['CG'])
+
+    def draw(self):
+        self.mouseX, self.mouseY = self.width / 2, self.height / 2
+        if not self.isReadyToEnd:
+            self.videoPlayer.preview('CG')
+            self.isReadyToEnd = True
+        else:
+            # 这里的下一个场景是开场Logo
+            self.nextSceneNum = 101
+            self.isEnd = True
+
+
 class OriginLogo(Scene):
     def __init__(self, *args):
         super(OriginLogo, self).__init__(*args)
@@ -208,7 +224,7 @@ class OriginLogo(Scene):
 
     def setup(self):
         self.caption = 'FinialSound:Origin 终曲：起源 v1.0.0'
-        pygame.mouse.set_visible(False)
+        self.mouseVisible = False
         self.render.open()
         self.render.add(self.__ele_Logo1, self.__ele_Logo2)
         self.render.close()
@@ -235,7 +251,6 @@ class OriginTitle(Scene):
                         'bg_options': 'bg_options.bmp', 'bg_rive': 'bg_rive.png', 'bg_reflect': 'bg_reflect.jpg',
                         'bg_traveller': 'bg_traveller.png', 'bg_bridge': 'bg_bridge.png', 'bg_pen': 'bg_pen.png',
                         'bg_copyright': 'bg_copyright.png', 'bg_penBk': 'bg_pen_bk.png', 'bg_cursor': 'cursor.bmp'}
-        # self.__spr_mouse = Sprite()
         self.__ele_mask = MaskElement((0, 0, self.width, self.height))
 
         self.__bgGear_InitImg = pygame.image.load(g_resPath + self.resPath['bg_gear'])
@@ -264,21 +279,27 @@ class OriginTitle(Scene):
         self.__ele_bgOptions = ImgElement((centeredXPos(self.width, 88), 320, 88, 109),
                                           g_resPath + self.resPath['bg_options'])
         # 选项与鼠标精灵##################################################################################
-        self.__spr_mouse = CursorSprite(g_resPath + self.resPath['bg_cursor'], (0, 0, 5, 5))
         self.__spr_currentOptList = []
         self.__spr_currentOpt = None
         self.__spr_lastOpt = None
         self.__spr_option1 = OptionSprite(g_resPath + self.resPath['bg_options'],
                                           (centeredXPos(self.width, 88), 320, 91, 25), clipSize=(0, 0))
+        self.__spr_option1.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
+                                              lambda: self.__clickOption('mouse_left_key_up: scene_title_option1\n'), 1)
         self.__spr_option2 = OptionSprite(g_resPath + self.resPath['bg_options'],
                                           (centeredXPos(self.width, 88), 350, 91, 25), clipSize=(30, 0))
+        self.__spr_option2.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
+                                              lambda: self.__clickOption('mouse_left_key_up: scene_title_option2\n'), 1)
         self.__spr_option3 = OptionSprite(g_resPath + self.resPath['bg_options'],
                                           (centeredXPos(self.width, 88), 380, 91, 25), clipSize=(60, 0))
+        self.__spr_option3.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
+                                              lambda: self.__clickOption('mouse_left_key_up: scene_title_option3\n'), 1)
         self.__spr_option4 = OptionSprite(g_resPath + self.resPath['bg_options'],
                                           (centeredXPos(self.width, 88), 410, 91, 25), clipSize=(90, 0))
-        self.__sprg_mouse_pot = Group(self.__spr_option1, self.__spr_option2, self.__spr_option3, self.__spr_option4)
-        # self.__ele_bgPenBk = ImgElement((self.__ele_bgOptions.area.x - 4, self.__ele_bgOptions.area.y + 18, 102, 5),
-        #                                 g_resPath + self.resPath['bg_penBk'])
+        self.__spr_option4.Events.appendEvent(ioEvent3Enum.mouseLeftKeyUp,
+                                              lambda: self.__clickOption('mouse_left_key_up: scene_title_option4\n'), 1)
+        self.__sprg_mouse_pot = SpriteGroup(self.screenRect, self.__spr_option1, self.__spr_option2, self.__spr_option3,
+                                            self.__spr_option4)
         self.__ele_bgPenBk = ImgElement((-999, -999, 102, 5),
                                         g_resPath + self.resPath['bg_penBk'])
         self.__ele_bgPenBk.zIndex = 98
@@ -288,25 +309,27 @@ class OriginTitle(Scene):
         self.__ele_bgCopyright.zIndex = 999
 
         self.rot = 0
-        self.__wave_bgm = pygame.mixer.Sound(g_resPath + self.resPath['bgm'])
+        self.mixer.addSound('wave_bgm', g_resPath + self.resPath['bgm'])
+
+    def __clickOption(self, text):
+        self.systemConsole.log(text)
 
     def setup(self):
         self.caption = 'FinialSound:Origin 终曲：起源 v1.0.0'
-        pygame.mouse.set_visible(True)
-        # self.useDefaultDraw = False
         self.bgSurface = createSurfaceFromFile(g_resPath + self.resPath['bg_back'])
+        self.mouseSprite.setImg(g_resPath + self.resPath['bg_cursor'])
+        self.mouseSprite.setRect((0, 0, 5, 5))
         self.render.open()
         self.render.add(self.__spr_bgGear, self.__ele_bgTown, self.__spr_airship0,
                         self.__spr_airship1, self.__spr_airship2, self.__ele_bgTitle,
                         self.__ele_bgRive, self.__ele_bgReflect, self.__spr_traveller,
                         self.__ele_bgBridge, self.__ele_bgCopyright, self.__ele_mask,
                         self.__spr_option1, self.__spr_option2, self.__spr_option3,
-                        self.__spr_option4, self.__ele_bgPen, self.__ele_bgPenBk,
-                        self.__spr_mouse)
+                        self.__spr_option4, self.__ele_bgPen, self.__ele_bgPenBk)
         # self.render.add(self.__spr_option1, self.__spr_option2, self.__spr_option3,
         #                 self.__spr_option4, self.__ele_bgPen, self.__ele_bgPenBk)
         self.render.close()
-        self.__wave_bgm.play(loops=-1)
+        self.mixer.playSound('wave_bgm', loops=-1)
 
     def doMouseMotion(self, MouseRel, Buttons):
         if len(self.__spr_currentOptList) > 0 and self.focus != self.__spr_currentOpt:
@@ -329,7 +352,7 @@ class OriginTitle(Scene):
         self.__spr_airship2.update(NowClock)
         self.__spr_traveller.update(NowClock)
         self.__ele_bgReflect.update(NowClock)
-        self.__spr_mouse.update(self.mousePos)
+        self.mouseSprite.update(self.mousePos)
         self.__ele_bgPen.update(NowClock, self.__ele_bgPenBk.area.x + self.__ele_bgPenBk.area.w)
         self.__sprg_mouse_pot.update()
-        self.__spr_currentOptList = spritecollide(self.__spr_mouse, self.__sprg_mouse_pot, False)
+        self.__spr_currentOptList = spritecollide(self.mouseSprite, self.__sprg_mouse_pot, False)

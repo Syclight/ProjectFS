@@ -50,7 +50,8 @@ class gameObjRender:
             # self.__logFile.write('Render Log Error: render closed, add ' + str(args) + ' failed\n')
         else:
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n'
-            # self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add start\n')
+            # self.__logFile.write('Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add
+            # start\n')
             self.__add(*args)
             self.__log += 'Render Log: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' add finished\n'
             # self.__logFile.write(

@@ -1,0 +1,5 @@
+options text 选项文本：
+open reminiscences 打开回忆录 （开始新游戏）
+record groove 记录的痕迹 （读档继续）
+revise 修改 （设置）
+close 合上 （退出游戏）

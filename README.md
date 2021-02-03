@@ -203,3 +203,17 @@ view|bassClass,element,entity,scene|游戏视图，baseClass中有一游戏中�
 
 ### 2021.1.10 Asheor
 * 完成了Origin的TitleScene的编写
+
+### 2021.2.3 Asheor
+时间拖的有点久，因为这次更新了许多功能，向着成熟的Syclight迈进
+* 现在可在脱离Pycharm的环境下直接用命令行启动
+* 添加了KMP字符串匹配算法，在source.util下
+* 修改了一些element的bug
+* 将sprite，element与actor整合。
+* 稍微修改了事件触发的方式。
+* 添加了一些列新的控件，文本域，滑动条
+* 在新控件的基础上开发了Syclight with Py的图形节目控制台，在本框架开发的游戏中按f1键即可开启
+* 整合了pygame的mixer模块和moviepy的播放模块，将其包装进Syclight。
+* 添加了一个容器，source.core.assembly.container.MiniQueue
+* 为父类Scene，Element，添加了一些功能性的变量
+

@@ -28,6 +28,7 @@ from source.examples.SpringSimulate import SpringSimulateScene, SpringMassSystem
 from source.examples.Sudoku import SudokuGame  # 数独的游戏
 from source.examples.TestPainter import TestPainterScene  # Painter测试
 from source.examples.TestPick import pickTest  # pick测试
+from source.examples.TextAreaTest import TextAreaTest  # textArea测试
 from source.examples.noiseTest import noiseTestScene, noise1DScene  # 噪声测试
 from source.examples.physicsTest import PhysicsScene, verletScene, verletSceneRotate  # 力学测试场景
 from source.examples.reference import drawingBoard, createWave, sketchSphere, chain, paramEquation, \
@@ -35,10 +36,10 @@ from source.examples.reference import drawingBoard, createWave, sketchSphere, ch
 from source.examples.testSpriteScene import testSpriteScene, testAnimScene, trueAnimScene  # 精灵场景测试
 from source.guitools.AnimaEditor import AnimaEditor  # GUITools 动画编辑器
 from source.view.baseClazz.Scene import Scene  # 空场景
-from source.view.origin.Scenes import OriginLogo, OriginTitle  # 起源
+from source.view.origin.Scenes import OriginLogo, OriginTitle, OriginCGLogo  # 起源
 from source.view.scene.Scenes import LogoScene  # 正常游戏运行流程入口
 
-SceneMap = {SCENENUM_INIT: [OriginLogo]}
+SceneMap = {SCENENUM_INIT: [OriginCGLogo]}
 
 
 def registerScene(sceneNum, sceneClass, paramList=None):

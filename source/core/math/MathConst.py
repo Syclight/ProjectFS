@@ -3,7 +3,7 @@ PI_HALF = 1.5707963267948966
 PI_QUARTER = 0.78539816339745
 PI_DOUBLE = 6.283185307179586
 E = 2.718281828459045
-
+MAX_ZINDEX = 999999999
 
 def __f_interpolation_poly__(x):
     return -0.0001521 * x * x * x * x * x * x \

@@ -12,7 +12,7 @@ from source.util.ToolsFuc import centeredXPos, centeredYPos, InElement
 from source.view.baseClazz.Actor import Actor
 from source.view.baseClazz.Element import Element
 from source.view.baseClazz.Scene import Scene
-from source.view.element.control import InputElement
+from source.view.element.Control import InputElement
 from source.view.element.Elements import TextElement, ioEvent3Enum, ImgElement
 
 

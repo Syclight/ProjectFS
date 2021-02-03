@@ -8,7 +8,7 @@ from source.core.math.Shape import Rectangle
 class Sprite(pygame.sprite.Sprite):
     """游戏中所有精灵的父类 框架：Syclight Framework with pygame
 
-        实现自pygame.sprite.Sprite(*groups):
+        实现自pygame.sprite.sprite(*groups):
 
         在本框架中的声明精灵时要求继承该类，否则将会导致出错
 
@@ -36,6 +36,10 @@ class Sprite(pygame.sprite.Sprite):
         self.visual = True
         self.active = True
         self.zIndex = 0
+        self.mouseLastPos = (0, 0)
+        self.mousePos = (0, 0)
+        self.mouseButtons = (0, 0, 0)
+        self.mouseRel = (0, 0)
         self.physicalBodyType = None
         if isinstance(rect, tuple):
             self.collidedArea = Rectangle(self.rect[0], self.rect[1], self.rect[2], self.rect[3])
@@ -62,7 +66,7 @@ class Sprite(pygame.sprite.Sprite):
 
     def collided(self, oth):
         if not isinstance(oth, Sprite):
-            raise Exception("Param '{}' must is a subclass of 'Sprite'".format(oth))
+            raise Exception("Param '{}' must is a subclass of 'sprite'".format(oth))
         if self.zIndex != oth.zIndex:
             return False
         return self.collidedArea.intersects(oth.collidedArea)

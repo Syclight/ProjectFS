@@ -1,7 +1,11 @@
+import os
+
 import pygame
 import gc
 
 from source.core.assembly.Config import Config
+from source.core.component.Console import Console
+from source.core.component.Mixer import Mixer
 from source.core.const.Const import SCENENUM_INIT
 from source.util.ToolsFuc import getNotN
 
@@ -10,7 +14,8 @@ class gameApp:
     def __init__(self, appTitle, wight, height, isFullScreen, screenMod, colorBits):
         # 初始化要用到的库
         pygame.init()
-        pygame.mixer.init()
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+        self.__mixer = Mixer()
 
         # 初始化App属性
         self.__Id = id(self)
@@ -28,11 +33,12 @@ class gameApp:
             raise Exception("'SceneMap' is Empty in AppConfig, 'SceneMap' mast have at least one element")
         self.__mapping = SceneMap
 
-        pygame.display.set_caption(appTitle)
+        pygame.display.set_caption(self.__appTitle)
         self.__screen = pygame.display.set_mode((self.__screenWidth, self.__screenHeight), self.__screenMod,
                                                 self.__colorBits)
         self.__config = Config()
         self.__config.readConfig()
+        self.__console = Console((0, 0, self.__screenWidth * 0.8, self.__screenHeight * 0.8))
 
         self.__clock = pygame.time.Clock()
 
@@ -41,15 +47,25 @@ class gameApp:
         if self.frameRate != 0:
             self.__frameControl = True
 
-        print(appTitle + '\n-----控制台-----')
-
-        self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen, self.__config, pygame.time.get_ticks())
+        self.__scene = self.__mapping[SCENENUM_INIT][0](self.__screen, self.__config, pygame.time.get_ticks(),
+                                                        self.__mixer, self.__console)
         self.__scene.super_setup()
+
         if self.__scene.caption is not None:
             pygame.display.set_caption(self.__scene.caption)
+            self.__appTitle = self.__scene.caption
+        pygame.mouse.set_visible(self.__scene.mouseVisible)
+
+        self.__console.log('achieved with Syclight\n' +
+                           'inex recreation software 2020-2021 all rights reserved\n' + 'console version: ' +
+                           self.__console.getVerStr() + '\n' +
+                           self.__appTitle +
+                           '\n------Console------\n')
 
     def MainLoop(self):
         while not self.isQuit:
+            if self.__scene.mouseLimited:
+                pygame.mouse.set_pos(self.__scene.mouseX, self.__scene.mouseY)
             if self.__frameControl:
                 self.__clock.tick(self.frameRate)
             else:
@@ -68,7 +84,7 @@ class gameApp:
 
             for event in pygame.event.get():
                 if event.type == 12:  # QUIT
-                    pygame.mixer.quit()
+                    self.__mixer.quit()
                     pygame.quit()
                     self.isQuit = True
                     break
@@ -105,12 +121,21 @@ class gameApp:
                 del self.__scene
                 gc.collect()
                 if len(nowScene) > 1:
-                    self.__scene = nowScene[0](self.__screen, self.__config, pygame.time.get_ticks(), nowScene[1:])
+                    self.__scene = nowScene[0](self.__screen, self.__config, pygame.time.get_ticks(), self.__mixer,
+                                               self.__console, nowScene[1:])
                 else:
-                    self.__scene = nowScene[0](self.__screen, self.__config, pygame.time.get_ticks())
+                    self.__scene = nowScene[0](self.__screen, self.__config, pygame.time.get_ticks(), self.__mixer,
+                                               self.__console)
                 self.__scene.super_setup()
+                if self.__scene.resetMouse:
+                    pygame.mouse.set_pos(self.__scene.mouseX, self.__scene.mouseY)
+                pygame.mouse.set_visible(self.__scene.mouseVisible)
                 if self.__scene.caption is not None:
+                    self.__appTitle = self.__scene.caption
                     pygame.display.set_caption(self.__scene.caption)
+
+    def getId(self):
+        return self.__Id
 
 # class gameApp:
 #     def __init__(self, appTitle, wight, height, isFullScreen, screenMod, colorBits):
